@@ -65,15 +65,11 @@
 
 
 
-        .album-header{
-
-            background:#fff
-        }
         .album-header h1 {
             font-family: 'Rajdhani', sans-serif;
             font-size: clamp(2rem, 5vw, 3rem);
             font-weight: 700;
-            color:green; /* var(--text-main);*/
+            color: var(--text-main);
             line-height: 1.2;
         }
 
@@ -967,7 +963,7 @@
 
         function verifyAdmin() {
             const pass = document.getElementById('admin-pass').value;
-            if (pass === 'admin123') {
+            if (pass === '0000') {
                 isAdminLoggedIn = true;
                 document.getElementById('logout-btn').style.display = 'inline-block';
                 document.getElementById('admin-pass').value = '';
@@ -1108,7 +1104,7 @@
                         applyLocationFilter();
                         renderAdminManageList();
                         closeEditModal();
-                        alert('Member information updated successfully!');
+                        alert('Updated successfully!');
                     } else {
                         alert('Failed to update: ' + res.message);
                     }
@@ -1158,7 +1154,7 @@
                     galleryData.splice(index, 1);
                     applyLocationFilter();
                     renderAdminManageList();
-                    alert('Member entry deleted successfully!');
+                    alert('Deleted successfully!');
                 } else {
                     alert('Failed to delete: ' + res.message);
                 }
