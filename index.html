@@ -42,8 +42,8 @@
         }
 
         .nacos-logo-container {
-            width: 90px;
-            height: 90px;
+            width: 120px;
+            height: 120px;
             border-radius: 50%;
             overflow: hidden;
             display: flex;
@@ -53,11 +53,14 @@
             margin-bottom: 1rem;
         }
 
-        .nacos-logo-img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
+          .nacos-logo-img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transform: scale(1.7);
+        object-position: center;   /* Keeps the focal point dead center */
+  transform-origin: center center;
+    }
 
         .album-header h1 {
             font-family: 'Rajdhani', sans-serif;
@@ -496,7 +499,7 @@
         /* 📱 MOBILE VIEW: 3 COLUMNS & COMPACT STYLING */
         @media (max-width: 480px) {
             .gallery-container {
-                grid-template-columns: repeat(3, 1fr);
+                grid-template-columns: repeat(2, 1fr);
                 gap: 0.4rem;
                 padding: 0 0.4rem 3rem;
             }
@@ -565,7 +568,7 @@
         <div class="nacos-logo-container" title="Nigeria Association of Computer Science Students">
             <img src="https://nacos.org.ng/img/about.jpg" alt="NACOS Logo" class="nacos-logo-img">
         </div>
-        <h1>CS <span class="highlight">2K24</span> DIGITAL PHOTO ALBUM</h1>
+        <h1>CS <span class="highlight" style="color:#0be">2K24</span> DIGITAL PHOTO ALBUM</h1>
     </header>
 
     <div class="admin-bar">
@@ -575,21 +578,22 @@
 
     <!-- Location Search & Filter Bar -->
     <section class="search-filter-container">
+        <center> <label for="filter-state">FILTER BY STATE AND LGA</label></center>
         <div class="filter-group">
-            <label for="filter-state">Filter by State</label>
+           
             <select id="filter-state" onchange="onFilterStateChange()">
-                <option value="">-- All States --</option>
+                <option value="">STATES</option>
             </select>
         </div>
 
         <div class="filter-group">
-            <label for="filter-lga">Filter by Local Government (LGA)</label>
+           
             <select id="filter-lga" onchange="applyLocationFilter()" disabled>
-                <option value="">-- Select State First --</option>
+                <option value="">LGA</option>
             </select>
         </div>
 
-        <button class="btn btn-reset" onclick="resetFilters()">Clear / Show All</button>
+        <button class="btn btn-reset" onclick="resetFilters()" style="background:#0be">SHOW ALL</button>
     </section>
 
     <!-- Gallery Grid Container -->
@@ -779,7 +783,7 @@
 
         function populateStateOptions(selectId) {
             const stateSelect = document.getElementById(selectId);
-            stateSelect.innerHTML = selectId === 'filter-state' ? '<option value="">-- All States --</option>' : '<option value="">-- Choose State --</option>';
+            stateSelect.innerHTML = selectId === 'filter-state' ? '<option value="">STATES</option>' : '<option value="">-- Choose State --</option>';
             
             Object.keys(nigeriaStatesAndLgas).sort().forEach(state => {
                 const opt = document.createElement('option');
