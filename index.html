@@ -10,6 +10,7 @@
             --bg-primary: #0a0c10;
             --bg-secondary: #121620;
             --bg-card: #181d2b;
+            --grid-cols: 3;
             --accent-orange: #ff5500;
             --accent-orange-glow: rgba(255, 85, 0, 0.4);
             --whatsapp-green: #25d366;
@@ -500,12 +501,20 @@
         }
 
         /* 📱 MOBILE VIEW: 3 COLUMNS & COMPACT STYLING */
-        @media (max-width: 480px) {
-            .gallery-container {
-                grid-template-columns: repeat(3, 1fr);
-                gap: 0.4rem;
-                padding: 0 0.4rem 3rem;
-            }
+
+
+/* Your cards/roster container */
+.card-grid {
+  display: grid;
+  /* Dynamically sets grid columns based on the variable */
+  grid-template-columns: repeat(var(--grid-cols), minmax(0, 1fr));
+  gap: 1.5rem;
+}
+       @media (max-width: 640px) {
+  .card-grid {
+    grid-template-columns: 1fr !important;
+  }
+}
 
             .photo-item {
                 border-radius: 6px;
@@ -657,6 +666,16 @@
                 </div>
 
                 <button class="btn btn-primary" id="publish-btn" onclick="addPhotoEntry()">Publish to Album</button>
+                <div class="column-control">
+  <label for="colSelect"><strong>Display Columns:</strong></label>
+  <select id="colSelect" onchange="changeColumns(this.value)">
+    <option value="1">1 Column</option>
+    <option value="2">2 Columns</option>
+    <option value="3">3 Columns</option>
+    <option value="4">4 Columns</option>
+    <option value="5">5 Columns</option>
+  </select>
+</div>
             </div>
 
             <h3 style="font-size: 1.1rem; margin-bottom: 0.5rem;">Existing Entries (Manage & Edit)</h3>
