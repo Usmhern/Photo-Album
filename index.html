@@ -31,7 +31,6 @@
             overflow-x: hidden;
         }
 
-        /* NACOS Header & Logo Section */
         .album-header {
             text-align: center;
             padding: 3rem 1rem 1.5rem;
@@ -71,7 +70,6 @@
             text-shadow: 0 0 20px var(--accent-orange-glow);
         }
 
-        /* Top Action Bar */
         .admin-bar {
             display: flex;
             justify-content: center;
@@ -98,6 +96,21 @@
             border-color: var(--accent-orange);
         }
 
+        .btn-edit {
+            background: rgba(0, 123, 255, 0.2);
+            color: #4da6ff;
+            border: 1px solid rgba(0, 123, 255, 0.4);
+            padding: 0.35rem 0.75rem;
+            font-size: 0.8rem;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .btn-edit:hover {
+            background: var(--call-blue);
+            color: #fff;
+        }
+
         .btn:hover:not(:disabled) {
             transform: translateY(-2px);
             opacity: 0.9;
@@ -108,7 +121,6 @@
             cursor: not-allowed;
         }
 
-        /* Gallery Grid */
         .gallery-container {
             max-width: 1200px;
             margin: 0 auto;
@@ -202,7 +214,6 @@
             gap: 4px;
         }
 
-        /* Action Buttons Grid */
         .action-btns {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -246,7 +257,6 @@
             color: #fff;
         }
 
-        /* Modal Overlay System */
         .modal {
             position: fixed;
             inset: 0;
@@ -316,22 +326,12 @@
             font-size: 1.25rem;
             cursor: pointer;
         }
-        
-        .delete-btn {
-            background: rgba(255, 0, 0, 0.2);
-            color: #ff4444;
-            border: 1px solid rgba(255, 0, 0, 0.4);
-            padding: 0.3rem 0.6rem;
-            font-size: 0.75rem;
-            border-radius: 4px;
-            cursor: pointer;
-        }
 
         .admin-manage-item {
             display: flex; 
             justify-content: space-between; 
             align-items: center; 
-            padding: 0.5rem 0; 
+            padding: 0.6rem 0; 
             border-bottom: 1px solid var(--border-color);
         }
 
@@ -387,7 +387,7 @@
 </head>
 <body>
 
-  <header class="album-header">
+    <header class="album-header">
         <div class="nacos-logo-container" title="Nigeria Association of Computer Science Students">
             <img src="https://nacos.org.ng/img/about.jpg" alt="NACOS Logo" class="nacos-logo-img">
         </div>
@@ -442,15 +442,13 @@
                     <input type="text" id="input-phone" placeholder="e.g. +2348012345678">
                 </div>
                 
-                <!-- State Selector -->
                 <div class="form-group">
                     <label for="input-state">Select State</label>
-                    <select id="input-state" onchange="handleStateChange()">
+                    <select id="input-state" onchange="handleStateChange('input-state', 'lga-container', 'input-lga')">
                         <option value="">-- Choose State --</option>
                     </select>
                 </div>
                 
-                <!-- LGA Selector -->
                 <div class="form-group" id="lga-container" style="display:none;">
                     <label for="input-lga">Select Local Government Area (LGA)</label>
                     <select id="input-lga">
@@ -461,8 +459,45 @@
                 <button class="btn btn-primary" id="publish-btn" onclick="addPhotoEntry()">Publish to Album</button>
             </div>
 
-            <h3 style="font-size: 1.1rem; margin-bottom: 0.5rem;">Existing Entries (Manage)</h3>
-            <div id="admin-manage-list" style="max-height: 200px; overflow-y: auto;"></div>
+            <h3 style="font-size: 1.1rem; margin-bottom: 0.5rem;">Existing Entries (Manage & Edit)</h3>
+            <div id="admin-manage-list" style="max-height: 250px; overflow-y: auto;"></div>
+        </div>
+    </div>
+
+    <!-- Edit Member Modal -->
+    <div id="edit-modal" class="modal">
+        <div class="modal-content">
+            <button class="close-modal" onclick="closeEditModal()">&times;</button>
+            <h2>Edit Member Information</h2>
+            <input type="hidden" id="edit-row-id">
+            <input type="hidden" id="edit-index">
+            
+            <div class="form-group">
+                <label for="edit-name">Name / Title</label>
+                <input type="text" id="edit-name">
+            </div>
+            <div class="form-group">
+                <label for="edit-title">Role / Title</label>
+                <input type="text" id="edit-title">
+            </div>
+            <div class="form-group">
+                <label for="edit-phone">Phone Number</label>
+                <input type="text" id="edit-phone">
+            </div>
+            <div class="form-group">
+                <label for="edit-state">State</label>
+                <select id="edit-state" onchange="handleStateChange('edit-state', 'edit-lga-container', 'edit-lga')">
+                    <option value="">-- Choose State --</option>
+                </select>
+            </div>
+            <div class="form-group" id="edit-lga-container" style="display:none;">
+                <label for="edit-lga">LGA</label>
+                <select id="edit-lga">
+                    <option value="">-- Choose LGA --</option>
+                </select>
+            </div>
+            
+            <button class="btn btn-primary" id="save-edit-btn" style="width:100%;" onclick="saveMemberEdit()">Save Changes</button>
         </div>
     </div>
 
@@ -476,7 +511,7 @@
     </div>
 
     <script>
-        const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzo7FOW_vAVEgqgc6vEAKCetxoc_sRU1uIWZhM1HppRAmEn4kOg4_n4k6LAOl_HKT8/exec";
+        const WEB_APP_URL = "https://script.google.com/macros/s/AKfycby-XB8DOEQq9U0dkbC2UBPSftpGAMTy3stHDtfyDZFcGq7nO_LQVtwysf1kCNSpCDPj/exec";
 
         const nigeriaStatesAndLgas = {
             "Abia": ["Aba North", "Aba South", "Arochukwu", "Bende", "Ikwuano", "Isiala Ngwa North", "Isiala Ngwa South", "Isuikwuato", "Obi Ngwa", "Ohafia", "Osisioma", "Ugwunagbo", "Ukwa East", "Ukwa West", "Umuahia North", "Umuahia South", "Umu Nneochi"],
@@ -521,20 +556,19 @@
         let galleryData = [];
         let isAdminLoggedIn = false;
 
-        // Fetch central data from Google Apps Script on load
         async function fetchGalleryData() {
             try {
                 const response = await fetch(WEB_APP_URL);
                 galleryData = await response.json();
                 renderGallery();
             } catch (err) {
-                console.error("Error fetching central data:", err);
-                document.getElementById('gallery-grid').innerHTML = '<div class="loading-text">Failed to load memories. Please refresh the page.</div>';
+                console.error("Error fetching data:", err);
+                document.getElementById('gallery-grid').innerHTML = '<div class="loading-text">Failed to load memories.</div>';
             }
         }
 
-        function populateStates() {
-            const stateSelect = document.getElementById('input-state');
+        function populateStateOptions(selectId) {
+            const stateSelect = document.getElementById(selectId);
             stateSelect.innerHTML = '<option value="">-- Choose State --</option>';
             Object.keys(nigeriaStatesAndLgas).sort().forEach(state => {
                 const opt = document.createElement('option');
@@ -544,10 +578,10 @@
             });
         }
 
-        function handleStateChange() {
-            const stateSelect = document.getElementById('input-state');
-            const lgaContainer = document.getElementById('lga-container');
-            const lgaSelect = document.getElementById('input-lga');
+        function handleStateChange(stateSelectId, lgaContainerId, lgaSelectId) {
+            const stateSelect = document.getElementById(stateSelectId);
+            const lgaContainer = document.getElementById(lgaContainerId);
+            const lgaSelect = document.getElementById(lgaSelectId);
             const selectedState = stateSelect.value;
 
             if (selectedState && nigeriaStatesAndLgas[selectedState]) {
@@ -563,15 +597,6 @@
                 lgaContainer.style.display = 'none';
                 lgaSelect.innerHTML = '<option value="">-- Choose LGA --</option>';
             }
-        }
-
-        function previewImage(src, name) {
-            const modal = document.getElementById('preview-modal');
-            const img = document.getElementById('preview-img');
-            const caption = document.getElementById('preview-caption');
-            img.src = src;
-            caption.textContent = name;
-            modal.classList.add('active');
         }
 
         function renderGallery() {
@@ -638,20 +663,12 @@
                 waAnchor.target = '_blank';
                 waAnchor.rel = 'noopener noreferrer';
                 waAnchor.className = 'whatsapp-btn';
-                waAnchor.innerHTML = `
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981z"/>
-                    </svg> Chat
-                `;
+                waAnchor.innerHTML = `Chat`;
 
                 const callAnchor = document.createElement('a');
                 callAnchor.href = callLink;
                 callAnchor.className = 'call-btn';
-                callAnchor.innerHTML = `
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/>
-                    </svg> Call
-                `;
+                callAnchor.innerHTML = `Call`;
 
                 actionBtns.appendChild(waAnchor);
                 actionBtns.appendChild(callAnchor);
@@ -704,6 +721,114 @@
             document.querySelectorAll('.modal').forEach(m => m.classList.remove('active'));
         }
 
+        function closeEditModal() {
+            document.getElementById('edit-modal').classList.remove('active');
+        }
+
+        function renderAdminManageList() {
+            const list = document.getElementById('admin-manage-list');
+            list.innerHTML = '';
+            
+            galleryData.forEach((item, index) => {
+                const div = document.createElement('div');
+                div.className = 'admin-manage-item';
+
+                const span = document.createElement('span');
+                const locInfo = item.state ? ` - ${item.state}` : '';
+                span.textContent = `${item.name} (${item.title}${locInfo})`;
+
+                const editBtn = document.createElement('button');
+                editBtn.className = 'btn-edit';
+                editBtn.textContent = '✏️ Edit';
+                editBtn.onclick = () => openEditModal(index);
+
+                div.appendChild(span);
+                div.appendChild(editBtn);
+                list.appendChild(div);
+            });
+        }
+
+        function openEditModal(index) {
+            const item = galleryData[index];
+            document.getElementById('edit-row-id').value = item.rowId || '';
+            document.getElementById('edit-index').value = index;
+            document.getElementById('edit-name').value = item.name || '';
+            document.getElementById('edit-title').value = item.title || '';
+            document.getElementById('edit-phone').value = item.phone || '';
+
+            // Set state dropdown and trigger LGA options update
+            const stateSelect = document.getElementById('edit-state');
+            stateSelect.value = item.state || '';
+            handleStateChange('edit-state', 'edit-lga-container', 'edit-lga');
+
+            // Set LGA dropdown value after container updates
+            if (item.lga) {
+                document.getElementById('edit-lga').value = item.lga;
+            }
+
+            document.getElementById('edit-modal').classList.add('active');
+        }
+
+        async function saveMemberEdit() {
+            const index = document.getElementById('edit-index').value;
+            const rowId = document.getElementById('edit-row-id').value;
+            const saveBtn = document.getElementById('save-edit-btn');
+
+            const updatedData = {
+                action: 'edit',
+                rowId: rowId,
+                name: document.getElementById('edit-name').value.trim(),
+                title: document.getElementById('edit-title').value.trim(),
+                phone: document.getElementById('edit-phone').value.trim(),
+                state: document.getElementById('edit-state').value,
+                lga: document.getElementById('edit-lga').value
+            };
+
+            saveBtn.disabled = true;
+            saveBtn.textContent = "Saving...";
+
+            try {
+                const response = await fetch(WEB_APP_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                    body: JSON.stringify(updatedData)
+                });
+
+                const res = await response.json();
+
+                if (res.status === 'success') {
+                    // Update local data in place
+                    galleryData[index].name = updatedData.name;
+                    galleryData[index].title = updatedData.title;
+                    galleryData[index].phone = updatedData.phone;
+                    galleryData[index].state = updatedData.state;
+                    galleryData[index].lga = updatedData.lga;
+
+                    renderGallery();
+                    renderAdminManageList();
+                    closeEditModal();
+                    alert('Member information updated successfully!');
+                } else {
+                    alert('Failed to update: ' + res.message);
+                }
+            } catch (err) {
+                console.error(err);
+                alert('Error updating details. Check browser console.');
+            } finally {
+                saveBtn.disabled = false;
+                saveBtn.textContent = "Save Changes";
+            }
+        }
+
+        function previewImage(src, name) {
+            const modal = document.getElementById('preview-modal');
+            const img = document.getElementById('preview-img');
+            const caption = document.getElementById('preview-caption');
+            img.src = src;
+            caption.textContent = name;
+            modal.classList.add('active');
+        }
+
         async function addPhotoEntry() {
             const fileInput = document.getElementById('input-file');
             const nameInput = document.getElementById('input-name');
@@ -741,9 +866,7 @@
                 try {
                     const response = await fetch(WEB_APP_URL, {
                         method: 'POST',
-                        headers: {
-                            'Content-Type': 'text/plain;charset=utf-8',
-                        },
+                        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
                         body: JSON.stringify(payload)
                     });
 
@@ -768,7 +891,7 @@
                     }
                 } catch (err) {
                     console.error(err);
-                    alert('An error occurred during upload. Check console for details.');
+                    alert('An error occurred during upload.');
                 } finally {
                     publishBtn.disabled = false;
                     publishBtn.textContent = "Publish to Album";
@@ -778,25 +901,9 @@
             reader.readAsDataURL(file);
         }
 
-        function renderAdminManageList() {
-            const list = document.getElementById('admin-manage-list');
-            list.innerHTML = '';
-            
-            galleryData.forEach((item, index) => {
-                const div = document.createElement('div');
-                div.className = 'admin-manage-item';
-
-                const span = document.createElement('span');
-                const locInfo = item.state ? ` - ${item.state}` : '';
-                span.textContent = `${item.name} (${item.title}${locInfo})`;
-
-                div.appendChild(span);
-                list.appendChild(div);
-            });
-        }
-
-        // Initial Setup and Load
-        populateStates();
+        // Initialize state selectors & fetch live data
+        populateStateOptions('input-state');
+        populateStateOptions('edit-state');
         fetchGalleryData();
     </script>
 </body>
