@@ -102,7 +102,7 @@
 
     .filter-group label {
         font-size: 0.85rem;
-        color: var(--text-muted);
+        color: black;
         font-weight: 500;
     }
 
@@ -415,7 +415,7 @@
     }
 
     .admin-manage-item {
-        display: flex; 
+        display: none; /*flex*/
         justify-content: space-between; 
         align-items: center; 
         padding: 0.6rem 0; 
@@ -467,7 +467,7 @@
     /* 📱 MOBILE VIEW: 3 COLUMNS & COMPACT STYLING */
     @media (max-width: 480px) {
         .gallery-container {
-            grid-template-columns: repeat(2, 1fr);
+            grid-template-columns: repeat(3, 1fr);
             gap: 0.4rem;
             padding: 0 0.4rem 3rem;
         }
