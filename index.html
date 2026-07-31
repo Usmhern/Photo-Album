@@ -415,7 +415,7 @@
     }
 
     .admin-manage-item {
-        display: none; /*flex*/
+        display: flex;
         justify-content: space-between; 
         align-items: center; 
         padding: 0.6rem 0; 
@@ -540,7 +540,7 @@
     </header>
 
     <div class="admin-bar">
-        <button class="btn btn-primary" onclick="checkAdminAccess()"> Central Admin Panel</button>
+        <button class="btn btn-primary" onclick="checkAdminAccess()" style="display:none"> Central Admin Panel</button>
         <button class="btn" id="logout-btn" style="display:none;" onclick="adminLogout()"> Logout Admin</button>
     </div>
 
