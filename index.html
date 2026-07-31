@@ -10,7 +10,6 @@
             --bg-primary: #0a0c10;
             --bg-secondary: #121620;
             --bg-card: #181d2b;
-            --grid-cols: 3;
             --accent-orange: #ff5500;
             --accent-orange-glow: rgba(255, 85, 0, 0.4);
             --whatsapp-green: #25d366;
@@ -507,7 +506,7 @@
 .card-grid {
   display: grid;
   /* Dynamically sets grid columns based on the variable */
-  grid-template-columns: repeat(var(--grid-cols), minmax(0, 1fr));
+  grid-template-columns: repeat(var(--grid-cols), minmax(3, 1fr));
   gap: 1.5rem;
 }
        @media (max-width: 640px) {
@@ -666,17 +665,7 @@
                 </div>
 
                 <button class="btn btn-primary" id="publish-btn" onclick="addPhotoEntry()">Publish to Album</button>
-                <div class="column-control">
-  <label for="colSelect"><strong>Display Columns:</strong></label>
-  <select id="colSelect" onchange="changeColumns(this.value)">
-    <option value="1">1 Column</option>
-    <option value="2">2 Columns</option>
-    <option value="3">3 Columns</option>
-    <option value="4">4 Columns</option>
-    <option value="5">5 Columns</option>
-  </select>
-</div>
-            </div>
+              </div>
 
             <h3 style="font-size: 1.1rem; margin-bottom: 0.5rem;">Existing Entries (Manage & Edit)</h3>
             <div id="admin-manage-list" style="max-height: 250px; overflow-y: auto;"></div>
@@ -1272,28 +1261,6 @@
 
 
 
-        // Function to update CSS variable and save choice
-function changeColumns(cols) {
-  // Update the CSS custom property on the document element
-  document.documentElement.style.setProperty('--grid-cols', cols);
-  
-  // Save the selection in browser local storage
-  localStorage.setItem('admin_grid_cols', cols);
-}
-
-// Automatically load saved column preference on page load
-document.addEventListener('DOMContentLoaded', () => {
-  const savedCols = localStorage.getItem('admin_grid_cols') || '3'; // Default to 3
-  
-  // Set the CSS variable
-  document.documentElement.style.setProperty('--grid-cols', savedCols);
-  
-  // Update dropdown selection value if element exists
-  const colSelect = document.getElementById('colSelect');
-  if (colSelect) {
-    colSelect.value = savedCols;
-  }
-});
-    </script>
+          </script>
 </body>
 </html>
