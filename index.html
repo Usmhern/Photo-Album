@@ -493,28 +493,19 @@
             color: var(--text-muted);
         }
 
-        @media (max-width: 768px) {
+      @media (max-width: 768px) {
             .search-filter-container {
                 grid-template-columns: 1fr;
             }
         }
 
         /* 📱 MOBILE VIEW: 3 COLUMNS & COMPACT STYLING */
-
-
-/* Your cards/roster container */
-.card-grid {
-  display: grid;
-  /* Dynamically sets grid columns based on the variable */
-  grid-template-columns: repeat(var(--grid-cols), minmax(3, 1fr));
-  gap: 1.5rem;
-}
-       @media (max-width: 640px) {
-  .card-grid {
-    grid-template-columns: 1fr !important;
-  }
-}
-
+        @media (max-width: 480px) {
+            .gallery-container {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 0.4rem;
+                padding: 0 0.4rem 3rem;
+            }
             .photo-item {
                 border-radius: 6px;
             }
