@@ -56,6 +56,9 @@
         width: 100%;
         height: 100%;
         object-fit: cover;
+        transform: scale(1.5);
+        object-position: center;   /* Keeps the focal point dead center */
+  transform-origin: center center;
     }
 
     .album-header h1 {
@@ -85,7 +88,7 @@
         max-width: 900px;
         margin: 0 auto 2.5rem;
         padding: 1.25rem;
-        background: #0BF;
+        background: #1bd;
         border: 1px solid var(--border-color);
         border-radius: 12px;
         display: grid;
@@ -107,7 +110,7 @@
     }
 
     .filter-group select, .filter-group input {
-        width: 100%;
+        width: 20%;
         padding: 0.65rem 0.85rem;
         background: var(--bg-primary);
         border: 1px solid var(--border-color);
@@ -536,11 +539,11 @@
         <div class="nacos-logo-container" title="Nigeria Association of Computer Science Students">
             <img src="https://nacos.org.ng/img/about.jpg" alt="NACOS Logo" class="nacos-logo-img">
         </div>
-        <h1>CS <span class="highlight">2K24</span> DIGITAL PHOTO ALBUM</h1>
+        <h1>CS <span class="highlight" style="color:#1bd">2K24</span> DIGITAL PHOTO ALBUM</h1>
     </header>
 
     <div class="admin-bar">
-        <button class="btn btn-primary" onclick="checkAdminAccess()" style="display:none"> Central Admin Panel</button>
+        <button class="btn btn-primary" onclick="checkAdminAccess()" style=""> Central Admin Panel</button>
         <button class="btn" id="logout-btn" style="display:none;" onclick="adminLogout()"> Logout Admin</button>
     </div>
 
@@ -560,7 +563,7 @@
             </select>
         </div>
 
-        <button class="btn btn-reset" onclick="resetFilters()">SHOW ALL</button>
+        <button class="btn btn-primary" onclick="resetFilters()">SHOW ALL</button>
     </section>
 
     <!-- Gallery Grid Container -->
@@ -743,7 +746,7 @@
 
         function populateStateOptions(selectId) {
             const stateSelect = document.getElementById(selectId);
-            stateSelect.innerHTML = selectId === 'filter-state' ? '<option value="">-- All States --</option>' : '<option value="">-- Choose State --</option>';
+            stateSelect.innerHTML = selectId === 'filter-state' ? '<option value="">STATES</option>' : '<option value="">-- Choose State --</option>';
             
             Object.keys(nigeriaStatesAndLgas).sort().forEach(state => {
                 const opt = document.createElement('option');
