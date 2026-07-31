@@ -1269,6 +1269,31 @@
         populateStateOptions('input-state');
         populateStateOptions('edit-state');
         fetchGalleryData();
+
+
+
+        // Function to update CSS variable and save choice
+function changeColumns(cols) {
+  // Update the CSS custom property on the document element
+  document.documentElement.style.setProperty('--grid-cols', cols);
+  
+  // Save the selection in browser local storage
+  localStorage.setItem('admin_grid_cols', cols);
+}
+
+// Automatically load saved column preference on page load
+document.addEventListener('DOMContentLoaded', () => {
+  const savedCols = localStorage.getItem('admin_grid_cols') || '3'; // Default to 3
+  
+  // Set the CSS variable
+  document.documentElement.style.setProperty('--grid-cols', savedCols);
+  
+  // Update dropdown selection value if element exists
+  const colSelect = document.getElementById('colSelect');
+  if (colSelect) {
+    colSelect.value = savedCols;
+  }
+});
     </script>
 </body>
 </html>
