@@ -75,9 +75,57 @@
             display: flex;
             justify-content: center;
             gap: 1rem;
-            margin-bottom: 2rem;
+            margin-bottom: 1.5rem;
             padding: 0 1rem;
             flex-wrap: wrap;
+        }
+
+        /* Filter Search Section */
+        .search-filter-container {
+            max-width: 900px;
+            margin: 0 auto 2.5rem;
+            padding: 1.25rem;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1rem;
+            align-items: flex-end;
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.35rem;
+        }
+
+        .filter-group label {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        .filter-group select, .filter-group input {
+            width: 100%;
+            padding: 0.65rem 0.85rem;
+            background: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            color: #fff;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            outline: none;
+            transition: var(--transition-smooth);
+        }
+
+        .filter-group select:focus, .filter-group input:focus {
+            border-color: var(--accent-orange);
+            box-shadow: 0 0 10px var(--accent-orange-glow);
+        }
+
+        .filter-group select option {
+            background: var(--bg-secondary);
+            color: #fff;
         }
 
         .btn {
@@ -95,6 +143,17 @@
         .btn-primary {
             background-color: var(--accent-orange);
             border-color: var(--accent-orange);
+        }
+
+        .btn-reset {
+            background-color: rgba(255, 255, 255, 0.05);
+            color: var(--text-muted);
+            border-color: var(--border-color);
+        }
+
+        .btn-reset:hover {
+            color: #fff;
+            background-color: rgba(255, 255, 255, 0.15);
         }
 
         .btn-edit {
@@ -396,6 +455,12 @@
             color: var(--text-muted);
         }
 
+        @media (max-width: 768px) {
+            .search-filter-container {
+                grid-template-columns: 1fr;
+            }
+        }
+
         @media (max-width: 480px) {
             .gallery-container {
                 grid-template-columns: 1fr;
@@ -423,6 +488,25 @@
         <button class="btn btn-primary" onclick="checkAdminAccess()"> Central Admin Panel</button>
         <button class="btn" id="logout-btn" style="display:none;" onclick="adminLogout()"> Logout Admin</button>
     </div>
+
+    <!-- Location Search & Filter Bar -->
+    <section class="search-filter-container">
+        <div class="filter-group">
+            <label for="filter-state">Filter by State</label>
+            <select id="filter-state" onchange="onFilterStateChange()">
+                <option value="">-- All States --</option>
+            </select>
+        </div>
+
+        <div class="filter-group">
+            <label for="filter-lga">Filter by Local Government (LGA)</label>
+            <select id="filter-lga" onchange="applyLocationFilter()" disabled>
+                <option value="">-- Select State First --</option>
+            </select>
+        </div>
+
+        <button class="btn btn-reset" onclick="resetFilters()">Clear / Show All</button>
+    </section>
 
     <!-- Gallery Grid Container -->
     <main class="gallery-container" id="gallery-grid">
@@ -595,7 +679,7 @@
             try {
                 const response = await fetch(WEB_APP_URL);
                 galleryData = await response.json();
-                renderGallery();
+                renderGallery(galleryData);
             } catch (err) {
                 console.error("Error fetching data:", err);
                 document.getElementById('gallery-grid').innerHTML = '<div class="loading-text">Failed to load memories.</div>';
@@ -604,7 +688,8 @@
 
         function populateStateOptions(selectId) {
             const stateSelect = document.getElementById(selectId);
-            stateSelect.innerHTML = '<option value="">-- Choose State --</option>';
+            stateSelect.innerHTML = selectId === 'filter-state' ? '<option value="">-- All States --</option>' : '<option value="">-- Choose State --</option>';
+            
             Object.keys(nigeriaStatesAndLgas).sort().forEach(state => {
                 const opt = document.createElement('option');
                 opt.value = state;
@@ -634,17 +719,64 @@
             }
         }
 
-        function renderGallery() {
+        /* --- Filter Search Bar Functions --- */
+        function onFilterStateChange() {
+            const selectedState = document.getElementById('filter-state').value;
+            const lgaSelect = document.getElementById('filter-lga');
+
+            if (selectedState && nigeriaStatesAndLgas[selectedState]) {
+                lgaSelect.innerHTML = '<option value="">-- All Local Governments --</option>';
+                nigeriaStatesAndLgas[selectedState].forEach(lga => {
+                    const opt = document.createElement('option');
+                    opt.value = lga;
+                    opt.textContent = lga;
+                    lgaSelect.appendChild(opt);
+                });
+                lgaSelect.disabled = false;
+            } else {
+                lgaSelect.innerHTML = '<option value="">-- Select State First --</option>';
+                lgaSelect.disabled = true;
+            }
+
+            applyLocationFilter();
+        }
+
+        function applyLocationFilter() {
+            const selectedState = document.getElementById('filter-state').value;
+            const selectedLga = document.getElementById('filter-lga').value;
+
+            let filtered = galleryData;
+
+            if (selectedState) {
+                filtered = filtered.filter(item => (item.state || '').toLowerCase() === selectedState.toLowerCase());
+            }
+
+            if (selectedLga) {
+                filtered = filtered.filter(item => (item.lga || '').toLowerCase() === selectedLga.toLowerCase());
+            }
+
+            renderGallery(filtered);
+        }
+
+        function resetFilters() {
+            document.getElementById('filter-state').value = '';
+            const lgaSelect = document.getElementById('filter-lga');
+            lgaSelect.innerHTML = '<option value="">-- Select State First --</option>';
+            lgaSelect.disabled = true;
+
+            renderGallery(galleryData);
+        }
+
+        function renderGallery(dataToRender = galleryData) {
             const grid = document.getElementById('gallery-grid');
             grid.innerHTML = '';
 
-            if (!Array.isArray(galleryData) || galleryData.length === 0) {
-                grid.innerHTML = '<div class="loading-text">No memories uploaded yet!</div>';
+            if (!Array.isArray(dataToRender) || dataToRender.length === 0) {
+                grid.innerHTML = '<div class="loading-text">No members found matching this location!</div>';
                 return;
             }
 
-            galleryData.forEach((item) => {
-                // Sanitize phone number safely
+            dataToRender.forEach((item) => {
                 const phoneStr = String(item.phone || '');
                 const cleanPhone = phoneStr.replace(/[^0-9+]/g, '');
                 
@@ -789,7 +921,6 @@
         function openEditModal(index) {
             const item = galleryData[index];
             
-            // Populate image & name preview
             document.getElementById('edit-preview-img').src = item.img;
             document.getElementById('edit-preview-name').textContent = item.name;
 
@@ -799,12 +930,10 @@
             document.getElementById('edit-title').value = item.title || '';
             document.getElementById('edit-phone').value = item.phone || '';
 
-            // Set state dropdown and trigger LGA options update
             const stateSelect = document.getElementById('edit-state');
             stateSelect.value = item.state || '';
             handleStateChange('edit-state', 'edit-lga-container', 'edit-lga');
 
-            // Set LGA dropdown value after container updates
             if (item.lga) {
                 document.getElementById('edit-lga').value = item.lga;
             }
@@ -840,14 +969,13 @@
                 const res = await response.json();
 
                 if (res.status === 'success') {
-                    // Update local data in place
                     galleryData[index].name = updatedData.name;
                     galleryData[index].title = updatedData.title;
                     galleryData[index].phone = updatedData.phone;
                     galleryData[index].state = updatedData.state;
                     galleryData[index].lga = updatedData.lga;
 
-                    renderGallery();
+                    applyLocationFilter();
                     renderAdminManageList();
                     closeEditModal();
                     alert('Member information updated successfully!');
@@ -917,7 +1045,7 @@
 
                     if (result.status === "success") {
                         galleryData.push(result.entry);
-                        renderGallery();
+                        applyLocationFilter();
                         renderAdminManageList();
 
                         fileInput.value = '';
@@ -944,7 +1072,8 @@
             reader.readAsDataURL(file);
         }
 
-        // Initialize state selectors & fetch live data
+        // Initialize state dropdowns & fetch live data
+        populateStateOptions('filter-state');
         populateStateOptions('input-state');
         populateStateOptions('edit-state');
         fetchGalleryData();
