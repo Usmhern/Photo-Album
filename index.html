@@ -85,7 +85,7 @@
         max-width: 900px;
         margin: 0 auto 2.5rem;
         padding: 1.25rem;
-        background: var(--bg-secondary);
+        background: #0BF;
         border: 1px solid var(--border-color);
         border-radius: 12px;
         display: grid;
@@ -467,7 +467,7 @@
     /* 📱 MOBILE VIEW: 3 COLUMNS & COMPACT STYLING */
     @media (max-width: 480px) {
         .gallery-container {
-            grid-template-columns: repeat(3, 1fr);
+            grid-template-columns: repeat(2, 1fr);
             gap: 0.4rem;
             padding: 0 0.4rem 3rem;
         }
@@ -549,18 +549,18 @@
         <div class="filter-group">
             <label for="filter-state">Filter by State</label>
             <select id="filter-state" onchange="onFilterStateChange()">
-                <option value="">-- All States --</option>
+                <option value="">STATES</option>
             </select>
         </div>
 
         <div class="filter-group">
             <label for="filter-lga">Filter by Local Government (LGA)</label>
             <select id="filter-lga" onchange="applyLocationFilter()" disabled>
-                <option value="">-- Select State First --</option>
+                <option value="">LGA</option>
             </select>
         </div>
 
-        <button class="btn btn-reset" onclick="resetFilters()">Clear / Show All</button>
+        <button class="btn btn-reset" onclick="resetFilters()">SHOW ALL</button>
     </section>
 
     <!-- Gallery Grid Container -->
