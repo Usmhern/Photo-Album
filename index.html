@@ -626,8 +626,8 @@ header::after {
   }
 
   .intro-logo img {
-    width: 200px;
-    height: 200px;
+    width: 180px;
+    height: 180px;
     object-fit: cover;
     border-radius: 50%;
     border:none;
@@ -651,7 +651,7 @@ header::after {
     margin: 0.45rem 0;
     white-space: pre-wrap;
     word-wrap: break-word;
-    display: inline-block;
+    display:block;
     text-align: center;
     color: #0b1220;
     font-weight: 600;
@@ -693,12 +693,13 @@ header::after {
 
 .line-body {
   font-family: 'Poppins', sans-serif;
+    display:flex;
 }
 
 /* Book opening animation */
 #intro-overlay {
   transform-origin: left;
-  transition: transform 1s ease-in-out, opacity 0.9s ease;
+  transition: transform 3s ease-in-out, opacity 0.9s ease;
   perspective: 1200px;
 }
 
