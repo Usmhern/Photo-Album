@@ -107,27 +107,7 @@ header::after {
     border-radius: 50%;
     background: #fff;
 }
-.ysu-logo-container {
-    width: 130px;
-    height: 130px;
-    display:none;
-    overflow: hidden;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    
-    background: #fff;
-}
-.YSU {
-    width: 120%;
-    height: 120%;
-    object-fit: cover;
-    object-position: center;
-    transform-origin: center;
-    background:#fff;
-}
 
-/* Both images */
 .nacos-logo-img{
     width: 140%;
     height: 140%;
@@ -142,8 +122,8 @@ header::after {
 /* Mobile responsiveness */
 @media (max-width: 600px) {
     .nacos-logo-container {
-        width: 70px;
-        height: 70px;
+        width: 100px;
+        height: 100px;
     }
     }
 
@@ -781,10 +761,7 @@ header::after {
     
     <header class="album-header">
         <div class="logo-wrapper">
-            <div class="ysu-logo-container" title="Nigeria Association of Computer Science Students">
-                  <img src="https://universitycourses.ng/wp-content/uploads/2024/09/List-of-Courses-Offered-in-Yobe-State-University-Damaturu-YSU.webp" alt="YSU Logo" class="YSU">
- 
-            </div>
+            
         <div class="nacos-logo-container" title="Nigeria Association of Computer Science Students">
             <img src="https://nacos.org.ng/img/about.jpg" alt="NACOS Logo" class="nacos-logo-img">
         
@@ -819,11 +796,9 @@ header::after {
             </select>
         </div>
 
-       <center> <button class="btn btn-reset" onclick="resetFilters()" color:black;">SHOW ALL</button></center>
+       <center> <button class="btn btn-reset" onclick="resetFilters()" style="background: #0be; color:white;">SHOW ALL</button></center>
     </section>
-<center> <button class="btn btn-reset" onclick="SB()" style="background:#0be; color:black;">SEARCH 🔍</button></center>
- 
-    <!-- Gallery Grid Container -->
+ <!-- Gallery Grid Container -->
     <main class="gallery-container" id="gallery-grid">
         <div class="loading-text">Loading album memories...</div>
     </main>
@@ -835,7 +810,7 @@ header::after {
             <h2>Admin Authentication</h2>
             <div class="form-group">
                 <label for="admin-pass">Admin Passcode</label>
-                <input type="password" id="admin-pass" placeholder="Enter code (default: admin123)">
+                <input type="password" id="admin-pass" placeholder="Enter code">
             </div>
             <button class="btn btn-primary" style="width:100%;" onclick="verifyAdmin()">Login</button>
         </div>
