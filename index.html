@@ -8,6 +8,13 @@
    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
       <link rel="icon" type="image/jpg" href="https://nacos.org.ng/img/about.jpg">
     <style>
+
+        
+        #lock{
+            display:none;
+        }
+
+        
         :root {
             --bg-primary: #0a0c10;
             --bg-secondary: #121620;
@@ -741,7 +748,7 @@ header::after {
     </header>
 
     <div class="admin-bar">
-        <button class="btn btn-primary" onclick="checkAdminAccess()"> Central Admin Panel</button>
+        <button id="Lock" class="btn btn-primary" onclick="checkAdminAccess()"> Central Admin Panel</button>
         <button class="btn" id="logout-btn" style="display:none;" onclick="adminLogout()"> Logout Admin</button>
     </div>
 
