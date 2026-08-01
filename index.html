@@ -83,14 +83,8 @@ header::after {
         background-position: 100% 50%;
     }
                }
-        
-#SB {
-    display: none;
-}
 
-#SB.show {
-    display: grid;
-}
+        
         /* Wrapper to hold both logos */
 .logo-wrapper {
     display: flex;
@@ -184,7 +178,7 @@ header::after {
             background: var(--bg-secondary);
             border: 1px solid var(--border-color);
             border-radius: 12px;
-            display: none; /*grid;*/
+            display: grid;
             grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
             gap: 1rem;
             align-items: flex-end;
@@ -1570,16 +1564,7 @@ header::after {
   });
 
 })();
-    function toggleSB() {
-    var sb = document.getElementById("SB");
-    sb.classList.toggle("show");
 
-    if (sb.classList.contains("show")) {
-        sb.textContent = "CLOSE";
-    } else {
-        sb.textContent = "OPEN";
-    }
-    }
 </script>
 </body>
 </html>
