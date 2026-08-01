@@ -10,9 +10,7 @@
     <style>
 
         
-        #lock{
-            display:none;
-        }
+        
 
         
         :root {
@@ -624,7 +622,7 @@ header::after {
 }
 
 /* 🔥 ADD THIS */
-#intro-overlay::before {
+  .intro-logo img {
   content: "";
   position: absolute;
   inset: 0;
@@ -632,24 +630,9 @@ header::after {
   opacity: 0.06; /* makes it faint behind text */
   z-index: 0;
     filter: blur(2px);
-        }
 
 
-        
-  #intro-overlay.hidden {
-    display: none;
-  }
 
-  .intro-inner {
-    max-width: 900px;
-    width: 100%;
-    text-align: center;
-  position: relative;
-  z-index: 2;
-      
-  }
-
-  .intro-logo img {
     width: 180px;
     height: 180px;
     object-fit: cover;
@@ -760,12 +743,12 @@ header::after {
         <div class="nacos-logo-container" title="Nigeria Association of Computer Science Students">
             <img src="https://nacos.org.ng/img/about.jpg" alt="NACOS Logo" class="nacos-logo-img">
         </div>
-        <h1> <span class="highlight">YOBE STATE UNIVERSITY </span></h1>
-        <h3>CS <span class="highlight" style="color:#0be">2K24</span> DIGITAL PHOTO ALBUM</h3>
+        <h1> <span style="color:#0be">YOBE STATE UNIVERSITY </span></h1>
+        <h3>CS <span style="color:#e20" >2K24</span> DIGITAL PHOTO ALBUM</h3>
     </header>
 
     <div class="admin-bar">
-        <button id="Lock" class="btn btn-primary" onclick="checkAdminAccess()"> Central Admin Panel</button>
+        <button id="Lock" class="btn btn-primary" onclick="checkAdminAccess()" style="display:none;"> Central Admin Panel</button>
         <button class="btn" id="logout-btn" style="display:none;" onclick="adminLogout()"> Logout Admin</button>
     </div>
 
