@@ -96,7 +96,18 @@ header::after {
 }
 
 /* Logo container (circle) */
-.nacos-logo-container {
+.nacos-logo-container1 {
+    width: 90px;
+    height: 90px;
+    
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: #fff;
+}
+.ysu-logo-container {
     width: 90px;
     height: 90px;
     
@@ -107,12 +118,10 @@ header::after {
     
     background: #fff;
 }
-
 .YSU {
     width: 130%;
     height: 130%;
     object-fit: cover;
-    transform: scale(1.9);
     object-position: center;
     transform-origin: center;
     background:#fff;
@@ -122,9 +131,9 @@ header::after {
 .nacos-logo-img{
     width: 150%;
     height: 150%;
-    border-radius: 50%;
+    
     object-fit: cover;
-    transform: scale(1.9);
+    transform: scale(1);
     object-position: center;
     transform-origin: center;
     border: 1px solid #fff;
@@ -651,27 +660,31 @@ header::after {
   overflow: hidden;
 }
 
-/* 🔥 ADD THIS */
-  .intro-logo img {
+/* 🔥 Background logo (faint, centered) */
+#intro-overlay::before {
   content: "";
   position: absolute;
   inset: 0;
-  background: url('https://nacos.org.ng/img/about.jpg') center/300px no-repeat;
-  opacity: 0.2; /* makes it faint behind text */
+  background: url('https://nacos.org.ng/img/about.jpg') center/250px no-repeat;
+  opacity: 0.15; /* adjust opacity here */
   z-index: 0;
-    filter: blur(1px);
+}
 
+/* Ensure content stays above background */
+#intro-overlay * {
+  position: relative;
+  z-index: 1;
+}
 
-
-    width: 180px;
-    height: 180px;
-    object-fit: cover;
-    border-radius: 50%;
-    border:none;
-      transform: scale(2);
-    display: block;
-    background: #fff;
-  }
+/* Your actual logo (clean, no weird overlay styles) */
+.intro-logo img {
+  width: 180px;
+  height: 180px;
+  object-fit: cover;
+  border-radius: 50%;
+  display: block;
+  background: #fff;
+}
 
   .intro-texts {
     color: #0b1220;
@@ -774,7 +787,7 @@ header::after {
                   <img src="https://universitycourses.ng/wp-content/uploads/2024/09/List-of-Courses-Offered-in-Yobe-State-University-Damaturu-YSU.webp" alt="YSU Logo" class="YSU">
  
             </div>
-        <div class="nacos-logo-container" title="Nigeria Association of Computer Science Students">
+        <div class="ysu-logo-container" title="Nigeria Association of Computer Science Students">
             <img src="https://nacos.org.ng/img/about.jpg" alt="NACOS Logo" class="nacos-logo-img">
         
         </div>
