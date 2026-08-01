@@ -1391,7 +1391,7 @@ header::after {
 
           </script>
 <script>
-(function () {
+/*(function () {
 
   const lines = [
     "WELCOME TO CS 2K24 DIGITAL PHOTO ALBUM.",
@@ -1484,7 +1484,96 @@ header::after {
 
   });
 
-})();
+})();*/
 </script>
+    <script>
+(function () {
+
+  const lines = [
+    "<strong>WELCOME TO CS 2K24 DIGITAL PHOTO ALBUM.</strong>",
+    "O Allah, the Most Merciful, the Most Compassionate",
+    "We thank You for the gift of life, knowledge, and the beautiful moments we shared as the Computer Science Class of 2K24. Bless our memories and make them a source of unity, strength, and lasting",
+    "O Allah, forgive those among us who have passed away, especially our beloved brother and mentor, <strong>UMAR ADAMU IBBI (Sarki)</strong>. Enlarge his grave, fill it with light, have mercy on him, and grant him Al-Jannah Firdaus. Reunite us all in the highest ranks of Paradise.",
+    "🤲🏽 آمِينَ"
+  ];
+
+  const typingSpeed = 50; // slower typing
+  const pauseBetweenLines = 900;
+
+  document.addEventListener('DOMContentLoaded', () => {
+
+    const overlay = document.getElementById('intro-overlay');
+    const enterBtn = document.getElementById('enter-btn');
+
+    const elements = [
+      document.getElementById('line-1'),
+      document.getElementById('line-2'),
+      document.getElementById('line-3'),
+      document.getElementById('line-4'),
+      document.getElementById('line-5')
+    ];
+
+    if (!overlay || !enterBtn || elements.includes(null)) {
+      console.error("Missing required HTML elements.");
+      return;
+    }
+
+    function typeInto(element, htmlText, speed) {
+      return new Promise((resolve) => {
+        element.innerHTML = '';
+        let i = 0;
+
+        function step() {
+          if (i < htmlText.length) {
+            element.innerHTML += htmlText.charAt(i);
+            i++;
+            setTimeout(step, speed);
+          } else {
+            resolve();
+          }
+        }
+
+        step();
+      });
+    }
+
+    async function runTypingSequence() {
+      for (let i = 0; i < lines.length; i++) {
+        await typeInto(elements[i], lines[i], typingSpeed);
+        await new Promise(r => setTimeout(r, pauseBetweenLines));
+      }
+
+      enterBtn.style.display = 'inline-block';
+    }
+
+    function closeIntro() {
+      overlay.classList.add('hidden');
+      overlay.setAttribute('aria-hidden', 'true');
+      document.body.classList.remove('intro-active');
+    }
+
+    // Show overlay
+    overlay.classList.remove('hidden');
+    overlay.setAttribute('aria-hidden', 'false');
+    document.body.classList.add('intro-active');
+
+    // Hide button initially
+    enterBtn.style.display = 'none';
+
+    // Start typing
+    runTypingSequence();
+
+    // ONLY button closes it
+    enterBtn.addEventListener('click', closeIntro);
+
+    // ESC can still close (optional)
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeIntro();
+    });
+
+  });
+
+})();
+    </script>
 </body>
 </html>
