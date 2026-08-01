@@ -1077,6 +1077,9 @@ header::after {
     <!-- Image Preview Lightbox Modal -->
     <div id="preview-modal" class="modal" onclick="closeModals()">
         <div class="preview-modal-content" onclick="event.stopPropagation()">
+                <audio id="BSound" preload="auto">
+  <source src="https://raw.githubusercontent.com/Usmhern/Photo-Album/main/hw.mp3" type="audio/mpeg">
+                </audio>
             <button class="close-modal" onclick="closeModals()">&times;</button>
             <img id="preview-img" src="" alt="Preview">
             <div id="preview-caption" class="preview-caption"></div>
@@ -1533,6 +1536,12 @@ header::after {
             img.src = src;
             caption.textContent = name;
             modal.classList.add('active');
+            const BSound = document.getElementById("BSound");
+
+document.getElementById("preview-img").addEventListener("click", () => {
+    BSound.currentTime = 0;
+    BSound.play().catch(err => console.error(err));
+});
         }
 
         async function addPhotoEntry() {
