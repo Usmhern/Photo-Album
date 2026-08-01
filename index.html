@@ -631,6 +631,7 @@ header::after {
     object-fit: cover;
     border-radius: 50%;
     border:none;
+      transform: scale(2);
     margin: 0 auto 1.2rem;
     display: block;
     background: #fff;
@@ -657,7 +658,7 @@ header::after {
   }
 
   /* Arabic line style - larger and right-to-left */
-  #line-3 {
+  #line-5 {
     font-family: "Noto Naskh Arabic", "Arial", serif;
     font-size: clamp(1.05rem, 2.6vw, 1.4rem);
     direction: rtl;
@@ -697,7 +698,7 @@ header::after {
 /* Book opening animation */
 #intro-overlay {
   transform-origin: left;
-  transition: transform 1s ease-in-out, opacity 0.6s ease;
+  transition: transform 1s ease-in-out, opacity 0.9s ease;
   perspective: 1200px;
 }
 
@@ -1421,10 +1422,10 @@ header::after {
 (function () {
 
   const lines = [
-    "<strong>WELCOME TO CS 2K24 DIGITAL PHOTO ALBUM.</strong>",
+    "WELCOME TO CS 2K24 DIGITAL PHOTO ALBUM.",
     "O Allah, the Most Merciful, the Most Compassionate",
     "We thank You for the gift of life, knowledge, and the beautiful moments we shared as the Computer Science Class of 2K24.",
-    "O Allah, forgive those among us who have passed away, especially our beloved brother and mentor, <strong>UMAR ADAMU IBBI (Sarki)</strong>.",
+    "O Allah, forgive those among us who have passed away, especially our beloved brother and mentor, UMAR ADAMU IBBI (Sarki).",
     "🤲🏽 آمِينَ"
   ];
 
@@ -1450,11 +1451,8 @@ header::after {
     }
 
     // ✅ APPLY FONT SWAP
-    elements[0].classList.add('line-heading');     // first line → heading font
-    elements[1].classList.add('line-body');        // second line → body font
-    elements[2].classList.add('line-body');
-    elements[3].classList.add('line-body');
-    elements[4].classList.add('line-body');
+    elements[0].classList.add('line-body');     // first line → heading font
+    
 
     function typeInto(element, htmlText, speed) {
       return new Promise((resolve) => {
