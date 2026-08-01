@@ -1,2 +1,2 @@
-# Photo-Album
+# Computer Science Photo-Album
 Digital
