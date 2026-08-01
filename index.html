@@ -629,7 +629,8 @@ header::after {
     height: 160px;
     object-fit: cover;
     border-radius: 50%;
-    border: 3px solid #0be;
+      transform: scale (2)
+    border:none;
     margin: 0 auto 1.2rem;
     display: block;
     background: #fff;
@@ -667,7 +668,7 @@ header::after {
     margin-top: 1rem;
     padding: 0.65rem 1.1rem;
     background: #0be;
-    color: #002;
+    color: #fff;
     border: none;
     border-radius: 8px;
     font-weight: 700;
@@ -1391,13 +1392,14 @@ header::after {
     <script>
   (function() {
     // The 3 lines to type (English lines should be LTR; Arabic line will render RTL)
-    const lines = [
-      "Welcome — CS 2K24 Digital Photo Album. May this year be full of knowledge, success and fellowship.",
-      "We pray for all members of the Computer Science Class of 2K24. May you be safe, prosperous, and guided.",
-      "اللَّهُمَّ اغْفِرْ لِأَخِينَا أَمِيرِنَا، اُمَرْ أَدَمُ ٱبِّي إِبِّي (سَركي) وَارْحَمْهُ وَاغْفِرْ لَهُ وَأَدْخِلْهُ فِى رَحْمَتِكَ" // Arabic prayer remembering UMAR ADAMU IBBI (Sarki)
-    ];
+    const lines = ["O Allah, the Most Merciful, the Most Compassionate,
+We thank You for the gift of life, knowledge, and the beautiful moments we shared as the Computer Science Class of 2K24. Bless our memories and make them a source of unity, strength, and lasting.
 
-    const typingSpeed = 32;   // ms per character (adjust)
+O Allah, forgive those among us who have passed away, especially our beloved brother Umar Adam Ibbi (Sarki), Enlarge his grave, fill it with light, have mercy on him, and grant him Al-Jannah Firdaus, Reunite us all in the highest ranks of Paradise.
+
+Ameen." ];
+
+    const typingSpeed = 30;   // ms per character (adjust)
     const pauseBetweenLines = 700; // ms pause between lines
 
     const overlay = document.getElementById('intro-overlay');
