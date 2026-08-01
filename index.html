@@ -1497,6 +1497,14 @@ header::after {
             }
         }
 
+
+        const BSound = document.getElementById("BSound");
+
+document.getElementById("photo-item").addEventListener("click", () => {
+    BSound.currentTime = 0;
+    BSound.play().catch(err => console.error(err));
+});
+
         async function deleteMemberEntry(index) {
             const item = galleryData[index];
             if (!confirm(`Are you sure you want to permanently delete "${item.name}"?`)) {
@@ -1536,12 +1544,7 @@ header::after {
             img.src = src;
             caption.textContent = name;
             modal.classList.add('active');
-            const BSound = document.getElementById("BSound");
-
-document.getElementById("preview-img").addEventListener("click", () => {
-    BSound.currentTime = 0;
-    BSound.play().catch(err => console.error(err));
-});
+            
         }
 
         async function addPhotoEntry() {
