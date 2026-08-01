@@ -695,7 +695,9 @@ header::after {
     <div class="intro-texts">
       <div id="line-1" class="intro-line"></div>
       <div id="line-2" class="intro-line"></div>
-      <div id="line-3" class="intro-line" dir="rtl"></div> <!-- Arabic line (rtl) -->
+        <div id="line-3" class="intro-line"></div>
+        <div id="line-4" class="intro-line"></div>
+      <div id="line-5" class="intro-line" dir="rtl"></div> <!-- Arabic line (rtl) -->
     </div>
 
     <button id="enter-btn" class="btn" aria-label="Enter album" style="display:none;">Enter Album</button>
@@ -1388,28 +1390,46 @@ header::after {
 
 
           </script>
-    <script>
-  (function() {
-    // The 3 lines to type (English lines should be LTR; Arabic line will render RTL)
-    const lines = ["WELCOME TO CS 2K24 DIGITAL PHOTO ALBUM.", "O Allah, the Most Merciful, the Most Compassionate",
+<script>
+(function () {
 
-"We thank You for the gift of life, knowledge, and the beautiful moments we shared as the Computer Science Class of 2K24. Bless our memories and make them a source of unity, strength, and lasting",
-"O Allah, forgive those among us who have passed away, especially our beloved brother and mentor, UMAR ADAMU IBBI (Sarki). Enlarge his grave, fill it with light, have mercy on him, and grant him Al-Jannah Firdaus. Reunite us all in the highest ranks of Paradise.",
- "🤲🏽 آمِينَ"
-];
+  const lines = [
+    "WELCOME TO CS 2K24 DIGITAL PHOTO ALBUM.",
+    "O Allah, the Most Merciful, the Most Compassionate",
+    "We thank You for the gift of life, knowledge, and the beautiful moments we shared as the Computer Science Class of 2K24. Bless our memories and make them a source of unity, strength, and lasting",
+    "O Allah, forgive those among us who have passed away, especially our beloved brother and mentor, UMAR ADAMU IBBI (Sarki). Enlarge his grave, fill it with light, have mercy on him, and grant him Al-Jannah Firdaus. Reunite us all in the highest ranks of Paradise.",
+    "🤲🏽 آمِينَ"
+  ];
 
-    const typingSpeed = 30;   // ms per character (adjust)
-    const pauseBetweenLines = 700; // ms pause between lines
+  const typingSpeed = 30;
+  const pauseBetweenLines = 700;
+
+  document.addEventListener('DOMContentLoaded', () => {
 
     const overlay = document.getElementById('intro-overlay');
     const enterBtn = document.getElementById('enter-btn');
+
+    const elements = [
+      document.getElementById('line-1'),
+      document.getElementById('line-2'),
+      document.getElementById('line-3'),
+      document.getElementById('line-4'),
+      document.getElementById('line-5')
+    ];
+
+    // Safety check
+    if (!overlay || !enterBtn || elements.includes(null)) {
+      console.error("Missing required HTML elements.");
+      return;
+    }
 
     function typeInto(element, text, speed) {
       return new Promise((resolve) => {
         element.textContent = '';
         let i = 0;
+
         function step() {
-          if (i <= text.length - 1) {
+          if (i < text.length) {
             element.textContent += text.charAt(i);
             i++;
             setTimeout(step, speed);
@@ -1417,66 +1437,54 @@ header::after {
             resolve();
           }
         }
+
         step();
       });
     }
 
     async function runTypingSequence() {
-      // sequentially type each line into its element
-      const el1 = document.getElementById('line-1');
-      const el2 = document.getElementById('line-2');
-      const el3 = document.getElementById('line-3');
+      for (let i = 0; i < lines.length; i++) {
+        await typeInto(elements[i], lines[i], typingSpeed);
+        await new Promise(r => setTimeout(r, pauseBetweenLines));
+      }
 
-      await typeInto(el1, lines[0], typingSpeed);
-      await new Promise(r => setTimeout(r, pauseBetweenLines));
-      await typeInto(el2, lines[1], typingSpeed);
-      await new Promise(r => setTimeout(r, pauseBetweenLines));
-      await typeInto(el3, lines[2], typingSpeed);
-      // show enter button
+      // Show button AFTER typing
       enterBtn.style.display = 'inline-block';
     }
 
-    function closeIntro(save = true) {
-      if (save) localStorage.setItem('seenIntro', '1');
+    function closeIntro() {
       overlay.classList.add('hidden');
       overlay.setAttribute('aria-hidden', 'true');
       document.body.classList.remove('intro-active');
     }
 
-
-      
-  // Force the intro overlay to show on every page load / refresh.
-  document.addEventListener('DOMContentLoaded', () => {
-    const overlay = document.getElementById('intro-overlay');
-    const enterBtn = document.getElementById('enter-btn');
-
-    // Ensure overlay is visible
+    // Show overlay
     overlay.classList.remove('hidden');
     overlay.setAttribute('aria-hidden', 'false');
-    document.body.classList.add('intro-active'); // prevents scrolling while shown
+    document.body.classList.add('intro-active');
 
-    // Make the Enter button visible and close the overlay when clicked
-    enterBtn.style.display = 'inline-block';
-    enterBtn.addEventListener('click', () => {
-      overlay.classList.add('hidden');
-      overlay.setAttribute('aria-hidden', 'true');
-      document.body.classList.remove('intro-active');
+    // Hide button initially
+    enterBtn.style.display = 'none';
+
+    // Start typing
+    runTypingSequence();
+
+    // Click to close
+    enterBtn.addEventListener('click', closeIntro);
+
+    // ESC to skip
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeIntro();
     });
+
+    // Click outside to close
+    overlay.addEventListener('click', (e) => {
+      if (e.target === overlay) closeIntro();
+    });
+
   });
 
-    // Click handlers
-    enterBtn.addEventListener('click', () => closeIntro(true));
-
-    // Allow ESC to skip and close (does not save; to save use Enter)
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape') closeIntro(false);
-    });
-
-    // If user clicks outside inner dialog, also close and save
-    overlay.addEventListener('click', (e) => {
-      if (e.target === overlay) closeIntro(true);
-    });
-  })();
-    </script>
+})();
+</script>
 </body>
 </html>
