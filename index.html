@@ -611,18 +611,31 @@ header::after {
     </style>
     <style>
   /* Intro overlay full-screen */
-  #intro-overlay {
-    position: fixed;
-    inset: 0;
-    background: #fff;           /* white background as requested */
-    z-index: 99999;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 2rem;
-    overflow: hidden;
-  }
+#intro-overlay {
+  position: fixed;
+  inset: 0;
+  background: #fff;
+  z-index: 99999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  overflow: hidden;
+}
 
+/* 🔥 ADD THIS */
+#intro-overlay::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: url('https://nacos.org.ng/img/about.jpg') center/300px no-repeat;
+  opacity: 0.06; /* makes it faint behind text */
+  z-index: 0;
+    filter: blur(2px);
+        }
+
+
+        
   #intro-overlay.hidden {
     display: none;
   }
@@ -631,6 +644,9 @@ header::after {
     max-width: 900px;
     width: 100%;
     text-align: center;
+  position: relative;
+  z-index: 2;
+      
   }
 
   .intro-logo img {
