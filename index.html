@@ -600,9 +600,107 @@ header::after {
             }
         }
     </style>
+    <style>
+  /* Intro overlay full-screen */
+  #intro-overlay {
+    position: fixed;
+    inset: 0;
+    background: #fff;           /* white background as requested */
+    z-index: 99999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    overflow: hidden;
+  }
+
+  #intro-overlay.hidden {
+    display: none;
+  }
+
+  .intro-inner {
+    max-width: 900px;
+    width: 100%;
+    text-align: center;
+  }
+
+  .intro-logo img {
+    width: 160px;
+    height: 160px;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 3px solid #0be;
+    margin: 0 auto 1.2rem;
+    display: block;
+    background: #fff;
+  }
+
+  .intro-texts {
+    color: #0b1220;
+    font-family: 'Rajdhani', 'Inter', system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+    font-weight: 600;
+    font-size: clamp(1rem, 2.2vw, 1.35rem);
+    line-height: 1.5;
+    margin-bottom: 1.25rem;
+    min-height: 5.2rem; /* reserve vertical space while typing */
+  }
+
+  .intro-line {
+    margin: 0.45rem 0;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    display: inline-block;
+    text-align: center;
+    color: #0b1220;
+    font-weight: 600;
+  }
+
+  /* Arabic line style - larger and right-to-left */
+  #line-3 {
+    font-family: "Noto Naskh Arabic", "Arial", serif;
+    font-size: clamp(1.05rem, 2.6vw, 1.4rem);
+    direction: rtl;
+  }
+
+  /* Enter button */
+  #enter-btn {
+    margin-top: 1rem;
+    padding: 0.65rem 1.1rem;
+    background: #0be;
+    color: #002;
+    border: none;
+    border-radius: 8px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: transform .18s ease, opacity .18s ease;
+  }
+  #enter-btn:hover { transform: translateY(-2px); }
+
+  /* Prevent page scroll while overlay is shown */
+  body.intro-active { overflow: hidden; }
+</style>
+
+<!-- Optional Google font for Arabic (paste inside <head> if you haven't loaded it already) -->
+<link href="https://fonts.googleapis.com/css2?family=Noto+Naskh+Arabic:wght@400;700&display=swap" rel="stylesheet">
+
+    
 </head>
 <body>
+<div id="intro-overlay" aria-hidden="false">
+  <div class="intro-inner" role="dialog" aria-labelledby="intro-title">
+    <div class="intro-logo">
+      <img src="https://nacos.org.ng/img/about.jpg" alt="NACOS Logo">
+    </div>
 
+    <div class="intro-texts">
+      <div id="line-1" class="intro-line"></div>
+      <div id="line-2" class="intro-line"></div>
+      <div id="line-3" class="intro-line" dir="rtl"></div> <!-- Arabic line (rtl) -->
+    </div>
+
+    <button id="enter-btn" class="btn" aria-label="Enter album" style="display:none;">Enter Album</button>
+  </div>
+</div>
     <header class="album-header">
         <div class="nacos-logo-container" title="Nigeria Association of Computer Science Students">
             <img src="https://nacos.org.ng/img/about.jpg" alt="NACOS Logo" class="nacos-logo-img">
@@ -1290,5 +1388,83 @@ header::after {
 
 
           </script>
+    <script>
+  (function() {
+    // The 3 lines to type (English lines should be LTR; Arabic line will render RTL)
+    const lines = [
+      "Welcome — CS 2K24 Digital Photo Album. May this year be full of knowledge, success and fellowship.",
+      "We pray for all members of the Computer Science Class of 2K24. May you be safe, prosperous, and guided.",
+      "اللَّهُمَّ اغْفِرْ لِأَخِينَا أَمِيرِنَا، اُمَرْ أَدَمُ ٱبِّي إِبِّي (سَركي) وَارْحَمْهُ وَاغْفِرْ لَهُ وَأَدْخِلْهُ فِى رَحْمَتِكَ" // Arabic prayer remembering UMAR ADAMU IBBI (Sarki)
+    ];
+
+    const typingSpeed = 32;   // ms per character (adjust)
+    const pauseBetweenLines = 700; // ms pause between lines
+
+    const overlay = document.getElementById('intro-overlay');
+    const enterBtn = document.getElementById('enter-btn');
+
+    function typeInto(element, text, speed) {
+      return new Promise((resolve) => {
+        element.textContent = '';
+        let i = 0;
+        function step() {
+          if (i <= text.length - 1) {
+            element.textContent += text.charAt(i);
+            i++;
+            setTimeout(step, speed);
+          } else {
+            resolve();
+          }
+        }
+        step();
+      });
+    }
+
+    async function runTypingSequence() {
+      // sequentially type each line into its element
+      const el1 = document.getElementById('line-1');
+      const el2 = document.getElementById('line-2');
+      const el3 = document.getElementById('line-3');
+
+      await typeInto(el1, lines[0], typingSpeed);
+      await new Promise(r => setTimeout(r, pauseBetweenLines));
+      await typeInto(el2, lines[1], typingSpeed);
+      await new Promise(r => setTimeout(r, pauseBetweenLines));
+      await typeInto(el3, lines[2], typingSpeed);
+      // show enter button
+      enterBtn.style.display = 'inline-block';
+    }
+
+    function closeIntro(save = true) {
+      if (save) localStorage.setItem('seenIntro', '1');
+      overlay.classList.add('hidden');
+      overlay.setAttribute('aria-hidden', 'true');
+      document.body.classList.remove('intro-active');
+    }
+
+    // If user has seen intro before, hide immediately
+    if (localStorage.getItem('seenIntro') === '1') {
+      overlay.classList.add('hidden');
+      overlay.setAttribute('aria-hidden', 'true');
+    } else {
+      // show overlay and start typing
+      document.body.classList.add('intro-active');
+      runTypingSequence().catch(console.error);
+    }
+
+    // Click handlers
+    enterBtn.addEventListener('click', () => closeIntro(true));
+
+    // Allow ESC to skip and close (does not save; to save use Enter)
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeIntro(false);
+    });
+
+    // If user clicks outside inner dialog, also close and save
+    overlay.addEventListener('click', (e) => {
+      if (e.target === overlay) closeIntro(true);
+    });
+  })();
+    </script>
 </body>
 </html>
