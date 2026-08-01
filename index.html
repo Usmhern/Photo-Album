@@ -1444,15 +1444,26 @@ header::after {
       document.body.classList.remove('intro-active');
     }
 
-    // If user has seen intro before, hide immediately
-    if (localStorage.getItem('seenIntro') === '1') {
+
+      
+  // Force the intro overlay to show on every page load / refresh.
+  document.addEventListener('DOMContentLoaded', () => {
+    const overlay = document.getElementById('intro-overlay');
+    const enterBtn = document.getElementById('enter-btn');
+
+    // Ensure overlay is visible
+    overlay.classList.remove('hidden');
+    overlay.setAttribute('aria-hidden', 'false');
+    document.body.classList.add('intro-active'); // prevents scrolling while shown
+
+    // Make the Enter button visible and close the overlay when clicked
+    enterBtn.style.display = 'inline-block';
+    enterBtn.addEventListener('click', () => {
       overlay.classList.add('hidden');
       overlay.setAttribute('aria-hidden', 'true');
-    } else {
-      // show overlay and start typing
-      document.body.classList.add('intro-active');
-      runTypingSequence().catch(console.error);
-    }
+      document.body.classList.remove('intro-active');
+    });
+  });
 
     // Click handlers
     enterBtn.addEventListener('click', () => closeIntro(true));
