@@ -113,7 +113,7 @@ header::after {
     height: 140%;
     
     object-fit: cover;
-    transform: scale(1);
+    transform: scale(2);
     object-position: center;
     transform-origin: center;
     border: 1px solid #fff;
@@ -638,7 +638,9 @@ header::after {
   justify-content: center;
   padding: 2rem;
   overflow: hidden;
-}
+    width: 100vw;
+    height: 100vh;
+    }
 
 /* 🔥 Background logo (faint, centered) */
 #intro-overlay::before {
@@ -646,7 +648,7 @@ header::after {
   position: absolute;
   inset: 0;
   background: url('https://nacos.org.ng/img/about.jpg') center/250px no-repeat;
-  opacity: 0.15; /* adjust opacity here */
+  opacity: 0.17; /* adjust opacity here */
   z-index: 0;
 }
 
@@ -656,17 +658,7 @@ header::after {
   z-index: 1;
 }
 
-/* Your actual logo (clean, no weird overlay styles) */
-.intro-logo img {
-  width: 180px;
-  height: 180px;
-  object-fit: cover;
-  border-radius: 50%;
-  display: block;
-  background: #fff;
-}
-
-  .intro-texts {
+ .intro-texts {
     color: #0b1220;
     font-family: 'Rajdhani', 'Inter', system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
     font-weight: 600;
@@ -1464,8 +1456,8 @@ header::after {
     "🤲🏽 آمِينَ"
   ];
 
-  const typingSpeed = 80;
-  const pauseBetweenLines = 300;
+const typingSpeed = 10;
+const pauseBetweenLines = 50;
 
   document.addEventListener('DOMContentLoaded', () => {
 
