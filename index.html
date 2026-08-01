@@ -106,7 +106,14 @@ header::after {
   transform-origin: center center;
     }
 
-
+.YSU{
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transform: scale(1.9);
+        object-position: center;   /* Keeps the focal point dead center */
+  transform-origin: center center;
+    }
 
 
         .album-header h1 {
@@ -627,9 +634,9 @@ header::after {
   position: absolute;
   inset: 0;
   background: url('https://nacos.org.ng/img/about.jpg') center/300px no-repeat;
-  opacity: 0.06; /* makes it faint behind text */
+  opacity: 0.2; /* makes it faint behind text */
   z-index: 0;
-    filter: blur(2px);
+    filter: blur(1px);
 
 
 
@@ -639,7 +646,6 @@ header::after {
     border-radius: 50%;
     border:none;
       transform: scale(2);
-    margin: 0 auto 1.2rem;
     display: block;
     background: #fff;
   }
@@ -726,7 +732,7 @@ header::after {
   <div class="intro-inner" role="dialog" aria-labelledby="intro-title">
     <div class="intro-logo">
       <img src="https://nacos.org.ng/img/about.jpg" alt="NACOS Logo">
-    </div>
+           </div>
 
     <div class="intro-texts">
       <div id="line-1" class="intro-line"></div>
@@ -736,12 +742,14 @@ header::after {
       <div id="line-5" class="intro-line" dir="rtl"></div> <!-- Arabic line (rtl) -->
     </div>
 
-    <button id="enter-btn" class="btn" aria-label="Enter album" style="display:none;">Enter Album</button>
+  <center>  <button id="enter-btn" class="btn" aria-label="Enter album" style="display:none;">Open Album</button></center>
   </div>
 </div>
     <header class="album-header">
         <div class="nacos-logo-container" title="Nigeria Association of Computer Science Students">
             <img src="https://nacos.org.ng/img/about.jpg" alt="NACOS Logo" class="nacos-logo-img">
+            <img src="https://universitycourses.ng/wp-content/uploads/2024/09/List-of-Courses-Offered-in-Yobe-State-University-Damaturu-YSU.webp" alt="YSU Logo" class="YSU">
+ 
         </div>
         <h1> <span style="color:#0be">YOBE STATE UNIVERSITY </span></h1>
         <h3>CS <span style="color:#e20" >2K24</span> DIGITAL PHOTO ALBUM</h3>
@@ -758,7 +766,7 @@ header::after {
         <div class="filter-group">
            
             <select id="filter-state" onchange="onFilterStateChange()">
-                <option value="">STATES</option>
+                <option value="">STATE</option>
             </select>
         </div>
 
