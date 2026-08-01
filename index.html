@@ -84,14 +84,20 @@ header::after {
     }
                }
         
+#SB {
+    display: none;
+}
 
+#SB.show {
+    display: grid;
+}
         /* Wrapper to hold both logos */
 .logo-wrapper {
     display: flex;
     justify-content: center;
     align-items: center;
     gap: 15px;           /* space between logos */
-    width: 100%;
+    width: 150%;
     margin-top: 10px;
 }
 
@@ -110,7 +116,7 @@ header::after {
 .ysu-logo-container {
     width: 130px;
     height: 130px;
-    
+    display:none;
     overflow: hidden;
     display: flex;
     align-items: center;
@@ -178,7 +184,7 @@ header::after {
             background: var(--bg-secondary);
             border: 1px solid var(--border-color);
             border-radius: 12px;
-            display: grid;
+            display: none; /*grid;*/
             grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
             gap: 1rem;
             align-items: flex-end;
@@ -803,7 +809,7 @@ header::after {
     </div>
 
     <!-- Location Search & Filter Bar -->
-    <section class="search-filter-container">
+    <section class="search-filter-container" id="SB">
         <center> <label for="filter-state">FILTER BY STATE AND LGA</label></center>
         <div class="filter-group">
            
@@ -819,9 +825,10 @@ header::after {
             </select>
         </div>
 
-       <center> <button class="btn btn-reset" onclick="resetFilters()" style="background:#0be; color:black;">SHOW ALL</button></center>
+       <center> <button class="btn btn-reset" onclick="resetFilters()" color:black;">SHOW ALL</button></center>
     </section>
-
+<center> <button class="btn btn-reset" onclick="SB()" style="background:#0be; color:black;">SEARCH 🔍</button></center>
+ 
     <!-- Gallery Grid Container -->
     <main class="gallery-container" id="gallery-grid">
         <div class="loading-text">Loading album memories...</div>
@@ -1563,6 +1570,16 @@ header::after {
   });
 
 })();
+    function toggleSB() {
+    var sb = document.getElementById("SB");
+    sb.classList.toggle("show");
+
+    if (sb.classList.contains("show")) {
+        sb.textContent = "CLOSE";
+    } else {
+        sb.textContent = "OPEN";
+    }
+    }
 </script>
 </body>
 </html>
