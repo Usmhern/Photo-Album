@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CS2 2024 Digital Photo Album & Roster</title>
     <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
         :root {
             --bg-primary: #0a0c10;
@@ -678,6 +679,32 @@ header::after {
 
   /* Prevent page scroll while overlay is shown */
   body.intro-active { overflow: hidden; }
+
+        /* Fonts */
+.line-heading {
+  font-family: 'Playfair Display', serif; /* elegant heading */
+  font-weight: bold;
+}
+
+.line-subheading {
+  font-family: 'Poppins', sans-serif; /* clean body */
+}
+
+.line-body {
+  font-family: 'Poppins', sans-serif;
+}
+
+/* Book opening animation */
+#intro-overlay {
+  transform-origin: left;
+  transition: transform 1s ease-in-out, opacity 0.6s ease;
+  perspective: 1200px;
+}
+
+#intro-overlay.opening {
+  transform: rotateY(-100deg);
+  opacity: 0;
+        }
 </style>
 
 <!-- Optional Google font for Arabic (paste inside <head> if you haven't loaded it already) -->
@@ -1391,113 +1418,17 @@ header::after {
 
           </script>
 <script>
-/*(function () {
-
-  const lines = [
-    "WELCOME TO CS 2K24 DIGITAL PHOTO ALBUM.",
-    "O Allah, the Most Merciful, the Most Compassionate",
-    "We thank You for the gift of life, knowledge, and the beautiful moments we shared as the Computer Science Class of 2K24. Bless our memories and make them a source of unity, strength, and lasting",
-    "O Allah, forgive those among us who have passed away, especially our beloved brother and mentor, UMAR ADAMU IBBI (Sarki). Enlarge his grave, fill it with light, have mercy on him, and grant him Al-Jannah Firdaus. Reunite us all in the highest ranks of Paradise.",
-    "🤲🏽 آمِينَ"
-  ];
-
-  const typingSpeed = 30;
-  const pauseBetweenLines = 700;
-
-  document.addEventListener('DOMContentLoaded', () => {
-
-    const overlay = document.getElementById('intro-overlay');
-    const enterBtn = document.getElementById('enter-btn');
-
-    const elements = [
-      document.getElementById('line-1'),
-      document.getElementById('line-2'),
-      document.getElementById('line-3'),
-      document.getElementById('line-4'),
-      document.getElementById('line-5')
-    ];
-
-    // Safety check
-    if (!overlay || !enterBtn || elements.includes(null)) {
-      console.error("Missing required HTML elements.");
-      return;
-    }
-
-    function typeInto(element, text, speed) {
-      return new Promise((resolve) => {
-        element.textContent = '';
-        let i = 0;
-
-        function step() {
-          if (i < text.length) {
-            element.textContent += text.charAt(i);
-            i++;
-            setTimeout(step, speed);
-          } else {
-            resolve();
-          }
-        }
-
-        step();
-      });
-    }
-
-    async function runTypingSequence() {
-      for (let i = 0; i < lines.length; i++) {
-        await typeInto(elements[i], lines[i], typingSpeed);
-        await new Promise(r => setTimeout(r, pauseBetweenLines));
-      }
-
-      // Show button AFTER typing
-      enterBtn.style.display = 'inline-block';
-    }
-
-    function closeIntro() {
-      overlay.classList.add('hidden');
-      overlay.setAttribute('aria-hidden', 'true');
-      document.body.classList.remove('intro-active');
-    }
-
-    // Show overlay
-    overlay.classList.remove('hidden');
-    overlay.setAttribute('aria-hidden', 'false');
-    document.body.classList.add('intro-active');
-
-    // Hide button initially
-    enterBtn.style.display = 'none';
-
-    // Start typing
-    runTypingSequence();
-
-    // Click to close
-    enterBtn.addEventListener('click', closeIntro);
-
-    // ESC to skip
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape') closeIntro();
-    });
-
-    // Click outside to close
-    overlay.addEventListener('click', (e) => {
-      if (e.target === overlay) closeIntro();
-    });
-
-  });
-
-})();*/
-</script>
-    <script>
 (function () {
 
   const lines = [
     "<strong>WELCOME TO CS 2K24 DIGITAL PHOTO ALBUM.</strong>",
     "O Allah, the Most Merciful, the Most Compassionate",
-    "We thank You for the gift of life, knowledge, and the beautiful moments we shared as the Computer Science Class of 2K24. Bless our memories and make them a source of unity, strength, and lasting",
-    "O Allah, forgive those among us who have passed away, especially our beloved brother and mentor, <strong>UMAR ADAMU IBBI (Sarki)</strong>. Enlarge his grave, fill it with light, have mercy on him, and grant him Al-Jannah Firdaus. Reunite us all in the highest ranks of Paradise.",
+    "We thank You for the gift of life, knowledge, and the beautiful moments we shared as the Computer Science Class of 2K24.",
+    "O Allah, forgive those among us who have passed away, especially our beloved brother and mentor, <strong>UMAR ADAMU IBBI (Sarki)</strong>.",
     "🤲🏽 آمِينَ"
   ];
 
-  const typingSpeed = 50; // slower typing
+  const typingSpeed = 50;
   const pauseBetweenLines = 900;
 
   document.addEventListener('DOMContentLoaded', () => {
@@ -1514,9 +1445,16 @@ header::after {
     ];
 
     if (!overlay || !enterBtn || elements.includes(null)) {
-      console.error("Missing required HTML elements.");
+      console.error("Missing elements");
       return;
     }
+
+    // ✅ APPLY FONT SWAP
+    elements[0].classList.add('line-heading');     // first line → heading font
+    elements[1].classList.add('line-body');        // second line → body font
+    elements[2].classList.add('line-body');
+    elements[3].classList.add('line-body');
+    elements[4].classList.add('line-body');
 
     function typeInto(element, htmlText, speed) {
       return new Promise((resolve) => {
@@ -1546,34 +1484,28 @@ header::after {
       enterBtn.style.display = 'inline-block';
     }
 
-    function closeIntro() {
-      overlay.classList.add('hidden');
-      overlay.setAttribute('aria-hidden', 'true');
-      document.body.classList.remove('intro-active');
+    function openBookEffect() {
+      overlay.classList.add('opening');
+
+      setTimeout(() => {
+        overlay.style.display = 'none';
+        document.body.classList.remove('intro-active');
+      }, 1000); // matches CSS duration
     }
 
-    // Show overlay
+    // Init
     overlay.classList.remove('hidden');
-    overlay.setAttribute('aria-hidden', 'false');
     document.body.classList.add('intro-active');
-
-    // Hide button initially
     enterBtn.style.display = 'none';
 
-    // Start typing
     runTypingSequence();
 
-    // ONLY button closes it
-    enterBtn.addEventListener('click', closeIntro);
-
-    // ESC can still close (optional)
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape') closeIntro();
-    });
+    // ONLY button triggers book opening
+    enterBtn.addEventListener('click', openBookEffect);
 
   });
 
 })();
-    </script>
+</script>
 </body>
 </html>
