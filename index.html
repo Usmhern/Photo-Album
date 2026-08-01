@@ -1541,7 +1541,7 @@ header::after {
             
         const BSound = document.getElementById("BSound");
 
-document.getElementById("photo-item").addEventListener("click", () => {
+document.getElementById("preview-modal").addEventListener("click", () => {
     BSound.currentTime = 0;
     BSound.play().catch(err => console.error(err));
 });
