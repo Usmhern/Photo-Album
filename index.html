@@ -4,810 +4,970 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CS 2024 DIGITAL PHOTO ALBUM</title>
-    
-    <!-- External Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Naskh+Arabic:wght@400;700&display=swap" rel="stylesheet">
-    
-    <!-- Font Awesome Icons for WhatsApp and Call buttons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
-    <link rel="icon" type="image/jpg" href="https://nacos.org.ng/img/about.jpg">
+    <link rel="stylesheet" href="style.css">
     <script src="script.js" defer></script>
-
+    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+      <link rel="icon" type="image/jpg" href="https://nacos.org.ng/img/about.jpg">
     <style>
-      /* ======================================================
-         GLOBAL THEME & CSS VARIABLES
-         ====================================================== */
-      :root {
-          --bg-primary: #0a0c10;
-          --bg-secondary: #121620;
-          --bg-card: #181d2b;
-          --accent-orange: #0be;
-          --accent-orange-glow: rgba(0, 187, 255, 0.4);
-          --whatsapp-green: #25d366;
-          --whatsapp-green-hover: #1ebd56;
-          --call-blue: #007bff;
-          --call-blue-hover: #0056b3;
-          --danger-red: #ff3b30;
-          --text-main: #f3f4f6;
-          --text-muted: #9ca3af;
-          --border-color: rgba(255, 255, 255, 0.08);
-          --transition-smooth: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
-      }
 
-      * { box-sizing: border-box; margin: 0; padding: 0; }
-
-      body {
-          background-color: var(--bg-primary);
-          color: var(--text-main);
-          font-family: 'Inter', sans-serif;
-          min-height: 100vh;
-          overflow-x: hidden;
-      }
-
-      body.intro-active { 
-          overflow: hidden; 
-      }
-
-      /* ======================================================
-         HEADER & NAV STRUCTURE
-         ====================================================== */
-      header { 
-          position: relative; 
-          top: 0; 
-          width: 100%; 
-          background: #000; 
-          padding: 15px 10px; 
-          text-align: center; 
-          z-index: 1000; 
-          display: flex; 
-          flex-direction: column; 
-          align-items: center;
-          border-bottom: none;
-      }
-
-      header::after {
-          content: "";
-          position: absolute;
-          bottom: 0;
-          left: 0;
-          width: 100%;
-          height: 3px; 
-          background: linear-gradient(90deg, #00bbff, navy, #000000, #00bbff, navy, black);
-          background-size: 300% 100%;
-          animation: moveGradient 2s linear infinite;
-      }
-
-      @keyframes moveGradient {
-          0% { background-position: 0% 50%; }
-          100% { background-position: 100% 50%; }
-      }
-
-      .nacos-logo-container {
-          width: 90px;
-          height: 90px;
-          border-radius: 50%;
-          overflow: hidden;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          border: 1px solid #fff;
-          margin-bottom: 0.5rem;
-      }
-
-      .nacos-logo-img {
-          width: 100%;
-          height: 100%;
-          object-fit: cover;
-          transform: scale(1.8);
-          object-position: center;
-          transform-origin: center center;
-      }
-
-      .album-header h1 {
-          font-family: 'Rajdhani', sans-serif;
-          font-size: clamp(1.4rem, 4vw, 2.8rem);
-          font-weight: 700;
-          color: var(--text-main);
-          line-height: 1.2;
-      }
-
-      .album-header .highlight {
-          color: var(--accent-orange);
-          text-shadow: 0 0 20px var(--accent-orange-glow);
-      }
-
-      .admin-bar {
-          display: flex;
-          justify-content: center;
-          gap: 1rem;
-          margin-top: 1rem;
-          margin-bottom: 1rem;
-          padding: 0 1rem;
-          flex-wrap: wrap;
-      }
-
-      /* ======================================================
-         SEARCH, FILTERS & CONTROLS
-         ====================================================== */
-      .search-filter-container {
-          max-width: 900px;
-          margin: 0 auto 1.5rem;
-          padding: 0.85rem;
-          background: var(--bg-secondary);
-          border: 1px solid var(--border-color);
-          border-radius: 12px;
-          display: grid;
-          grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
-          gap: 0.75rem;
-          align-items: flex-end;
-      }
-
-      .filter-group {
-          display: flex;
-          flex-direction: column;
-          gap: 0.25rem;
-      }
-
-      .filter-group label {
-          font-size: 0.75rem;
-          color: var(--text-muted);
-          font-weight: 500;
-      }
-
-      .filter-group select, .filter-group input, .form-group select, .form-group input {
-          width: 100%;
-          padding: 0.5rem 0.65rem;
-          background: var(--bg-primary);
-          border: 1px solid var(--border-color);
-          color: #fff;
-          border-radius: 8px;
-          font-size: 0.82rem;
-          outline: none;
-          transition: var(--transition-smooth);
-      }
-
-      .filter-group select:focus, .filter-group input:focus, .form-group select:focus, .form-group input:focus {
-          border-color: var(--accent-orange);
-          box-shadow: 0 0 10px var(--accent-orange-glow);
-      }
-
-      .filter-group select option, .form-group select option {
-          background: var(--bg-secondary);
-          color: #fff;
-      }
-
-      .btn {
-          background-color: var(--bg-secondary);
-          color: var(--text-main);
-          border: 1px solid var(--border-color);
-          padding: 0.5rem 1rem;
-          font-size: 0.85rem;
-          font-weight: 600;
-          border-radius: 8px;
-          cursor: pointer;
-          transition: var(--transition-smooth);
-          display: inline-flex;
-          align-items: center;
-          justify-content: center;
-          gap: 0.5rem;
-          text-decoration: none;
-      }
-
-      .btn-primary {
-          background-color: var(--accent-orange);
-          border-color: var(--accent-orange);
-          color: #fff;
-      }
-
-      .btn-reset {
-          background-color: rgba(255, 255, 255, 0.05);
-          color: var(--text-muted);
-          border-color: var(--border-color);
-      }
-
-      .btn-reset:hover {
-          color: #fff;
-          background-color: rgba(255, 255, 255, 0.15);
-      }
-
-      /* ======================================================
-         GALLERY GRID (STRICT 3-COLUMN MOBILE & DESKTOP)
-         ====================================================== */
-      .gallery-container {
-          max-width: 1200px;
-          margin: 0 auto;
-          padding: 0 0.5rem 4rem;
-          display: grid;
-          grid-template-columns: repeat(3, 1fr) !important; /* Forces 3 Columns on all screens */
-          gap: 0.65rem;
-      }
-
-      @media (min-width: 768px) {
-          .gallery-container {
-              gap: 1.5rem;
-              padding: 0 1.5rem 5rem;
-          }
-      }
-
-      @property --angle {
-          syntax: "<angle>";
-          inherits: false;
-          initial-value: 0deg;
-      }
-
-      @keyframes borderRotate {
-          to { --angle: 360deg; }
-      }
-
-      .photo-item {
-          background-color: var(--bg-card);
-          border-radius: 10px;
-          overflow: hidden;
-          transition: var(--transition-smooth);
-          display: flex;
-          flex-direction: column;
-          border: 2px solid transparent;
-          background:
-              linear-gradient(#000, #000) padding-box,
-              conic-gradient(
-                  from var(--angle),
-                  #000 0deg,
-                  #000 250deg,
-                  #0088ff 290deg,
-                  #00bbff 315deg,
-                  #0088ff 340deg,
-                  #000 360deg
-              ) border-box;
-          animation: borderRotate 2.5s linear infinite;
-      }
-
-      .photo-item:hover {
-          transform: translateY(-4px);
-          box-shadow: 0 8px 25px rgba(0, 187, 255, 0.2);
-      }
-
-      .image-wrapper {
-          position: relative;
-          width: 100%;
-          height: 130px;
-          overflow: hidden;
-          background: #000;
-          cursor: pointer;
-      }
-
-      @media (min-width: 768px) {
-          .image-wrapper { height: 250px; }
-      }
-
-      .image-wrapper img {
-          width: 100%;
-          height: 100%;
-          object-fit: cover;
-          object-position: top center;
-          transition: var(--transition-smooth);
-      }
-
-      .photo-item:hover .image-wrapper img {
-          transform: scale(1.05);
-      }
-
-      .card-content {
-          padding: 0.5rem;
-          display: flex;
-          flex-direction: column;
-          flex-grow: 1;
-          text-align: center;
-      }
-
-      .card-content h3 {
-          font-family: 'Rajdhani', sans-serif;
-          font-size: 0.85rem;
-          color: var(--text-main);
-          white-space: nowrap;
-          overflow: hidden;
-          text-overflow: ellipsis;
-      }
-
-      .card-content .player-title {
-          color: var(--accent-orange);
-          font-size: 0.7rem;
-          font-weight: 600;
-          margin-bottom: 0.35rem;
-      }
-
-      /* Call & Chat Action Buttons Directly Beneath Photo */
-      .card-actions {
-          display: flex;
-          gap: 0.25rem;
-          margin-top: auto;
-      }
-
-      .btn-action {
-          flex: 1;
-          padding: 0.35rem 0.15rem;
-          font-size: 0.7rem;
-          font-weight: 600;
-          border-radius: 6px;
-          border: none;
-          color: #fff;
-          display: inline-flex;
-          align-items: center;
-          justify-content: center;
-          gap: 0.2rem;
-          text-decoration: none;
-          cursor: pointer;
-          transition: var(--transition-smooth);
-      }
-
-      .btn-chat { background-color: var(--whatsapp-green); }
-      .btn-chat:hover { background-color: var(--whatsapp-green-hover); }
-
-      .btn-call { background-color: var(--call-blue); }
-      .btn-call:hover { background-color: var(--call-blue-hover); }
-
-      /* ======================================================
-         MODALS & GLOWING PREVIEW LIGHTBOX
-         ====================================================== */
-      .modal {
-          display: none;
-          position: fixed;
-          top: 0; left: 0; width: 100%; height: 100%;
-          background: rgba(0, 0, 0, 0.88);
-          z-index: 10000;
-          align-items: center;
-          justify-content: center;
-          padding: 1rem;
-      }
-
-      .modal-content {
-          background: var(--bg-secondary);
-          border: 1px solid var(--border-color);
-          border-radius: 12px;
-          padding: 1.25rem;
-          width: 100%;
-          max-width: 450px;
-          position: relative;
-          color: var(--text-main);
-      }
-
-      .close-modal {
-          position: absolute;
-          top: 10px; right: 15px;
-          background: none;
-          border: none;
-          color: var(--text-muted);
-          font-size: 1.8rem;
-          cursor: pointer;
-      }
-
-      .form-group {
-          margin-bottom: 0.85rem;
-          display: flex;
-          flex-direction: column;
-          gap: 0.25rem;
-      }
-
-      .form-group label {
-          font-size: 0.8rem;
-          color: var(--text-muted);
-      }
-
-      .edit-preview-box {
-          display: flex;
-          align-items: center;
-          gap: 1rem;
-          margin-bottom: 1rem;
-          padding: 0.5rem;
-          background: var(--bg-primary);
-          border-radius: 8px;
-      }
-
-      .edit-preview-img {
-          width: 50px;
-          height: 50px;
-          border-radius: 50%;
-          object-fit: cover;
-      }
-
-      /* Glowing Rotating Border on Lightbox Image Preview Modal */
-      .preview-modal-content {
-          position: relative;
-          max-width: 90vw;
-          max-height: 85vh;
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          padding: 6px;
-          border-radius: 14px;
-          border: 3px solid transparent;
-          background:
-              linear-gradient(#000, #000) padding-box,
-              conic-gradient(
-                  from var(--angle),
-                  #000 0deg,
-                  #000 250deg,
-                  #0088ff 290deg,
-                  #00bbff 315deg,
-                  #0088ff 340deg,
-                  #000 360deg
-              ) border-box;
-          animation: borderRotate 2s linear infinite;
-          box-shadow: 0 0 30px rgba(0, 187, 255, 0.4);
-      }
-
-      .preview-modal-content img {
-          max-width: 100%;
-          max-height: 70vh;
-          border-radius: 8px;
-          object-fit: contain;
-      }
-
-      .preview-caption {
-          margin-top: 10px;
-          color: #fff;
-          font-size: 1.1rem;
-          font-family: 'Rajdhani', sans-serif;
-          font-weight: 700;
-          text-align: center;
-      }
-
-      /* ======================================================
-         WELCOME INTRO OVERLAY
-         ====================================================== */
-      #intro-overlay {
-          position: fixed;
-          top: 0;
-          left: 0;
-          width: 100vw;
-          height: 100vh;
-          background: #ffffff;
-          z-index: 999999;
-          display: flex !important;
-          align-items: center;
-          justify-content: center;
-          padding: 2rem;
-          overflow: hidden;
-          transform-origin: left;
-          transition: transform 1.2s ease-in-out, opacity 0.5s ease, visibility 0.5s ease;
-          perspective: 1200px;
-      }
-
-      #intro-overlay::before {
-          content: "";
-          position: absolute;
-          inset: 0;
-          background: url('https://nacos.org.ng/img/about.jpg') center/300px no-repeat;
-          opacity: 0.06;
-          z-index: 0;
-          filter: blur(2px);
-      }
-
-      #intro-overlay.hidden,
-      #intro-overlay.opening {
-          opacity: 0;
-          visibility: hidden;
-          pointer-events: none;
-          transform: rotateY(-100deg);
-      }
-
-      .intro-inner {
-          max-width: 900px;
-          width: 100%;
-          text-align: center;
-          position: relative;
-          z-index: 2;
-      }
-
-      .intro-logo img {
-          position: absolute;
-          top: 50%;
-          left: 50%;
-          transform: translate(-50%, -50%) scale(2);
-          width: 150px;
-          height: 150px;
-          object-fit: cover;
-          border-radius: 50%;
-          z-index: -1;
-          opacity: 0.15;
-          pointer-events: none;
-      }
-
-      .intro-texts {
-          color: #0b1220;
-          font-family: 'Rajdhani', 'Inter', system-ui, sans-serif;
-          font-weight: 600;
-          font-size: clamp(1rem, 2.2vw, 1.35rem);
-          line-height: 1.5;
-          margin-bottom: 1.25rem;
-          min-height: 5.2rem;
-      }
-
-      .intro-line {
-          margin: 0.45rem 0;
-          white-space: pre-wrap;
-          word-wrap: break-word;
-          display: block;
-          text-align: center;
-          color: #0b1220;
-          font-weight: 600;
-      }
-
-      #enter-btn {
-          margin-top: 1rem;
-          padding: 0.65rem 1.1rem;
-          background: #0be;
-          color: #fff;
-          border: none;
-          border-radius: 8px;
-          font-weight: 700;
-          cursor: pointer;
-          transition: transform .18s ease, opacity .18s ease;
-      }
-
-      #enter-btn:hover { transform: translateY(-2px); }
-
-      /* ======================================================
-         LIVE CHAT OVERLAYS & MODALS
-         ====================================================== */
-      .chat-modal-overlay {
-        position: fixed;
-        top: 0; left: 0; right: 0; bottom: 0;
-        background: rgba(0, 0, 0, 0.6);
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        z-index: 9999;
-      }
-
-      .chat-modal-card {
-        background: #fff;
-        color: #333;
-        padding: 24px;
-        border-radius: 12px;
-        width: 90%;
-        max-width: 360px;
-        text-align: center;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-      }
-
-      .chat-modal-card input {
-        width: 100%;
-        padding: 10px;
-        margin: 15px 0;
-        border: 1px solid #ccc;
-        border-radius: 6px;
-        box-sizing: border-box;
-      }
-
-      .chat-modal-card button {
-        background: var(--whatsapp-green);
-        color: #fff;
-        border: none;
-        padding: 10px 16px;
-        border-radius: 6px;
-        font-weight: 600;
-        cursor: pointer;
-        width: 100%;
-      }
-
-      #chatToggleBtn {
-        position: fixed;
-        bottom: 20px;
-        right: 20px;
-        background-color: var(--whatsapp-green);
-        color: white;
-        border: none;
-        padding: 10px 16px;
-        border-radius: 30px;
-        font-size: 14px;
-        font-weight: 600;
-        cursor: pointer;
-        box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-        z-index: 999;
-        display: flex;
-        align-items: center;
-        gap: 6px;
-      }
-
-      .badge {
-        background-color: #e74c3c;
-        color: white;
-        border-radius: 50%;
-        padding: 2px 7px;
-        font-size: 11px;
-      }
-
-      .chat-window {
-        background: #fff;
-        color: #333;
-        width: 90%;
-        max-width: 450px;
-        height: 80vh;
-        border-radius: 12px;
-        display: flex;
-        flex-direction: column;
-        overflow: hidden;
-      }
-
-      .chat-header {
-        background: #075E54;
-        color: white;
-        padding: 15px;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-      }
-
-      .close-btn {
-        cursor: pointer;
-        font-size: 20px;
-      }
-
-      .online-users-bar {
-        background: #f0f2f5;
-        padding: 8px 12px;
-        font-size: 13px;
-        border-bottom: 1px solid #ddd;
-        display: flex;
-        gap: 8px;
-        align-items: center;
-        overflow-x: auto;
-      }
-
-      .chat-body {
-        flex: 1;
-        padding: 15px;
-        overflow-y: auto;
-        background: #efeae2;
-        display: flex;
-        flex-direction: column;
-        gap: 10px;
-      }
-
-      .msg-bubble {
-        max-width: 75%;
-        padding: 8px 12px;
-        border-radius: 8px;
-        font-size: 14px;
-        word-wrap: break-word;
-      }
-
-      .msg-bubble.me {
-        align-self: flex-end;
-        background: #dcf8c6;
-        color: #000;
-      }
-
-      .msg-bubble.other {
-        align-self: flex-start;
-        background: #ffffff;
-        color: #000;
-      }
-
-      .msg-author {
-        font-size: 11px;
-        color: #555;
-        font-weight: bold;
-        display: block;
-        margin-bottom: 3px;
-      }
-
-      .chat-footer {
-        display: flex;
-        padding: 10px;
-        background: #f0f2f5;
-        gap: 8px;
-      }
-
-      .chat-footer input {
-        flex: 1;
-        padding: 8px 12px;
-        border: 1px solid #ccc;
-        border-radius: 20px;
-      }
-
-      .chat-footer button {
-        background: #075E54;
-        color: white;
-        border: none;
-        padding: 8px 16px;
-        border-radius: 18px;
-        cursor: pointer;
-      }
-
-      #micBtn {
-        background: #128C7E;
-        color: white;
-        border: none;
-        border-radius: 50%;
-        width: 36px;
-        height: 36px;
-        cursor: pointer;
-        padding: 0;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-      }
-
-      #micBtn.listening {
-        background: #e74c3c;
-        animation: pulse 1s infinite;
-      }
-
-      @keyframes pulse {
-        0% { transform: scale(1); }
-        50% { transform: scale(1.1); }
-        100% { transform: scale(1); }
-      }
-    </style>
-</head>
-<body class="intro-active">
-
-    <!-- Welcome Intro Overlay -->
-    <div id="intro-overlay" aria-hidden="false">
-      <div class="intro-inner" role="dialog" aria-labelledby="intro-title">
-        <div class="intro-logo">
-          <img src="https://nacos.org.ng/img/about.jpg" alt="NACOS Logo">
-        </div>
-
-        <div class="intro-texts">
-          <b><div id="line-1" class="intro-line"></div></b>
-          <div id="line-2" class="intro-line"></div>
-          <div id="line-3" class="intro-line"></div>
-          <div id="line-4" class="intro-line"></div>
-          <div id="line-5" class="intro-line" dir="rtl"></div>
-        </div>
-
-        <button id="enter-btn" class="btn" aria-label="Enter album" style="display:none;">Open Album</button>
         
-        <audio id="welcomeSound" preload="auto">
-          <source src="https://raw.githubusercontent.com/Usmhern/Photo-Album/main/win7.mp3" type="audio/mpeg">
-        </audio>
-      </div>
+        :root {
+            --bg-primary: #0a0c10;
+            --bg-secondary: #121620;
+            --bg-card: #181d2b;
+            --accent-orange:/* #ff5500;*/ #0be;
+            --accent-orange-glow: rgba(255, 85, 0, 0.4);
+            --whatsapp-green: #25d366;
+            --whatsapp-green-hover: #1ebd56;
+            --call-blue: #007bff;
+            --danger-red: #ff3b30;
+            --text-main: #f3f4f6;
+            --text-muted: #9ca3af;
+            --border-color: rgba(255, 255, 255, 0.08);
+            --transition-smooth: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            background-color: var(--bg-primary);
+            color: var(--text-main);
+            font-family: 'Inter', sans-serif;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        header { 
+    position: relative; 
+    top: 0; 
+    width: 100%; 
+    background: #000; 
+    padding: 15px 10px; 
+    text-align: center; 
+    z-index: 1000; 
+    display: flex; 
+    flex-direction: column; 
+    align-items: center;
+    border-bottom: none; /* Remove any existing solid border */
+}
+
+/* This creates the continuous moving border at the bottom */
+header::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 3px; 
+    background: linear-gradient(90deg, #00bbff, navy, #000000, #00bbff,navy, black);
+    background-size: 300% 100%;
+    animation: moveGradient 2s linear infinite;
+}
+
+        @keyframes moveGradient {
+    0% {
+        background-position: 0% 50%;
+    }
+    100% {
+        background-position: 100% 50%;
+    }
+               }
+        
+
+        .nacos-logo-container {
+            width: 130px;
+            height: 130px;
+            border-radius: 50%;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid #fff;
+            margin-bottom: 1rem;
+        }
+
+          .nacos-logo-img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transform: scale(1.9);
+        object-position: center;   /* Keeps the focal point dead center */
+  transform-origin: center center;
+    }
+
+
+
+
+        .album-header h1 {
+            font-family: 'Rajdhani', sans-serif;
+            font-size: clamp(2rem, 5vw, 3rem);
+            font-weight: 700;
+            color: var(--text-main);
+            line-height: 1.2;
+        }
+
+        .album-header .highlight {
+            color: var(--accent-orange);
+            text-shadow: 0 0 20px var(--accent-orange-glow);
+        }
+
+        .admin-bar {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            padding: 0 1rem;
+            flex-wrap: wrap;
+        }
+
+        /* Filter Search Section */
+        .search-filter-container {
+            max-width: 900px;
+            margin: 0 auto 2.5rem;
+            padding: 1.25rem;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1rem;
+            align-items: flex-end;
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.35rem;
+        }
+
+        .filter-group label {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        .filter-group select, .filter-group input {
+            width: 100%;
+            padding: 0.65rem 0.85rem;
+            background: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            color: #fff;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            outline: none;
+            transition: var(--transition-smooth);
+        }
+
+        .filter-group select:focus, .filter-group input:focus {
+            border-color: var(--accent-orange);
+            box-shadow: 0 0 10px var(--accent-orange-glow);
+        }
+
+        .filter-group select option {
+            background: var(--bg-secondary);
+            color: #fff;
+        }
+
+        .btn {
+            background-color: var(--bg-secondary);
+            color: var(--text-main);
+            border: 1px solid var(--border-color);
+            padding: 0.65rem 1.25rem;
+            font-size: 0.9rem;
+            font-weight: 600;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: var(--transition-smooth);
+        }
+
+        .btn-primary {
+            background-color: var(--accent-orange);
+            border-color: var(--accent-orange);
+        }
+
+        .btn-reset {
+            background-color: rgba(255, 255, 255, 0.05);
+            color: var(--text-muted);
+            border-color: var(--border-color);
+        }
+
+        .btn-reset:hover {
+            color: #fff;
+            background-color: rgba(255, 255, 255, 0.15);
+        }
+
+        .btn-edit {
+            background: rgba(0, 123, 255, 0.2);
+            color: #4da6ff;
+            border: 1px solid rgba(0, 123, 255, 0.4);
+            padding: 0.35rem 0.65rem;
+            font-size: 0.8rem;
+            border-radius: 4px;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .btn-edit:hover {
+            background: var(--call-blue);
+            color: #fff;
+        }
+
+        .btn-delete {
+            background: rgba(255, 59, 48, 0.15);
+            color: #ff6b6b;
+            border: 1px solid rgba(255, 59, 48, 0.4);
+            padding: 0.35rem 0.65rem;
+            font-size: 0.8rem;
+            border-radius: 4px;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .btn-delete:hover {
+            background: var(--danger-red);
+            color: #fff;
+        }
+
+        .btn:hover:not(:disabled) {
+            transform: translateY(-2px);
+            opacity: 0.9;
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .gallery-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1.5rem 5rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 3rem;
+        }
+
+       .photo-item {
+            background-color: var(--bg-card);
+            /*border: 1px solid var(--border-color);*/
+            border-radius: 12px;
+            overflow: hidden;
+            transition: var(--transition-smooth);
+            display: flex;
+            flex-direction: column;
+    
+    
+    object-fit: contain;
+
+    border: 2px solid transparent;
+
+    background:
+        linear-gradient(#000, #000) padding-box,
+        conic-gradient(
+            from var(--angle),
+            #000 0deg,
+            #000 250deg,
+            #0088ff 290deg,
+            #00bbff 315deg,
+            #0088ff 340deg,
+            #000 360deg
+        ) border-box;
+
+    /*box-shadow:
+        0 10px 40px rgba(0,0,0,.8),
+        0 0 15px #00bbff;*/
+}
+
+@property --angle {
+    syntax: "<angle>";
+    inherits: false;
+    initial-value: 0deg;
+}
+
+@keyframes borderRotate {
+    to {
+        --angle: 360deg;
+    }
+}
+
+.photo-item {
+    animation: borderRotate 2s linear infinite;
+}
+
+        .photo-item:hover {
+            transform: translateY(-6px);
+            border-color: rgba(255, 85, 0, 0.4);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        .image-wrapper {
+            position: relative;
+            width: 100%;
+            height: 220px;
+            overflow: hidden;
+            background: #000;
+            cursor: pointer;
+        }
+
+        /* Top alignment for all member pictures */
+        .image-wrapper img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: top center;
+            transition: var(--transition-smooth);
+        }
+
+        .photo-item:hover .image-wrapper img {
+            transform: scale(1.05);
+        }
+
+        .image-overlay-hint {
+            position: absolute;
+            inset: 0;
+            background: rgba(0,0,0,0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: var(--transition-smooth);
+            color: #fff;
+            font-size: 0.83rem;
+            font-weight: 600;
+        }
+
+        .image-wrapper:hover .image-overlay-hint {
+            opacity: 1;
+        }
+
+        .card-content {
+            padding: 1.25rem;
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+        }
+
+        .card-content h3 {
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 1.35rem;
+            color: var(--text-main);
+        }
+
+        .card-content .player-title {
+            color: var(--accent-orange);
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            margin-bottom: 0.25rem;
+        }
+
+        .card-content .location-tag {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .action-btns {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            margin-top: auto;
+            padding-top: 1rem;
+        }
+
+        .whatsapp-btn, .call-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            padding: 0.6rem 0.4rem;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.82rem;
+            transition: var(--transition-smooth);
+        }
+
+        .whatsapp-btn {
+            background-color: rgba(37, 211, 102, 0.1);
+            color: var(--whatsapp-green);
+            border: 1px solid rgba(37, 211, 102, 0.3);
+        }
+
+        .whatsapp-btn:hover {
+            background-color: var(--whatsapp-green);
+            color: #fff;
+        }
+
+        .call-btn {
+            background-color: rgba(0, 123, 255, 0.1);
+            color: var(--call-blue);
+            border: 1px solid rgba(0, 123, 255, 0.3);
+        }
+
+        .call-btn:hover {
+            background-color: var(--call-blue);
+            color: #fff;
+        }
+
+        .btn-icon {
+            width: 16px;
+            height: 16px;
+            fill: currentColor;
+        }
+
+        .modal {
+            position: fixed;
+            inset: 0;
+            background: rgba(5, 7, 10, 0.85);
+            backdrop-filter: blur(8px);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            padding: 1rem;
+        }
+
+        .modal.active { display: flex; }
+
+        .modal-content {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            padding: 2rem;
+            border-radius: 12px;
+            width: 100%;
+            max-width: 450px;
+            position: relative;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-content h2 {
+            font-family: 'Rajdhani', sans-serif;
+            margin-bottom: 1.25rem;
+            font-size: 1.5rem;
+        }
+
+        .edit-preview-box {
+            text-align: center;
+            margin-bottom: 1.25rem;
+            padding: 0.75rem;
+            background: var(--bg-primary);
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+        }
+
+        .edit-preview-img {
+            width: 110px;
+            height: 110px;
+            object-fit: cover;
+            object-position: top center;
+            border-radius: 50%;
+            border: 2px solid var(--accent-orange);
+            margin-bottom: 0.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-bottom: 0.35rem;
+        }
+
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 0.75rem;
+            background: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            color: #fff;
+            border-radius: 6px;
+            font-size: 0.95rem;
+            outline: none;
+        }
+
+        .form-group select option {
+            background: var(--bg-secondary);
+            color: #fff;
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: none;
+            border: none;
+            color: #fff;
+            font-size: 1.25rem;
+            cursor: pointer;
+        }
+
+        .admin-manage-item {
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            padding: 0.65rem 0; 
+            border-bottom: 1px solid var(--border-color);
+            gap: 10px;
+        }
+
+        .admin-item-actions {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .preview-modal-content {
+            background: transparent;
+            border: none;
+            max-width: 90vw;
+            max-height: 90vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 0;
+        }
+
+       /* .preview-modal-content img {
+            max-width: 100%;
+            max-height: 80vh;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.8);
+            border: 10px solid var(--border-color);
+            object-fit: contain;
+            animation: moveGradient 2s linear infinite;
+        }*/
+        
+        .preview-modal-content img {
+    max-width: 100%;
+    max-height: 80vh;
+    border-radius: 12px;
+    object-fit: contain;
+
+    border: 5px solid transparent;
+
+    background:
+        linear-gradient(#000, #000) padding-box,
+        conic-gradient(
+            from var(--angle),
+            #000 0deg,
+            #000 250deg,
+            #0088ff 290deg,
+            #00bbff 315deg,
+            #0088ff 340deg,
+            #000 360deg
+        ) border-box;
+
+    /*box-shadow:
+        0 10px 40px rgba(0,0,0,.8),
+        0 0 15px #00bbff;*/
+}
+
+@property --angle {
+    syntax: "<angle>";
+    inherits: false;
+    initial-value: 0deg;
+}
+
+@keyframes borderRotate {
+    to {
+        --angle: 360deg;
+    }
+}
+
+.preview-modal-content img {
+    animation: borderRotate 2s linear infinite;
+}
+
+        .preview-caption {
+            margin-top: 1rem;
+            text-align: center;
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 1.25rem;
+            color: var(--text-main);
+        }
+
+        .loading-text {
+            text-align: center;
+            grid-column: 1 / -1;
+            padding: 2rem;
+            color: var(--text-muted);
+        }
+
+      @media (max-width: 768px) {
+            .search-filter-container {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        
+      #glowt22{
+   /* font-size: 4rem;*/
+    font-weight: 900;
+    text-transform: uppercase;
+
+    /* Gradient colors */
+    background: linear-gradient(
+        135deg,
+        black,
+        black,
+        #e20,
+        black,
+        black,
+        #e20,
+        black,
+        black
+    );
+
+    background-size: 400% 400%;
+
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+
+    animation: splashGradient 5s linear infinite;
+}
+
+@keyframes splashGradient {
+    0% {
+        background-position: 0% 0%; 
+    }
+    25% {
+        background-position: 50% 25%;
+    }
+    50% {
+        background-position: 100% 100%;
+    }
+    75% {
+        background-position: 50% 75%;
+    }
+    100% {
+        background-position: 0% 0%;
+    }
+}
+
+     #glowttt {
+   /* font-size: 4rem;*/
+    font-weight: 900;
+    text-transform: uppercase;
+
+    /* Gradient colors */
+    background: linear-gradient(
+        135deg,
+        black,
+        black,
+        #0bf,
+        black,
+        black,
+        #0bf,
+        black,
+        black
+    );
+
+    background-size: 400% 400%;
+
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+
+    animation: splashGradient 5s linear infinite;
+}
+
+@keyframes splashGradient {
+    0% {
+        background-position: 0% 0%; 
+    }
+    25% {
+        background-position: 50% 25%;
+    }
+    50% {
+        background-position: 100% 100%;
+    }
+    75% {
+        background-position: 50% 75%;
+    }
+    100% {
+        background-position: 0% 0%;
+    }
+}
+
+        /* 📱 MOBILE VIEW: 3 COLUMNS & COMPACT STYLING */
+        @media (max-width: 480px) {
+            .gallery-container {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 0.4rem;
+                padding: 0 0.4rem 3rem;
+            }
+            .photo-item {
+                border-radius: 6px;
+                
+            }
+
+            .image-wrapper {
+                height: 110px;
+            }
+
+            .card-content {
+                padding: 0.4rem;
+            }
+
+            .card-content h3 {
+                font-size: 0.75rem;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+
+            .card-content .player-title {
+                font-size: 0.6rem;
+                margin-bottom: 0.15rem;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+
+            .card-content .location-tag {
+                font-size: 0.55rem;
+                margin-bottom: 0.3rem;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+
+            .action-btns {
+                grid-template-columns: 1fr;
+                gap: 4px;
+                padding-top: 0.3rem;
+            }
+
+            .whatsapp-btn, .call-btn {
+                padding: 0.3rem 0.2rem;
+                font-size: 0.62rem;
+                border-radius: 4px;
+            }
+
+            .btn-icon {
+                width: 11px;
+                height: 11px;
+            }
+
+            .modal-content {
+                padding: 1.25rem;
+            }
+        }
+    </style>
+    <style>
+  /* Intro overlay full-screen */
+#intro-overlay {
+  position: fixed;
+  inset: 0;
+  background: #fff;
+  z-index: 99999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  overflow: hidden;
+}
+
+/* 🔥 ADD THIS */
+#intro-overlay::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: url('https://nacos.org.ng/img/about.jpg') center/300px no-repeat;
+  opacity: 0.06; /* makes it faint behind text */
+  z-index: 0;
+    filter: blur(2px);
+        }
+
+
+        
+  #intro-overlay.hidden {
+    display: none;
+  }
+
+  .intro-inner {
+    max-width: 900px;
+    width: 100%;
+    text-align: center;
+  position: relative;
+  z-index: 2;
+      
+  }
+
+  .intro-logo img {
+    position: absolute;     /* remove from normal flow */
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(2);
+
+    width: 150px;
+    height: 150px;
+    object-fit: cover;
+    border-radius: 50%;
+    border: none;
+
+    z-index: -1;             /* behind everything */
+    opacity: 0.15;          /* optional: make it faint */
+    pointer-events: none;   /* prevent blocking clicks */
+}
+
+  .intro-texts {
+    color: #0b1220;
+    font-family: 'Rajdhani', 'Inter', system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+    font-weight: 600;
+    font-size: clamp(1rem, 2.2vw, 1.35rem);
+    line-height: 1.5;
+    margin-bottom: 1.25rem;
+    min-height: 5.2rem; /* reserve vertical space while typing */
+  }
+
+  .intro-line {
+    margin: 0.45rem 0;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    display:block;
+    text-align: center;
+    color: #0b1220;
+    font-weight: 600;
+  }
+
+  /* Arabic line style - larger and right-to-left */
+  #line-5 {
+    font-family: "Noto Naskh Arabic", "Arial", serif;
+    font-size: clamp(1.05rem, 2.6vw, 1.4rem);
+    direction: rtl;
+  }
+  #line-1{
+  color:darkgreen;
+  text-align:center;
+ font-weight:bold;
+  }
+
+  /* Enter button */
+  #enter-btn {
+    margin-top: 1rem;
+    padding: 0.65rem 1.1rem;
+    background: #0be;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: transform .18s ease, opacity .18s ease;
+  }
+  #enter-btn:hover { transform: translateY(-2px); }
+
+  /* Prevent page scroll while overlay is shown */
+  body.intro-active { overflow: hidden; }
+
+        /* Fonts */
+.line-heading {
+  font-family: 'Playfair Display', serif; /* elegant heading */
+  font-weight: bold;
+}
+
+.line-subheading {
+  font-family: 'Poppins', sans-serif; /* clean body */
+}
+
+.line-body {
+  font-family: 'Poppins', sans-serif;
+    display:flex;
+}
+
+/* Book opening animation */
+#intro-overlay {
+  transform-origin: left;
+  transition: transform 3s ease-in-out, opacity 0.3s ease;
+  perspective: 1200px;
+}
+
+#intro-overlay.opening {
+  transform: rotateY(-100deg);
+  opacity: 0;
+        }
+</style>
+
+<!-- Optional Google font for Arabic (paste inside <head> if you haven't loaded it already) -->
+<link href="https://fonts.googleapis.com/css2?family=Noto+Naskh+Arabic:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/jpg" href="https://nacos.org.ng/img/about.jpg">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Naskh+Arabic:wght@400;700&display=swap" rel="stylesheet">
+
+
+</head>
+<body>
+<div id="intro-overlay" aria-hidden="false">
+  <div class="intro-inner" role="dialog" aria-labelledby="intro-title">
+    <div class="intro-logo">
+      <img src="https://nacos.org.ng/img/about.jpg" alt="NACOS Logo">
     </div>
 
-    <!-- Album Main Header -->
+    <div class="intro-texts">
+      <b><div id="line-1" class="intro-line"></div></b>
+      <div id="line-2" class="intro-line"></div>
+        <div id="line-3" class="intro-line"></div>
+        <div id="line-4" class="intro-line"></div>
+      <div id="line-5" class="intro-line" dir="rtl"></div> <!-- Arabic line (rtl) -->
+    </div>
+
+    <button id="enter-btn" class="btn" aria-label="Enter album" style="display:none;">Open Album</button>
+
+    <audio id="welcomeSound" preload="auto">
+  <source src="https://raw.githubusercontent.com/Usmhern/Photo-Album/main/win7.mp3" type="audio/mpeg">
+</audio>
+
+  </div>
+</div>
     <header class="album-header">
         <div class="nacos-logo-container" title="Nigeria Association of Computer Science Students">
             <img src="https://nacos.org.ng/img/about.jpg" alt="NACOS Logo" class="nacos-logo-img">
         </div>
-        <h1><span id="glowtt" style="color:#0be;">YOBE STATE UNIVERSITY</span></h1>
-        <h3 style="font-size: 0.95rem; font-weight: normal; margin-top: 4px;">CS <span style="color:#e20" id="glowt2">2K24</span> DIGITAL PHOTO ALBUM</h3>
+        <h1> <span class=""  id="glowtt" style="color:#0be;" >YOBE STATE UNIVERSITY </span></h1>
+        <h3>CS <span class="" style="color:#e20" id="glowt2">2K24</span> DIGITAL PHOTO ALBUM</h3>
     </header>
 
-    <!-- Admin Controls -->
     <div class="admin-bar">
-        <button id="Lock" class="btn btn-primary" onclick="checkAdminAccess()" style="display:none;">Central Admin Panel</button>
-        <button class="btn" id="logout-btn" style="display:none;" onclick="adminLogout()">Logout Admin</button>
+        <button id="Lock" class="btn btn-primary" onclick="checkAdminAccess()" style="display:none;"> Central Admin Panel</button>
+        <button class="btn" id="logout-btn" style="display:none;" onclick="adminLogout()"> Logout Admin</button>
     </div>
 
     <!-- Location Search & Filter Bar -->
     <section class="search-filter-container">
         <div class="filter-group">
-            <label for="filter-state">State</label>
+
             <select id="filter-state" onchange="onFilterStateChange()">
                 <option value="">STATE</option>
             </select>
         </div>
 
         <div class="filter-group">
-            <label for="filter-lga">LGA</label>
+
             <select id="filter-lga" onchange="applyLocationFilter()" disabled>
                 <option value="">LGA</option>
             </select>
         </div>
 
-        <div style="display:flex; justify-content:center; align-items: flex-end;">
-            <button class="btn btn-reset" onclick="resetFilters()" style="background:#e20; color:#fff; width: 100%;">ALL</button>
-        </div>
+       <center> <button class="btn btn-reset" onclick="resetFilters()" style="background:#e20; color:#fff;">🔍 ALL</button></center>
     </section>
 
-    <!-- 3-Column Gallery Grid Container -->
+    <!-- Gallery Grid Container -->
     <main class="gallery-container" id="gallery-grid">
-        <div class="loading-text" style="grid-column: 1 / -1; text-align: center; color: var(--text-muted);">Loading album memories...</div>
+        <div class="loading-text">Loading album memories...</div>
     </main>
 
     <!-- Admin Login Modal -->
@@ -815,7 +975,7 @@
         <div class="modal-content">
             <button class="close-modal" onclick="closeModals()">&times;</button>
             <h2>Admin Authentication</h2>
-            <div class="form-group" style="margin-top: 1rem;">
+            <div class="form-group">
                 <label for="admin-pass">Admin Passcode</label>
                 <input type="password" id="admin-pass" placeholder="Enter code">
             </div>
@@ -828,7 +988,7 @@
         <div class="modal-content" style="max-width: 600px;">
             <button class="close-modal" onclick="closeModals()">&times;</button>
             <h2>Central Admin Dashboard</h2>
-            
+
             <div style="border-bottom: 1px solid var(--border-color); padding-bottom: 1rem; margin-bottom: 1rem;">
                 <h3 style="font-size: 1.1rem; margin-bottom: 0.75rem;">Add New Memory / Member</h3>
                 <div class="form-group">
@@ -837,7 +997,7 @@
                 </div>
                 <div class="form-group">
                     <label for="input-name">Person's Name</label>
-                    <input type="text" id="input-name" placeholder="e.g. Name">
+                    <input type="text" id="input-name" placeholder="e.g. name">
                 </div>
                 <div class="form-group">
                     <label for="input-title">Nickname</label>
@@ -847,14 +1007,14 @@
                     <label for="input-phone">WhatsApp/Phone Number</label>
                     <input type="text" id="input-phone" placeholder="e.g. 08012345678">
                 </div>
-                
+
                 <div class="form-group">
                     <label for="input-state">Select State</label>
                     <select id="input-state" onchange="handleStateChange('input-state', 'lga-container', 'input-lga')">
                         <option value="">-- Choose State --</option>
                     </select>
                 </div>
-                
+
                 <div class="form-group" id="lga-container" style="display:none;">
                     <label for="input-lga">Select Local Government Area (LGA)</label>
                     <select id="input-lga">
@@ -863,7 +1023,7 @@
                 </div>
 
                 <button class="btn btn-primary" id="publish-btn" onclick="addPhotoEntry()">Publish to Album</button>
-            </div>
+              </div>
 
             <h3 style="font-size: 1.1rem; margin-bottom: 0.5rem;">Existing Entries (Manage & Edit)</h3>
             <div id="admin-manage-list" style="max-height: 250px; overflow-y: auto;"></div>
@@ -875,7 +1035,7 @@
         <div class="modal-content">
             <button class="close-modal" onclick="closeEditModal()">&times;</button>
             <h2>Edit Member Information</h2>
-            
+
             <div class="edit-preview-box">
                 <img id="edit-preview-img" class="edit-preview-img" src="" alt="Member Image">
                 <div id="edit-preview-name" style="font-weight: 700; color: var(--text-main);"></div>
@@ -883,7 +1043,8 @@
 
             <input type="hidden" id="edit-row-id">
             <input type="hidden" id="edit-index">
-            
+
+            <!-- Replace Image Input -->
             <div class="form-group">
                 <label for="edit-file">Replace Member Photo (Optional)</label>
                 <input type="file" id="edit-file" accept="image/*" onchange="previewNewEditImage(this)">
@@ -913,258 +1074,700 @@
                     <option value="">-- Choose LGA --</option>
                 </select>
             </div>
-            
+
             <button class="btn btn-primary" id="save-edit-btn" style="width:100%;" onclick="saveMemberEdit()">Save Changes</button>
         </div>
     </div>
 
-    <!-- Image Preview Lightbox Overlay Modal with Glowing Border -->
-    <div id="preview-modal" class="modal" onclick="closePreviewModal()">
+    <!-- Image Preview Lightbox Modal -->
+    <div id="preview-modal" class="modal" onclick="closeModals()">
         <div class="preview-modal-content" onclick="event.stopPropagation()">
-            <button class="close-modal" onclick="closePreviewModal()">&times;</button>
+                <audio id="BSound" preload="auto">
+  <source src="https://raw.githubusercontent.com/Usmhern/Photo-Album/main/hw.mp3" type="audio/mpeg">
+                </audio>
+            <button class="close-modal" onclick="closeModals()">&times;</button>
             <img id="preview-img" src="" alt="Preview">
             <div id="preview-caption" class="preview-caption"></div>
-            <audio id="BSound" preload="auto">
-                <source src="https://raw.githubusercontent.com/Usmhern/Photo-Album/main/hw.mp3" type="audio/mpeg">
-            </audio>
         </div>
     </div>
 
-    <!-- Live Chat Modal 1: Phone Verification -->
-    <div id="phoneModal" class="chat-modal-overlay">
-      <div class="chat-modal-card">
-        <h3>Enter Your WhatsApp Number</h3>
-        <p style="font-size: 0.85rem; margin-top: 5px; color: #666;">Please enter your phone number to join the album chat.</p>
-        <input type="tel" id="userPhoneInput" placeholder="+2348012345678" required />
-        <button type="button" onclick="saveUserPhone()">Continue to Album & Chat</button>
-      </div>
-    </div>
 
-    <!-- Live Chat Modal 2: Floating Chat Trigger Button -->
-    <button id="chatToggleBtn" onclick="toggleChatModal()" style="display:none;">
-      <i class="fa-brands fa-whatsapp" style="font-size:1.1rem;"></i> Live Chat <span id="onlineBadge" class="badge">0</span>
-    </button>
-
-    <!-- Live Chat Modal 3: Group Chat Window -->
-    <div id="groupChatModal" class="chat-modal-overlay" style="display:none;">
-      <div class="chat-window">
-        <div class="chat-header">
-          <h4><i class="fa-brands fa-whatsapp"></i> Group Chat</h4>
-          <span class="close-btn" onclick="toggleChatModal()">&times;</span>
-        </div>
-        
-        <div class="online-users-bar">
-          <span style="font-weight: 600; color: #075E54;"><i class="fa-solid fa-circle" style="color:#25D366; font-size: 8px;"></i> Online:</span>
-          <div id="onlineUsersList">None</div>
-        </div>
-
-        <div id="chatMessages" class="chat-body"></div>
-
-        <div class="chat-footer">
-          <button id="micBtn" type="button" onclick="toggleVoiceToText()" title="Hold/Click to Speak">
-            <i class="fa-solid fa-microphone"></i>
-          </button>
-          <input type="text" id="chatInputText" placeholder="Type or speak a message..." />
-          <button type="button" onclick="handleSendChat()"><i class="fa-solid fa-paper-plane"></i></button>
-        </div>
-      </div>
-    </div>
-
-    <!-- Client-side Logic Engine -->
     <script>
-      var currentUserPhone = "";
-      var isListening = false;
-      var recognition = null;
+        const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzo7FOW_vAVEgqgc6vEAKCetxoc_sRU1uIWZhM1HppRAmEn4kOg4_n4k6LAOl_HKT8/exec";
 
-      // Image Preview Trigger Handler
-      function openImagePreview(imgSrc, captionText) {
-        var modal = document.getElementById("preview-modal");
-        var img = document.getElementById("preview-img");
-        var caption = document.getElementById("preview-caption");
-        var audio = document.getElementById("BSound");
+        const whatsappSvg = `<svg class="btn-icon" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/></svg>`;
+        const phoneSvg = `<svg class="btn-icon" viewBox="0 0 24 24"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg>`;
+        const editSvg = `<svg class="btn-icon" viewBox="0 0 24 24"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>`;
+        const trashSvg = `<svg class="btn-icon" viewBox="0 0 24 24"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>`;
 
-        if (img) img.src = imgSrc;
-        if (caption) caption.innerText = captionText || "";
-        if (modal) modal.style.display = "flex";
+        const nigeriaStatesAndLgas = {
+            "Abia": ["Aba North", "Aba South", "Arochukwu", "Bende", "Ikwuano", "Isiala Ngwa North", "Isiala Ngwa South", "Isuikwuato", "Obi Ngwa", "Ohafia", "Osisioma", "Ugwunagbo", "Ukwa East", "Ukwa West", "Umuahia North", "Umuahia South", "Umu Nneochi"],
+            "Adamawa": ["Demsa", "Fufure", "Ganye", "Gayuk", "Gombi", "Grie", "Hong", "Jada", "Lamu", "Madagali", "Maiha", "Mayo Belwa", "Michika", "Mubi North", "Mubi South", "Numan", "Shelleng", "Song", "Toungo", "Yerva", "Yola North", "Yola South"],
+            "Akwa Ibom": ["Abak", "Eastern Obolo", "Eket", "Esit Eket", "Essien Udim", "Etim Ekpo", "Etinan", "Ibeno", "Ibesikpo Asutan", "Ibiono-Ibom", "Ika", "Ikono", "Ikot Abasi", "Ikot Ekpene", "Ini", "Itu", "Mbo", "Mkpat-Enin", "Nsit-Atai", "Nsit-Ibiom", "Nsit-Ubium", "Obot Akara", "Okobo", "Onna", "Oron", "Oruk Anam", "Udung-Uko", "Uruan", "Urue-Offong/Oruko", "Uyo"],
+            "Anambra": ["Aguata", "Anambra East", "Anambra West", "Anaocha", "Awka North", "Awka South", "Ayamelum", "Dunukofia", "Ekwusigo", "Idemili North", "Idemili South", "Ihiala", "Nnjikoka", "Nnewi North", "Nnewi South", "Ogbaru", "Onitsha North", "Onitsha South", "Orumba North", "Orumba South", "Oyi"],
+            "Bauchi": ["Alkaleri", "Bauchi", "Bogoro", "Damban", "Darazo", "Dass", "Gamawa", "Ganjuwa", "Giade", "Itas/Gadau", "Jama'are", "Katagum", "Kirfi", "Misau", "Ningi", "Shira", "Tafawa Balewa", "Toro", "Warji", "Zaki"],
+            "Bayelsa": ["Brass", "Ekeremor", "Kolokuma/Opokuma", "Nembe", "Ogbia", "Sagbama", "Southern Ijaw", "Yenagoa"],
+            "Benue": ["Agatu", "Apa", "Ado", "Buruku", "Gboko", "Guma", "Gwer East", "Gwer West", "Katsina-Ala", "Konshisha", "Kwande", "Logo", "Makurdi", "Obi", "Ogbadibo", "Ohimini", "Oju", "Okpokwu", "Oturkpo", "Tarka", "Ukum", "Ushongo", "Vandeikya"],
+            "Borno": ["Abadam", "Askira/Uba", "Bama", "Bayo", "Biu", "Chibok", "Damboa", "Dikwa", "Gubio", "Guzamala", "Gwoza", "Hawul", "Jere", "Kaga", "Kala/Balge", "Konduga", "Kukawa", "Kwaya Kusar", "Mafa", "Magumeri", "Maiduguri", "Marte", "Mobbar", "Monguno", "Ngala", "Nganzai", "Shani"],
+            "Cross River": ["Abi", "Akamkpa", "Akpabuyo", "Bakassi", "Bekwarra", "Biase", "Boki", "Calabar Municipal", "Calabar South", "Etung", "Ikom", "Yala", "Obanliku", "Obubra", "Obudu", "Odukpani", "Ogoja", "Yakuur"],
+            "Delta": ["Aniocha North", "Aniocha South", "Bomadi", "Burutu", "Ethiope East", "Ethiope West", "Ika North East", "Ika South", "Isoko North", "Isoko South", "Ndokwa East", "Ndokwa West", "Okpe", "Oshimili North", "Oshimili South", "Patani", "Sapele", "Udu", "Ughelli North", "Ughelli South", "Ukwuani", "Uvwie", "Warri North", "Warri South", "Warri South West"],
+            "Ebonyi": ["Abakaliki", "Afikpo North", "Afikpo South", "Ebonyi", "Ezza North", "Ezza South", "Ikwo", "Ishielu", "Ivo", "Izzi", "Ohaozara", "Ohaukwu", "Onicha"],
+            "Edo": ["Akoko-Edo", "Egor", "Esan Central", "Esan North-East", "Esan South-East", "Esan West", "Etsako Central", "Etsako East", "Etsako West", "Igueben", "Ikpoba Okha", "Orhionmwon", "Oredo", "Ovia North-East", "Ovia South-West", "Owan East", "Owan West", "Uhunmwonde"],
+            "Ekiti": ["Ado Ekiti", "Efon", "Ekiti East", "Ekiti South-West", "Ekiti West", "Emure", "Gbonyin", "Ido Osi", "Ijero", "Ikere", "Ikole", "Ilejemeje", "Irepodun/Ifelodun", "Ise/Orun", "Moba", "Oye"],
+            "Enugu": ["Aninri", "Awgu", "Enugu East", "Enugu North", "Enugu South", "Ezeagu", "Igbo Etiti", "Igbo Eze North", "Igbo Eze South", "Isi Uzo", "Nkanu East", "Nkanu West", "Nsukka", "Oji River", "Udenu", "Udi", "Uzo Uwani"],
+            "FCT": ["Abaji", "Bwari", "Gwagwalada", "Kuje", "Kwali", "Municipal Area Council"],
+            "Gombe": ["Akko", "Balanga", "Billiri", "Dukku", "Funakaye", "Gombe", "Kaltungo", "Kwami", "Nafada", "Shongom", "Yamaltu/Deba"],
+            "Imo": ["Aboh Mbaise", "Ahiazu Mbaise", "Ehime Mbano", "Ezinihitte", "Ideato North", "Ideato South", "Ihitte/Uboma", "Ikeduru", "Isiala Mbano", "Isu", "Mbaitoli", "Ngor Okpala", "Njaba", "Nkwerre", "Nwangele", "Obowo", "Oguta", "Ohaji/Egbema", "Okigwe", "Orlu", "Orsu", "Oru East", "Oru West", "Owerri Municipal", "Owerri North", "Owerri West", "Unuimo"],
+            "Jigawa": ["Auyo", "Babura", "Biriniwa", "Birnin Kudu", "Buji", "Dutse", "Gagarawa", "Garki", "Gumel", "Guri", "Gwaram", "Gwiwa", "Hadejia", "Jahun", "Kafin Hausa", "Kaugama", "Kiri Kasama", "Kiyawa", "Maigatari", "Malam Madori", "Miga", "Ringim", "Roni", "Sule Tankarkar", "Taura", "Yankwashi"],
+            "Kaduna": ["Birnin Gwari", "Chikun", "Giwa", "Igabi", "Ikara", "Jaba", "Jema'a", "Kachia", "Kaduna North", "Kaduna South", "Kagarko", "Kajuru", "Kaura", "Kauru", "Kubau", "Kudan", "Lere", "Makarfi", "Sabon Gari", "Sanga", "Soba", "Zangon Kataf", "Zaria"],
+            "Kano": ["Ajingi", "Albasu", "Bagwai", "Bebeji", "Bichi", "Bunkure", "Dala", "Dambatta", "Dawakin Kudu", "Dawakin Tofa", "Doguwa", "Fagge", "Gabasawa", "Garko", "Garun Mallam", "Gaya", "Gezawa", "Gwale", "Gwarzo", "Kabo", "Kano Municipal", "Karaye", "Kibiya", "Kiru", "Kumbotso", "Kunchi", "Kura", "Madobi", "Makoda", "Minjibir", "Nasarawa", "Rano", "Rimin Gado", "Rogo", "Shanono", "Sumaila", "Takai", "Tarauni", "Tofa", "Tsanyawa", "Tudun Wada", "Ungogo", "Warawa", "Wudil"],
+            "Katsina": ["Bakori", "Batagarawa", "Batsari", "Baure", "Bindawa", "Charanchi", "Dandume", "Danja", "Dan Musa", "Daura", "Dutsi", "Dutsin Ma", "Faskari", "Funtua", "Ingawa", "Jibia", "Kafur", "Kaita", "Kankara", "Kankia", "Katsina", "Kurfi", "Kusada", "Mai'Adua", "Malumfashi", "Mani", "Mashi", "Matazu", "Musawa", "Rimi", "Sabuwa", "Safana", "Sandamu", "Zango"],
+            "Kebbi": ["Aleiro", "Arewa Dandi", "Argungu", "Augie", "Bagudo", "Birnin Kebbi", "Bunza", "Dandi", "Fakai", "Gwandu", "Jega", "Kalgo", "Koko/Besse", "Maiyama", "Ngaski", "Sakaba", "Shanga", "Suru", "Danko-Wasagu", "Yauri", "Zuru"],
+            "Kogi": ["Adavi", "Ajaokuta", "Ankpa", "Bassa", "Dekina", "Ibaji", "Idah", "Igalamela Odolu", "Ijumu", "Kabba/Bunu", "Kogi", "Lokoja", "Mopa Muro", "Ofu", "Ogori/Magongo", "Okehi", "Okene", "Olamaboro", "Omala", "Yagba East", "Yagba West"],
+            "Kwara": ["Asa", "Baruten", "Edu", "Ekiti", "Ifelodun", "Ilorin East", "Ilorin South", "Ilorin West", "Irepodun", "Isin", "Kaiama", "Moro", "Offa", "Oke Ero", "Oyun", "Pategi"],
+            "Lagos": ["Agege", "Ajeromi-Ifelodun", "Alimosho", "Amuwo-Odofin", "Apapa", "Badagry", "Epe", "Eti Osa", "Ibeju-Lekki", "Ifako-Ijaiye", "Ikeja", "Ikorodu", "Kosofe", "Lagos Island", "Lagos Mainland", "Mushin", "Ojo", "Oshodi-Isolo", "Somolu", "Surulere"],
+            "Nasarawa": ["Akwanga", "Awe", "Doma", "Karu", "Keana", "Keffi", "Kokona", "Lafia", "Nasarawa", "Nasarawa Egon", "Obi", "Toto", "Wamba"],
+            "Niger": ["Agaie", "Agwara", "Bida", "Borgu", "Bosso", "Chanchaga", "Edati", "Gbako", "Gurara", "Katcha", "Kontagora", "Lapai", "Lavun", "Magama", "Mariga", "Mashegu", "Mokwa", "Moya", "Paikoro", "Rafi", "Rijau", "Shiroro", "Suleja", "Tafa", "Wushishi"],
+            "Ogun": ["Abeokuta North", "Abeokuta South", "Ado-Odo/Ota", "Yewa North", "Yewa South", "Ewekoro", "Ifo", "Ijebu East", "Ijebu North", "Ijebu North East", "Ijebu Ode", "Ikenne", "Imeko Afon", "Ipokia", "Obafemi Owode", "Odeda", "Odogbolu", "Ogun Waterside", "Remo North", "Shagamu"],
+            "Ondo": ["Akoko North-East", "Akoko North-West", "Akoko South-West", "Akoko South-East", "Akure North", "Akure South", "Ese Odo", "Idanre", "Ifedore", "Ilaje", "Ile Oluji/Okeigbo", "Irele", "Odigbo", "Okitipupa", "Ondo East", "Ondo West", "Ose", "Owo"],
+            "Osun": ["Atakunmosa East", "Atakunmosa West", "Aiyedaade", "Aiyedire", "Boluwaduro", "Boripe", "Ede North", "Ede South", "Ife Central", "Ife East", "Ife North", "Ife South", "Egbedore", "Ejigbo", "Ifedayo", "Ifelodun", "Ila", "Ilesa East", "Ilesa West", "Irepodun", "Irewole", "Isokan", "Iwo", "Obokun", "Odo Otin", "Ola Oluwa", "Olorunda", "Oriade", "Orolu", "Osogbo"],
+            "Oyo": ["Afijio", "Akinyele", "Atiba", "Atisbo", "Egbeda", "Ibadan North", "Ibadan North-East", "Ibadan North-West", "Ibadan South-East", "Ibadan South-West", "Ibarapa Central", "Ibarapa East", "Ibarapa North", "Iddo", "Irepo", "Iseyin", "Itesiwaju", "Iwajowa", "Iwajowa", "Kajola", "Lagelu", "Ogbomosho North", "Ogbomosho South", "Ogo Oluwa", "Olorunsogo", "Oluyole", "Ona Ara", "Orelope", "Ori Ire", "Oyo East", "Oyo West", "Saki East", "Saki West", "Surulere"],
+            "Plateau": ["Barkin Ladi", "Bassa", "Bokkos", "Jos East", "Jos North", "Jos South", "Kanam", "Kanke", "Langtang South", "Langtang North", "Mangu", "Mikang", "Pankshin", "Qua'an Pan", "Riyom", "Shendam", "Wase"],
+            "Rivers": ["Abua/Odual", "Ahoada East", "Ahoada West", "Akuku-Toru", "Andoni", "Asari-Toru", "Bonny", "Degema", "Eleme", "Emuoha", "Etche", "Gokana", "Ikwerre", "Khana", "Obio/Akpor", "Ogba/Egbema/Ndoni", "Ogu/Bolo", "Okrika", "Omuma", "Opobo/Nkoro", "Oyigbo", "Port Harcourt", "Tai"],
+            "Sokoto": ["Binji", "Bodinga", "Dange Shuni", "Gada", "Goronyo", "Gudu", "Gwadabawa", "Illela", "Isa", "Kebbe", "Kware", "Rabah", "Sabon Birni", "Shagari", "Silame", "Sokoto North", "Sokoto South", "Tambuwal", "Tangaza", "Tureta", "Wamako", "Wurno", "Yabo"],
+            "Taraba": ["Ardo Kola", "Bali", "Donga", "Gashaka", "Gassol", "Ibi", "Jalingo", "Karim Lamido", "Kumi", "Lau", "Sardauna", "Takum", "Ussa", "Wukari", "Yorro", "Zing"],
+            "Yobe": ["Bade", "Bursari", "Damaturu", "Fika", "Fune", "Geidam", "Gujba", "Gulani", "Jakusko", "Karasuwa", "Machina", "Nangere", "Nguru", "Potiskum", "Tarmuwa", "Yunusari", "Yusufari"],
+            "Zamfara": ["Anka", "Bakura", "Birnin Magaji/Kiyaw", "Bukkuyum", "Bungudu", "Gummi", "Gusau", "Kaura Namoda", "Maradun", "Maru", "Shinkafi", "Talata Mafara", "Chafe", "Zurmi"]
+        };
 
-        if (audio) {
-          audio.currentTime = 0;
-          audio.play().catch(function(e) { console.log("Audio playback:", e); });
+        let galleryData = [];
+        let isAdminLoggedIn = false;
+
+        async function fetchGalleryData() {
+            try {
+                const response = await fetch(WEB_APP_URL);
+                galleryData = await response.json();
+                renderGallery(galleryData);
+            } catch (err) {
+                console.error("Error fetching data:", err);
+                document.getElementById('gallery-grid').innerHTML = '<div class="loading-text">Failed to load memories.</div>';
+            }
         }
-      }
 
-      function closePreviewModal() {
-        var modal = document.getElementById("preview-modal");
-        if (modal) modal.style.display = "none";
-      }
+        function populateStateOptions(selectId) {
+            const stateSelect = document.getElementById(selectId);
+            stateSelect.innerHTML = selectId === 'filter-state' ? '<option value="">STATE</option>' : '<option value="">-- Choose State --</option>';
+            
+            Object.keys(nigeriaStatesAndLgas).sort().forEach(state => {
+                const opt = document.createElement('option');
+                opt.value = state;
+                opt.textContent = state;
+                stateSelect.appendChild(opt);
+            });
+        }
 
-      function closeModals() {
-        var modals = document.querySelectorAll(".modal");
-        modals.forEach(function(m) { m.style.display = "none"; });
-      }
+        function handleStateChange(stateSelectId, lgaContainerId, lgaSelectId) {
+            const stateSelect = document.getElementById(stateSelectId);
+            const lgaContainer = document.getElementById(lgaContainerId);
+            const lgaSelect = document.getElementById(lgaSelectId);
+            const selectedState = stateSelect.value;
 
-      // Safe execution wrapper for Google Apps Script
-      function callScript(funcName, successCallback, payload) {
-        if (typeof google !== "undefined" && google.script && google.script.run) {
-          var runner = google.script.run.withSuccessHandler(successCallback);
-          if (payload !== undefined) {
-            runner[funcName](payload);
+            if (selectedState && nigeriaStatesAndLgas[selectedState]) {
+                lgaSelect.innerHTML = '<option value="">-- Choose LGA --</option>';
+                nigeriaStatesAndLgas[selectedState].forEach(lga => {
+                    const opt = document.createElement('option');
+                    opt.value = lga;
+                    opt.textContent = lga;
+                    lgaSelect.appendChild(opt);
+                });
+                lgaContainer.style.display = 'block';
+            } else {
+                lgaContainer.style.display = 'none';
+                lgaSelect.innerHTML = '<option value="">-- Choose LGA --</option>';
+            }
+        }
+
+        /* --- Filter Search Bar Functions --- */
+        function onFilterStateChange() {
+            const selectedState = document.getElementById('filter-state').value;
+            const lgaSelect = document.getElementById('filter-lga');
+
+            if (selectedState && nigeriaStatesAndLgas[selectedState]) {
+                lgaSelect.innerHTML = '<option value="">-- All Local Governments --</option>';
+                nigeriaStatesAndLgas[selectedState].forEach(lga => {
+                    const opt = document.createElement('option');
+                    opt.value = lga;
+                    opt.textContent = lga;
+                    lgaSelect.appendChild(opt);
+                });
+                lgaSelect.disabled = false;
+            } else {
+                lgaSelect.innerHTML = '<option value="">-- Select State First --</option>';
+                lgaSelect.disabled = true;
+            }
+
+            applyLocationFilter();
+        }
+
+        function applyLocationFilter() {
+            const selectedState = document.getElementById('filter-state').value;
+            const selectedLga = document.getElementById('filter-lga').value;
+
+            let filtered = galleryData;
+
+            if (selectedState) {
+                filtered = filtered.filter(item => (item.state || '').toLowerCase() === selectedState.toLowerCase());
+            }
+
+            if (selectedLga) {
+                filtered = filtered.filter(item => (item.lga || '').toLowerCase() === selectedLga.toLowerCase());
+            }
+
+            renderGallery(filtered);
+        }
+
+        function resetFilters() {
+            document.getElementById('filter-state').value = '';
+            const lgaSelect = document.getElementById('filter-lga');
+            lgaSelect.innerHTML = '<option value="">-- Select State First --</option>';
+            lgaSelect.disabled = true;
+
+            renderGallery(galleryData);
+        }
+
+        function renderGallery(dataToRender = galleryData) {
+            const grid = document.getElementById('gallery-grid');
+            grid.innerHTML = '';
+
+            if (!Array.isArray(dataToRender) || dataToRender.length === 0) {
+                grid.innerHTML = '<div class="loading-text">No members found matching this location!</div>';
+                return;
+            }
+
+            dataToRender.forEach((item) => {
+                const phoneStr = String(item.phone || '');
+                const cleanPhone = phoneStr.replace(/[^0-9+]/g, '');
+                
+                const waLink = cleanPhone ? `https://wa.me/${cleanPhone}` : '#';
+                const callLink = cleanPhone ? `tel:${cleanPhone}` : '#';
+
+                const article = document.createElement('article');
+                article.className = 'photo-item';
+
+                const imgWrapper = document.createElement('div');
+                imgWrapper.className = 'image-wrapper';
+                imgWrapper.onclick = () => previewImage(item.img, item.name);
+
+                const img = document.createElement('img');
+                img.src = item.img;
+                img.alt = item.name;
+                img.loading = 'lazy';
+                
+                img.onerror = function() {
+                    this.onerror = null;
+                    this.src = "https://images.unsplash.com/photo-1511512578047-dfb367046420?auto=format&fit=crop&w=600&q=80";
+                };
+
+                const overlay = document.createElement('div');
+                overlay.className = 'image-overlay-hint';
+                overlay.textContent = '🔍 Click to Preview';
+
+                imgWrapper.appendChild(img);
+                imgWrapper.appendChild(overlay);
+
+                const cardContent = document.createElement('div');
+                cardContent.className = 'card-content';
+
+                const playerTitle = document.createElement('div');
+                playerTitle.className = 'player-title';
+                playerTitle.textContent = item.title;
+
+                const nameHeader = document.createElement('h3');
+                nameHeader.textContent = item.name;
+
+                const locationTag = document.createElement('div');
+                locationTag.className = 'location-tag';
+                if (item.state && item.lga) {
+                    locationTag.textContent = `📍 ${item.lga}, ${item.state}`;
+                } else if (item.state) {
+                    locationTag.textContent = `📍 ${item.state}`;
+                }
+
+                const actionBtns = document.createElement('div');
+                actionBtns.className = 'action-btns';
+
+                const waAnchor = document.createElement('a');
+                waAnchor.href = waLink;
+                waAnchor.target = '_blank';
+                waAnchor.rel = 'noopener noreferrer';
+                waAnchor.className = 'whatsapp-btn';
+                waAnchor.innerHTML = `${whatsappSvg} Chat`;
+
+                const callAnchor = document.createElement('a');
+                callAnchor.href = callLink;
+                callAnchor.className = 'call-btn';
+                callAnchor.innerHTML = `${phoneSvg} Call`;
+
+                actionBtns.appendChild(waAnchor);
+                actionBtns.appendChild(callAnchor);
+
+                cardContent.appendChild(playerTitle);
+                cardContent.appendChild(nameHeader);
+                if (item.state) cardContent.appendChild(locationTag);
+                cardContent.appendChild(actionBtns);
+
+                article.appendChild(imgWrapper);
+                article.appendChild(cardContent);
+
+                grid.appendChild(article);
+            });
+        }
+
+        function checkAdminAccess() {
+            if (isAdminLoggedIn) {
+                openAdminDashboard();
+            } else {
+                document.getElementById('login-modal').classList.add('active');
+            }
+        }
+
+        function verifyAdmin() {
+            const pass = document.getElementById('admin-pass').value;
+            if (pass === '0000') {
+                isAdminLoggedIn = true;
+                document.getElementById('logout-btn').style.display = 'inline-block';
+                document.getElementById('admin-pass').value = '';
+                closeModals();
+                openAdminDashboard();
+            } else {
+                alert('Incorrect Admin Passcode!');
+            }
+        }
+
+        function adminLogout() {
+            isAdminLoggedIn = false;
+            document.getElementById('logout-btn').style.display = 'none';
+            alert('Logged out of Admin panel.');
+        }
+
+        function openAdminDashboard() {
+            document.getElementById('admin-modal').classList.add('active');
+            renderAdminManageList();
+        }
+
+        function closeModals() {
+            document.querySelectorAll('.modal').forEach(m => m.classList.remove('active'));
+        }
+
+        function closeEditModal() {
+            document.getElementById('edit-modal').classList.remove('active');
+        }
+
+        function renderAdminManageList() {
+            const list = document.getElementById('admin-manage-list');
+            list.innerHTML = '';
+            
+            galleryData.forEach((item, index) => {
+                const div = document.createElement('div');
+                div.className = 'admin-manage-item';
+
+                const span = document.createElement('span');
+                const locInfo = item.state ? ` - ${item.state}` : '';
+                span.textContent = `${item.name} (${item.title}${locInfo})`;
+
+                const actionDiv = document.createElement('div');
+                actionDiv.className = 'admin-item-actions';
+
+                const editBtn = document.createElement('button');
+                editBtn.className = 'btn-edit';
+                editBtn.innerHTML = `${editSvg} Edit`;
+                editBtn.onclick = () => openEditModal(index);
+
+                const deleteBtn = document.createElement('button');
+                deleteBtn.className = 'btn-delete';
+                deleteBtn.innerHTML = `${trashSvg} Delete`;
+                deleteBtn.onclick = () => deleteMemberEntry(index);
+
+                actionDiv.appendChild(editBtn);
+                actionDiv.appendChild(deleteBtn);
+
+                div.appendChild(span);
+                div.appendChild(actionDiv);
+                list.appendChild(div);
+            });
+        }
+
+        function openEditModal(index) {
+            const item = galleryData[index];
+            
+            document.getElementById('edit-preview-img').src = item.img;
+            document.getElementById('edit-preview-name').textContent = item.name;
+
+            document.getElementById('edit-row-id').value = item.rowId || '';
+            document.getElementById('edit-index').value = index;
+            document.getElementById('edit-file').value = ''; 
+            document.getElementById('edit-name').value = item.name || '';
+            document.getElementById('edit-title').value = item.title || '';
+            document.getElementById('edit-phone').value = item.phone || '';
+
+            const stateSelect = document.getElementById('edit-state');
+            stateSelect.value = item.state || '';
+            handleStateChange('edit-state', 'edit-lga-container', 'edit-lga');
+
+            if (item.lga) {
+                document.getElementById('edit-lga').value = item.lga;
+            }
+
+            document.getElementById('edit-modal').classList.add('active');
+        }
+
+        function previewNewEditImage(input) {
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById('edit-preview-img').src = e.target.result;
+                };
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        async function saveMemberEdit() {
+            const index = document.getElementById('edit-index').value;
+            const rowId = document.getElementById('edit-row-id').value;
+            const saveBtn = document.getElementById('save-edit-btn');
+            const fileInput = document.getElementById('edit-file');
+
+            const payload = {
+                action: 'edit',
+                rowId: rowId,
+                existingImg: galleryData[index].img,
+                name: document.getElementById('edit-name').value.trim(),
+                title: document.getElementById('edit-title').value.trim(),
+                phone: document.getElementById('edit-phone').value.trim(),
+                state: document.getElementById('edit-state').value,
+                lga: document.getElementById('edit-lga').value
+            };
+
+            saveBtn.disabled = true;
+            saveBtn.textContent = "Saving...";
+
+            const performSubmit = async (dataPayload) => {
+                try {
+                    const response = await fetch(WEB_APP_URL, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                        body: JSON.stringify(dataPayload)
+                    });
+
+                    const res = await response.json();
+
+                    if (res.status === 'success') {
+                        galleryData[index].name = dataPayload.name;
+                        galleryData[index].title = dataPayload.title;
+                        galleryData[index].phone = dataPayload.phone;
+                        galleryData[index].state = dataPayload.state;
+                        galleryData[index].lga = dataPayload.lga;
+                        if (res.imageUrl) {
+                            galleryData[index].img = res.imageUrl;
+                        }
+
+                        applyLocationFilter();
+                        renderAdminManageList();
+                        closeEditModal();
+                        alert('Updated successfully!');
+                    } else {
+                        alert('Failed to update: ' + res.message);
+                    }
+                } catch (err) {
+                    console.error(err);
+                    alert('Error updating details. Check browser console.');
+                } finally {
+                    saveBtn.disabled = false;
+                    saveBtn.textContent = "Save Changes";
+                }
+            };
+
+            if (fileInput.files.length > 0) {
+                const file = fileInput.files[0];
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    payload.bytes = e.target.result.split(',')[1];
+                    payload.filename = file.name;
+                    payload.mimeType = file.type;
+                    performSubmit(payload);
+                };
+                reader.readAsDataURL(file);
+            } else {
+                performSubmit(payload);
+            }
+        }
+
+
+
+        async function deleteMemberEntry(index) {
+            const item = galleryData[index];
+            if (!confirm(`Are you sure you want to permanently delete "${item.name}"?`)) {
+                return;
+            }
+
+            try {
+                const response = await fetch(WEB_APP_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                    body: JSON.stringify({
+                        action: 'delete',
+                        rowId: item.rowId
+                    })
+                });
+
+                const res = await response.json();
+
+                if (res.status === 'success') {
+                    galleryData.splice(index, 1);
+                    applyLocationFilter();
+                    renderAdminManageList();
+                    alert('Deleted successfully!');
+                } else {
+                    alert('Failed to delete: ' + res.message);
+                }
+            } catch (err) {
+                console.error(err);
+                alert('An error occurred while deleting.');
+            }
+        }
+
+        function previewImage(src, name) {
+            const modal = document.getElementById('preview-modal');
+            const img = document.getElementById('preview-img');
+            const caption = document.getElementById('preview-caption');
+            img.src = src;
+            caption.textContent = name;
+            modal.classList.add('active');
+            
+        const BSound = document.getElementById("BSound");
+
+document.getElementById("preview-modal").addEventListener("click", () => {
+    BSound.currentTime = 0;
+    BSound.play().catch(err => console.error(err));
+});
+            
+        }
+
+        async function addPhotoEntry() {
+            const fileInput = document.getElementById('input-file');
+            const nameInput = document.getElementById('input-name');
+            const titleInput = document.getElementById('input-title');
+            const phoneInput = document.getElementById('input-phone');
+            const stateInput = document.getElementById('input-state');
+            const lgaInput = document.getElementById('input-lga');
+            const publishBtn = document.getElementById('publish-btn');
+
+            if (fileInput.files.length === 0 || !nameInput.value.trim() || !phoneInput.value.trim()) {
+                alert('Please select an image file, enter a name, and provide a phone number!');
+                return;
+            }
+
+            const file = fileInput.files[0];
+            const reader = new FileReader();
+
+            publishBtn.disabled = true;
+            publishBtn.textContent = "Uploading...";
+
+            reader.onload = async function(e) {
+                const base64String = e.target.result.split(',')[1];
+                
+                const payload = {
+                    filename: file.name,
+                    mimeType: file.type,
+                    bytes: base64String,
+                    name: nameInput.value.trim(),
+                    title: titleInput.value.trim() || 'Member',
+                    phone: phoneInput.value.trim(),
+                    state: stateInput.value || '',
+                    lga: lgaInput.value || ''
+                };
+
+                try {
+                    const response = await fetch(WEB_APP_URL, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                        body: JSON.stringify(payload)
+                    });
+
+                    const result = await response.json();
+
+                    if (result.status === "success") {
+                        galleryData.push(result.entry);
+                        applyLocationFilter();
+                        renderAdminManageList();
+
+                        fileInput.value = '';
+                        nameInput.value = '';
+                        titleInput.value = '';
+                        phoneInput.value = '';
+                        stateInput.value = '';
+                        lgaInput.value = '';
+                        document.getElementById('lga-container').style.display = 'none';
+
+                        alert('Success! Image and details published globally.');
+                    } else {
+                        alert('Upload failed: ' + result.message);
+                    }
+                } catch (err) {
+                    console.error(err);
+                    alert('An error occurred during upload.');
+                } finally {
+                    publishBtn.disabled = false;
+                    publishBtn.textContent = "Publish to Album";
+                }
+            };
+
+            reader.readAsDataURL(file);
+        }
+
+        // Initialize state dropdowns & fetch live data
+        populateStateOptions('filter-state');
+        populateStateOptions('input-state');
+        populateStateOptions('edit-state');
+        fetchGalleryData();
+
+
+
+          </script>
+<script>
+(function () {
+
+  const lines = [
+    "WELCOME TO CS 2K24 DIGITAL PHOTO ALBUM.",
+    "O Allah, the Most Merciful, the Most Compassionate",
+    "We thank You for the gift of life, knowledge, and the beautiful moments we shared as the Computer Science Class of 2K24.",
+    "O Allah, forgive those among us who have passed away, especially our beloved brother and mentor, UMAR ADAMU IBBI (Sarki).",
+    "🤲🏽 آمِينَ"
+  ];
+
+  const typingSpeed = 10;
+  const pauseBetweenLines = 10;
+
+  document.addEventListener('DOMContentLoaded', () => {
+
+    const overlay = document.getElementById('intro-overlay');
+    const enterBtn = document.getElementById('enter-btn');
+
+    const elements = [
+      document.getElementById('line-1'),
+      document.getElementById('line-2'),
+      document.getElementById('line-3'),
+      document.getElementById('line-4'),
+      document.getElementById('line-5')
+    ];
+
+    if (!overlay || !enterBtn || elements.includes(null)) {
+      console.error("Missing elements");
+      return;
+    }
+    <!-- 1. Phone Verification Modal -->
+<div id="phoneModal" class="chat-modal-overlay">
+  <div class="chat-modal-card">
+    <h3>Enter Your WhatsApp Number</h3>
+    <p>Please enter your exact phone number to access the live album chat.</p>
+    <input type="tel" id="userPhoneInput" placeholder="+1234567890" required />
+    <button onclick="saveUserPhone()">Continue to Album & Chat</button>
+  </div>
+</div>
+
+    // ✅ APPLY FONT SWAP
+    elements[0].classList.add('line-body');     // first line → heading font
+<!-- 2. Floating Chat Toggle Button -->
+<button id="chatToggleBtn" onclick="toggleChatModal()" style="display:none;">
+  💬 Live Chat <span id="onlineBadge" class="badge">0</span>
+</button>
+
+<!-- 3. Group Chat Window Modal -->
+<div id="groupChatModal" class="chat-modal-overlay" style="display:none;">
+  <div class="chat-window">
+    <div class="chat-header">
+      <h4>Group Chat</h4>
+      <span class="close-btn" onclick="toggleChatModal()">&times;</span>
+    </div>
+
+    <!-- Online Users Sidebar / Bar -->
+    <div class="online-users-bar">
+      <span>🟢 Online Now:</span>
+      <div id="onlineUsersList">None</div>
+    </div>
+
+    function typeInto(element, htmlText, speed) {
+      return new Promise((resolve) => {
+        element.innerHTML = '';
+        let i = 0;
+
+        function step() {
+          if (i < htmlText.length) {
+            element.innerHTML += htmlText.charAt(i);
+            i++;
+            setTimeout(step, speed);
           } else {
-            runner[funcName]();
+            resolve();
           }
-        } else {
-          console.warn("google.script.run unavailable (local preview).");
-          if (funcName === 'updateUserPresence') successCallback(["Online"]);
-          if (funcName === 'getGroupMessages') successCallback([]);
-          if (funcName === 'sendMessage') successCallback({status: "success"});
         }
-      }
 
-      window.addEventListener("DOMContentLoaded", function() {
-        var savedPhone = localStorage.getItem("user_whatsapp_phone");
-        if (savedPhone) {
-          currentUserPhone = savedPhone;
-          document.getElementById("phoneModal").style.display = "none";
-          document.getElementById("chatToggleBtn").style.display = "flex";
-          startHeartbeatAndPolling();
-        } else {
-          document.getElementById("phoneModal").style.display = "flex";
-        }
-        
-        initSpeechRecognition();
+        step();
       });
+    }
 
-      function saveUserPhone() {
-        var phoneInput = document.getElementById("userPhoneInput").value.trim();
-        if (!phoneInput || phoneInput.length < 7) {
-          alert("Please enter a valid WhatsApp phone number.");
-          return;
-        }
-        currentUserPhone = phoneInput;
-        localStorage.setItem("user_whatsapp_phone", phoneInput);
-        
-        document.getElementById("phoneModal").style.display = "none";
-        document.getElementById("chatToggleBtn").style.display = "flex";
-        startHeartbeatAndPolling();
+    async function runTypingSequence() {
+      for (let i = 0; i < lines.length; i++) {
+        await typeInto(elements[i], lines[i], typingSpeed);
+        await new Promise(r => setTimeout(r, pauseBetweenLines));
       }
 
-      function toggleChatModal() {
-        var modal = document.getElementById("groupChatModal");
-        if (modal.style.display === "none" || modal.style.display === "") {
-          modal.style.display = "flex";
-          fetchMessages();
-        } else {
-          modal.style.display = "none";
-        }
-      }
+      enterBtn.style.display = 'inline-block';
+    }
 
-      function startHeartbeatAndPolling() {
-        pingPresence();
-        fetchMessages();
+    function openBookEffect() {
+      overlay.classList.add('opening');
 
-        setInterval(pingPresence, 30000);
-        setInterval(function() {
-          pingPresence();
-          fetchMessages();
-        }, 5000);
-      }
+      setTimeout(() => {
+        overlay.style.display = 'none';
+        document.body.classList.remove('intro-active');
+      }, 1000); // matches CSS duration
+    }
 
-      function pingPresence() {
-        if (!currentUserPhone) return;
-        callScript('updateUserPresence', function(onlineUsers) {
-          document.getElementById("onlineBadge").innerText = onlineUsers.length;
-          document.getElementById("onlineUsersList").innerText = onlineUsers.join(", ");
-        }, currentUserPhone);
-      }
+    // Init
+    overlay.classList.remove('hidden');
+    document.body.classList.add('intro-active');
+    enterBtn.style.display = 'none';
 
-      function fetchMessages() {
-        callScript('getGroupMessages', renderMessages);
-      }
+    runTypingSequence();
 
-      function renderMessages(messages) {
-        var container = document.getElementById("chatMessages");
-        if (!container || !Array.isArray(messages)) return;
-        container.innerHTML = "";
-        
-        messages.forEach(function(msg) {
-          var isMe = msg.phone === currentUserPhone;
-          var bubble = document.createElement("div");
-          bubble.className = "msg-bubble " + (isMe ? "me" : "other");
-          
-          var author = document.createElement("span");
-          author.className = "msg-author";
-          author.innerText = isMe ? "You" : msg.phone;
-          
-          var text = document.createElement("div");
-          text.innerText = msg.message;
-          
-          bubble.appendChild(author);
-          bubble.appendChild(text);
-          container.appendChild(bubble);
-        });
-        
-        container.scrollTop = container.scrollHeight;
-      }
+    // ONLY button triggers book opening
+    enterBtn.addEventListener('click', openBookEffect);
 
-      function handleSendChat() {
-        var input = document.getElementById("chatInputText");
-        var msg = input.value.trim();
-        if (!msg) return;
+  });
 
-        var payload = {
-          phone: currentUserPhone,
-          message: msg,
-          type: "text"
-        };
+})();
 
-        input.value = "";
-        
-        callScript('sendMessage', function() {
-          fetchMessages();
-        }, payload);
-      }
 
-      function initSpeechRecognition() {
-        var SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-        if (!SpeechRecognition) {
-          var micBtn = document.getElementById("micBtn");
-          if (micBtn) micBtn.style.display = "none";
-          return;
-        }
+const welcomeSound = document.getElementById("welcomeSound");
 
-        recognition = new SpeechRecognition();
-        recognition.continuous = false;
-        recognition.interimResults = true;
+document.getElementById("enter-btn").addEventListener("click", () => {
+    welcomeSound.currentTime = 0;
+    welcomeSound.play().catch(err => console.error(err));
+});
 
-        recognition.onresult = function(event) {
-          var transcript = Array.from(event.results)
-            .map(function(result) { return result[0].transcript; })
-            .join("");
-          
-          document.getElementById("chatInputText").value = transcript;
-        };
+</script>
 
-        recognition.onerror = function() { stopListening(); };
-        recognition.onend = function() { stopListening(); };
-      }
+    <!-- Chat Messages Stream -->
+    <div id="chatMessages" class="chat-body"></div>
 
-      function toggleVoiceToText() {
-        if (!recognition) return;
-        if (isListening) {
-          recognition.stop();
-          stopListening();
-        } else {
-          recognition.start();
-          isListening = true;
-          document.getElementById("micBtn").classList.add("listening");
-        }
-      }
+    <!-- Controls: Input, Voice-to-Text, Send -->
+    <div class="chat-footer">
+      <button id="micBtn" type="button" onclick="toggleVoiceToText()" title="Hold/Click to Speak">🎙️</button>
+      <input type="text" id="chatInputText" placeholder="Type or speak a message..." />
+      <button type="button" onclick="handleSendChat()">Send</button>
+    </div>
+  </div>
+</div>
 
-      function stopListening() {
-        isListening = false;
-        var micBtn = document.getElementById("micBtn");
-        if (micBtn) micBtn.classList.remove("listening");
-      }
-    </script>
 </body>
 </html>
