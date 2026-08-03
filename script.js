@@ -634,3 +634,177 @@ document.getElementById("enter-btn").addEventListener("click", () => {
     welcomeSound.play().catch(err => console.error(err));
 });
 
+
+
+
+
+
+
+var currentUserPhone = "";
+var isListening = false;
+var recognition = null;
+
+// Initialize on page load
+window.addEventListener("DOMContentLoaded", function() {
+  var savedPhone = localStorage.getItem("user_whatsapp_phone");
+  if (savedPhone) {
+    currentUserPhone = savedPhone;
+    document.getElementById("phoneModal").style.display = "none";
+    document.getElementById("chatToggleBtn").style.display = "block";
+    startHeartbeatAndPolling();
+  } else {
+    document.getElementById("phoneModal").style.display = "flex";
+  }
+  
+  initSpeechRecognition();
+});
+
+// Save phone number locally
+function saveUserPhone() {
+  var phoneInput = document.getElementById("userPhoneInput").value.trim();
+  if (!phoneInput || phoneInput.length < 7) {
+    alert("Please enter a valid WhatsApp phone number.");
+    return;
+  }
+  currentUserPhone = phoneInput;
+  localStorage.setItem("user_whatsapp_phone", phoneInput);
+  
+  document.getElementById("phoneModal").style.display = "none";
+  document.getElementById("chatToggleBtn").style.display = "block";
+  startHeartbeatAndPolling();
+}
+
+function toggleChatModal() {
+  var modal = document.getElementById("groupChatModal");
+  if (modal.style.display === "none" || modal.style.display === "") {
+    modal.style.display = "flex";
+    fetchMessages();
+  } else {
+    modal.style.display = "none";
+  }
+}
+
+// Presence Heartbeat & Periodic Polling
+function startHeartbeatAndPolling() {
+  // Pulse active status immediately
+  pingPresence();
+  fetchMessages();
+
+  // Send presence heartbeat every 30s
+  setInterval(pingPresence, 30000);
+  
+  // Refresh messages and online list every 5s
+  setInterval(function() {
+    pingPresence();
+    fetchMessages();
+  }, 5000);
+}
+
+function pingPresence() {
+  if (!currentUserPhone) return;
+  google.script.run
+    .withSuccessHandler(function(onlineUsers) {
+      document.getElementById("onlineBadge").innerText = onlineUsers.length;
+      document.getElementById("onlineUsersList").innerText = onlineUsers.join(", ");
+    })
+    .updateUserPresence(currentUserPhone);
+}
+
+function fetchMessages() {
+  google.script.run
+    .withSuccessHandler(renderMessages)
+    .getGroupMessages();
+}
+
+function renderMessages(messages) {
+  var container = document.getElementById("chatMessages");
+  container.innerHTML = "";
+  
+  messages.forEach(function(msg) {
+    var isMe = msg.phone === currentUserPhone;
+    var bubble = document.createElement("div");
+    bubble.className = "msg-bubble " + (isMe ? "me" : "other");
+    
+    var author = document.createElement("span");
+    author.className = "msg-author";
+    author.innerText = isMe ? "You" : msg.phone;
+    
+    var text = document.createElement("div");
+    text.innerText = msg.message;
+    
+    bubble.appendChild(author);
+    bubble.appendChild(text);
+    container.appendChild(bubble);
+  });
+  
+  // Auto-scroll to latest
+  container.scrollTop = container.scrollHeight;
+}
+
+function handleSendChat() {
+  var input = document.getElementById("chatInputText");
+  var msg = input.value.trim();
+  if (!msg) return;
+
+  var payload = {
+    phone: currentUserPhone,
+    message: msg,
+    type: "text"
+  };
+
+  input.value = "";
+  
+  google.script.run
+    .withSuccessHandler(function() {
+      fetchMessages();
+    })
+    .sendMessage(payload);
+}
+
+// Voice-to-Text via Web Speech API
+function initSpeechRecognition() {
+  var SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if (!SpeechRecognition) {
+    document.getElementById("micBtn").style.display = "none";
+    console.warn("Speech Recognition API not supported in this browser.");
+    return;
+  }
+
+  recognition = new SpeechRecognition();
+  recognition.continuous = false;
+  recognition.interimResults = true;
+
+  recognition.onresult = function(event) {
+    var transcript = Array.from(event.results)
+      .map(function(result) { return result[0].transcript; })
+      .join("");
+    
+    document.getElementById("chatInputText").value = transcript;
+  };
+
+  recognition.onerror = function(event) {
+    console.error("Speech recognition error:", event.error);
+    stopListening();
+  };
+
+  recognition.onend = function() {
+    stopListening();
+  };
+}
+
+function toggleVoiceToText() {
+  if (!recognition) return;
+  if (isListening) {
+    recognition.stop();
+    stopListening();
+  } else {
+    recognition.start();
+    isListening = true;
+    document.getElementById("micBtn").classList.add("listening");
+  }
+}
+
+function stopListening() {
+  isListening = false;
+  document.getElementById("micBtn").classList.remove("listening");
+}
