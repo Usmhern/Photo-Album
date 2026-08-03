@@ -25,6 +25,9 @@
             --accent-orange-glow: rgba(255, 85, 0, 0.4);
             --whatsapp-green: #25d366;
             --whatsapp-green-hover: #1ebd56;
+            --whatsapp-bg: #0b141a;
+            --whatsapp-card-me: #005c4b;
+            --whatsapp-card-other: #202c33;
             --call-blue: #007bff;
             --danger-red: #ff3b30;
             --text-main: #f3f4f6;
@@ -435,98 +438,141 @@
             overflow-y: auto;
         }
 
-        .modal-content h2 {
-            font-family: 'Rajdhani', sans-serif;
-            margin-bottom: 1.25rem;
-            font-size: 1.5rem;
-        }
-
-        /* Live Chat Modal Layout */
+        /* --- WhatsApp UI Chat Modal Layout --- */
         .chat-modal-content {
-            max-width: 600px;
-            height: 80vh;
+            max-width: 650px;
+            height: 85vh;
             display: flex;
             flex-direction: column;
-            padding: 1.25rem;
+            padding: 0;
+            background: var(--whatsapp-bg);
+            border-radius: 12px;
+            overflow: hidden;
         }
 
         .chat-header {
+            background: #202c33;
+            padding: 1rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding-bottom: 0.8rem;
-            border-bottom: 1px solid var(--border-color);
-            margin-bottom: 0.8rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         .online-members-bar {
-            background: var(--bg-primary);
-            padding: 8px 12px;
-            border-radius: 8px;
+            background: #111b21;
+            padding: 8px 15px;
             font-size: 0.85rem;
-            color: var(--text-muted);
-            margin-bottom: 0.8rem;
+            color: #8696a0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
             display: flex;
             align-items: center;
-            gap: 6px;
+            gap: 8px;
             overflow-x: auto;
         }
 
         .chat-messages {
             flex-grow: 1;
             overflow-y: auto;
-            background: var(--bg-primary);
-            border-radius: 8px;
             padding: 1rem;
             display: flex;
             flex-direction: column;
-            gap: 0.75rem;
-            margin-bottom: 0.8rem;
+            gap: 0.6rem;
+            background-image: radial-gradient(rgba(255,255,255,0.03) 1px, transparent 0);
+            background-size: 16px 16px;
         }
 
         .chat-msg {
-            max-width: 80%;
-            padding: 0.6rem 0.9rem;
+            max-width: 75%;
+            padding: 0.5rem 0.8rem;
             border-radius: 8px;
             font-size: 0.9rem;
             line-height: 1.4;
+            position: relative;
             word-wrap: break-word;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.3);
         }
 
         .chat-msg.me {
             align-self: flex-end;
-            background: rgba(0, 187, 255, 0.2);
-            border: 1px solid rgba(0, 187, 255, 0.4);
-            color: #fff;
+            background: var(--whatsapp-card-me);
+            color: #e9edef;
+            border-top-right-radius: 0;
         }
 
         .chat-msg.other {
             align-self: flex-start;
-            background: var(--bg-card);
-            border: 1px solid var(--border-color);
-            color: var(--text-main);
+            background: var(--whatsapp-card-other);
+            color: #e9edef;
+            border-top-left-radius: 0;
         }
 
-        .chat-sender {
+        .chat-sender-nickname {
             font-weight: 700;
-            font-size: 0.75rem;
-            color: var(--accent-orange);
-            margin-bottom: 2px;
+            font-size: 0.78rem;
+            color: #53bdeb;
+            margin-bottom: 3px;
         }
+
+        .chat-footer-meta {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 4px;
+            font-size: 0.68rem;
+            color: rgba(241, 241, 241, 0.6);
+            margin-top: 4px;
+            float: right;
+            margin-left: 10px;
+        }
+
+        /* Tick Marks */
+        .tick-mark {
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+        .tick-seen { color: #53bdeb; } /* Double Blue Ticks */
+        .tick-unseen { color: #8696a0; } /* Single Gray Tick */
 
         .chat-input-area {
+            background: #202c33;
+            padding: 0.8rem;
             display: flex;
+            align-items: center;
             gap: 8px;
         }
 
         .chat-input-area input {
             flex-grow: 1;
-            padding: 0.75rem;
-            background: var(--bg-primary);
-            border: 1px solid var(--border-color);
+            padding: 0.75rem 1rem;
+            background: #2a3942;
+            border: none;
             color: #fff;
-            border-radius: 8px;
+            border-radius: 20px;
             outline: none;
+            font-size: 0.95rem;
+        }
+
+        .voice-btn {
+            background: transparent;
+            border: none;
+            color: #8696a0;
+            font-size: 1.2rem;
+            cursor: pointer;
+            padding: 6px;
+            border-radius: 50%;
+            transition: var(--transition-smooth);
+        }
+
+        .voice-btn.recording {
+            color: var(--danger-red);
+            animation: pulse 1s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
         }
 
         .form-group { margin-bottom: 1rem; }
@@ -822,20 +868,21 @@
         </div>
     </div>
 
-    <!-- Live Chat Room Modal -->
+    <!-- Live Chat Room Modal (WhatsApp Theme) -->
     <div id="live-chat-modal" class="modal">
         <div class="modal-content chat-modal-content">
-            <button class="close-modal" onclick="closeModals()">&times;</button>
+            <button class="close-modal" style="top: 0.8rem; right: 1rem;" onclick="closeModals()">&times;</button>
+            
             <div class="chat-header">
                 <div>
-                    <h2 style="margin: 0; font-size: 1.3rem;">CS 2K24 Class Live Chat</h2>
-                    <span id="chat-user-badge" style="font-size: 0.8rem; color: var(--whatsapp-green);">Logged in as Member</span>
+                    <h2 style="margin: 0; font-size: 1.1rem; color: #e9edef;">CS 2K24 WhatsApp Group</h2>
+                    <span id="chat-user-badge" style="font-size: 0.78rem; color: #8696a0;">Logged in as Member</span>
                 </div>
             </div>
 
-            <!-- Active / Online Members Status -->
+            <!-- Active / Online Members Status Bar -->
             <div class="online-members-bar" id="online-members-bar">
-                <span class="online-dot"></span> <strong id="online-count-text">Active Now:</strong> <span id="online-users-list">Loading members...</span>
+                <span class="online-dot"></span> <strong id="online-count-text" style="color: #e9edef;">Online:</strong> <span id="online-users-list">Checking active members...</span>
             </div>
 
             <!-- Chat Messages Window -->
@@ -843,10 +890,11 @@
                 <div class="loading-text">Loading chat messages...</div>
             </div>
 
-            <!-- Chat Message Input -->
+            <!-- Chat Message Input Bar -->
             <div class="chat-input-area">
+                <button class="voice-btn" id="voice-btn" title="Voice to Text" onclick="toggleVoiceRecognition()">🎙️</button>
                 <input type="text" id="chat-msg-input" placeholder="Type a message..." onkeypress="handleChatKeyPress(event)">
-                <button class="btn btn-chat" id="send-msg-btn" onclick="sendChatMessage()">Send</button>
+                <button class="btn btn-chat" id="send-msg-btn" style="border-radius: 50%; width: 40px; height: 40px; padding: 0; display: flex; align-items: center; justify-content: center;" onclick="sendChatMessage()">▶</button>
             </div>
         </div>
     </div>
@@ -968,8 +1016,10 @@
 
         let galleryData = [];
         let isAdminLoggedIn = false;
-        let currentUser = null; // Verified member object
+        let currentUser = null; 
         let chatInterval = null;
+        let isRecording = false;
+        let recognition = null;
 
         async function fetchGalleryData() {
             try {
@@ -982,7 +1032,7 @@
             }
         }
 
-        /* --- Live Chat Authentication & Chat Logic --- */
+        /* --- Live Chat Authentication & Logic --- */
         function openLiveChat() {
             if (currentUser) {
                 showLiveChatModal();
@@ -1009,97 +1059,97 @@
                 closeModals();
                 showLiveChatModal();
             } else {
-                alert('Phone number not found in registered members list. Please make sure you are registered!');
+                alert('Phone number not found in registered members list. Please ensure your number is registered!');
             }
         }
 
         function showLiveChatModal() {
-            document.getElementById('chat-user-badge').textContent = `Logged in as: ${currentUser.name} (${currentUser.title || 'Member'})`;
+            const userNickname = currentUser.title || currentUser.name;
+            document.getElementById('chat-user-badge').textContent = `Logged in as: ${currentUser.name} (${userNickname})`;
             document.getElementById('live-chat-modal').classList.add('active');
             
-            updateOnlineMembersDisplay();
             loadChatMessages();
 
-            // Refresh chat every 4 seconds
             if (!chatInterval) {
-                chatInterval = setInterval(loadChatMessages, 4000);
+                chatInterval = setInterval(loadChatMessages, 3000);
             }
         }
 
-        function updateOnlineMembersDisplay() {
-            const onlineNames = galleryData.slice(0, 5).map(m => m.name).join(', ');
-            document.getElementById('online-users-list').textContent = onlineNames + " ... and others online";
-        }
-async function loadChatMessages() {
+        async function loadChatMessages() {
             const container = document.getElementById('chat-messages-container');
             const onlineList = document.getElementById('online-users-list');
             const countText = document.getElementById('online-count-text');
 
             try {
-                const res = await fetch(`${WEB_APP_URL}?action=getMessages`);
-                const responseData = await res.json();
-                
-                const messages = responseData.messages || [];
-                const activeUsers = responseData.activeUsers || [];
+                const userParam = currentUser ? `&phone=${encodeURIComponent(currentUser.phone)}` : '';
+                const res = await fetch(`${WEB_APP_URL}?action=getMessages${userParam}`);
+                const data = await res.json();
 
-                // 1. Update the Chat Messages
-                if (messages.length > 0) {
-                    container.innerHTML = ''; // Clear loading text
-                    messages.forEach(msg => {
-                        const isMe = currentUser && (String(msg.senderPhone) === String(currentUser.phone) || msg.senderName === currentUser.name);
-                        const msgDiv = document.createElement('div');
-                        msgDiv.className = `chat-msg ${isMe ? 'me' : 'other'}`;
-                        
-                        const senderName = document.createElement('div');
-                        senderName.className = 'chat-sender';
-                        senderName.textContent = isMe ? 'You' : (msg.senderName || 'Member');
+                if (data.status === 'success') {
+                    // 1. Render Messages with WhatsApp UI Styling
+                    const messages = data.messages || [];
+                    if (messages.length > 0) {
+                        container.innerHTML = '';
+                        messages.forEach(msg => {
+                            const isMe = currentUser && String(msg.phone).replace(/[^0-9]/g, '').endsWith(String(currentUser.phone).replace(/[^0-9]/g, ''));
+                            
+                            const msgDiv = document.createElement('div');
+                            msgDiv.className = `chat-msg ${isMe ? 'me' : 'other'}`;
+                            
+                            // Sender Nickname Display
+                            const senderHeader = document.createElement('div');
+                            senderHeader.className = 'chat-sender-nickname';
+                            senderHeader.textContent = isMe ? 'You' : (msg.senderName || 'Member');
 
-                        const msgText = document.createElement('div');
-                        msgText.textContent = msg.text || '';
+                            const msgText = document.createElement('span');
+                            msgText.textContent = msg.message || '';
 
-                        msgDiv.appendChild(senderName);
-                        msgDiv.appendChild(msgText);
-                        container.appendChild(msgDiv);
-                    });
-                    // Auto-scroll to the newest message
-                    container.scrollTop = container.scrollHeight;
-                } else {
-                    container.innerHTML = '<div class="loading-text">No messages yet. Be the first to say hi!</div>';
-                }
+                            // Formatting Time & Read Status Ticks
+                            const timeFormatted = msg.timestamp ? new Date(msg.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : '';
+                            const tickIcon = isMe ? '<span class="tick-mark tick-seen">✓✓</span>' : '<span class="tick-mark tick-unseen">✓</span>';
 
-                // 2. Update the "Online Now" list based on recent activity
-                if (activeUsers.length > 0) {
-                    // Ensure current user is always shown as online if they are logged in
-                    if (currentUser && !activeUsers.includes(currentUser.name)) {
-                        activeUsers.unshift(currentUser.name);
+                            const metaDiv = document.createElement('div');
+                            metaDiv.className = 'chat-footer-meta';
+                            metaDiv.innerHTML = `<span>${timeFormatted}</span> ${tickIcon}`;
+
+                            msgDiv.appendChild(senderHeader);
+                            msgDiv.appendChild(msgText);
+                            msgDiv.appendChild(metaDiv);
+                            container.appendChild(msgDiv);
+                        });
+                        container.scrollTop = container.scrollHeight;
+                    } else {
+                        container.innerHTML = '<div class="loading-text">No messages yet. Say hi to the group!</div>';
                     }
-                    countText.textContent = `Active Now (${activeUsers.length}):`;
-                    onlineList.textContent = activeUsers.join(', ');
-                } else if (currentUser) {
-                    countText.textContent = `Active Now (1):`;
-                    onlineList.textContent = currentUser.name;
-                } else {
-                    countText.textContent = `Active Now:`;
-                    onlineList.textContent = 'Waiting for members...';
+
+                    // 2. Render Online Members Top List
+                    const onlinePhones = data.onlineUsers || [];
+                    let activeNicknames = [];
+
+                    galleryData.forEach(member => {
+                        const cleanMemPhone = String(member.phone || '').replace(/[^0-9]/g, '');
+                        if (onlinePhones.some(p => cleanMemPhone.endsWith(p) || p.endsWith(cleanMemPhone))) {
+                            activeNicknames.push(member.title || member.name);
+                        }
+                    });
+
+                    if (currentUser && !activeNicknames.includes(currentUser.title || currentUser.name)) {
+                        activeNicknames.unshift(currentUser.title || currentUser.name);
+                    }
+
+                    if (activeNicknames.length > 0) {
+                        countText.textContent = `Online (${activeNicknames.length}):`;
+                        onlineList.textContent = activeNicknames.join(', ');
+                    } else {
+                        countText.textContent = `Online:`;
+                        onlineList.textContent = 'Only you active';
+                    }
                 }
-
             } catch (err) {
-                console.error("Error loading chat data:", err);
+                console.error("Error loading chat messages:", err);
             }
         }
 
-        function showLiveChatModal() {
-            document.getElementById('chat-user-badge').textContent = `Logged in as: ${currentUser.name}`;
-            document.getElementById('live-chat-modal').classList.add('active');
-            
-            // Immediately load messages and online users
-            loadChatMessages();
-
-            // Refresh chat and online status every 4 seconds
-            if (!chatInterval) {
-                chatInterval = setInterval(loadChatMessages, 4000);
-            }
-        }
         async function sendChatMessage() {
             const input = document.getElementById('chat-msg-input');
             const messageText = input.value.trim();
@@ -1110,12 +1160,13 @@ async function loadChatMessages() {
             input.value = '';
             sendBtn.disabled = true;
 
+            const userNickname = currentUser.title || currentUser.name;
+
             const payload = {
                 action: 'sendMessage',
-                senderName: currentUser.name,
-                senderPhone: currentUser.phone,
-                message: messageText,
-                timestamp: new Date().toISOString()
+                senderName: userNickname,
+                phone: currentUser.phone,
+                message: messageText
             };
 
             try {
@@ -1136,6 +1187,61 @@ async function loadChatMessages() {
             if (event.key === 'Enter') {
                 sendChatMessage();
             }
+        }
+
+        /* --- Voice-to-Text Feature --- */
+        function toggleVoiceRecognition() {
+            const voiceBtn = document.getElementById('voice-btn');
+            const chatInput = document.getElementById('chat-msg-input');
+
+            if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
+                alert('Voice-to-Text is not supported by your browser. Please use Google Chrome or modern Mobile Browsers.');
+                return;
+            }
+
+            if (isRecording) {
+                recognition.stop();
+                return;
+            }
+
+            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+            recognition = new SpeechRecognition();
+            recognition.continuous = false;
+            recognition.interimResults = true;
+            recognition.lang = 'en-US';
+
+            recognition.onstart = function() {
+                isRecording = true;
+                voiceBtn.classList.add('recording');
+                chatInput.placeholder = "Listening... Speak now";
+            };
+
+            recognition.onresult = function(event) {
+                let transcript = '';
+                for (let i = event.resultIndex; i < event.results.length; ++i) {
+                    transcript += event.results[i][0].transcript;
+                }
+                chatInput.value = transcript;
+            };
+
+            recognition.onerror = function(event) {
+                console.error("Voice Error:", event.error);
+                stopRecordingUI();
+            };
+
+            recognition.onend = function() {
+                stopRecordingUI();
+            };
+
+            recognition.start();
+        }
+
+        function stopRecordingUI() {
+            isRecording = false;
+            const voiceBtn = document.getElementById('voice-btn');
+            const chatInput = document.getElementById('chat-msg-input');
+            if (voiceBtn) voiceBtn.classList.remove('recording');
+            if (chatInput) chatInput.placeholder = "Type a message...";
         }
 
         function populateStateOptions(selectId) {
