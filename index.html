@@ -213,15 +213,27 @@
       }
 
       /* ======================================================
-         GALLERY GRID, MEMBER CARDS & ACTION BUTTONS
+         GALLERY GRID (STRICT 3-COLUMN LAYOUT)
          ====================================================== */
       .gallery-container {
           max-width: 1200px;
           margin: 0 auto;
           padding: 0 1.5rem 5rem;
           display: grid;
-          grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-          gap: 3rem;
+          grid-template-columns: repeat(3, 1fr); /* Enforce 3 columns */
+          gap: 2rem;
+      }
+
+      @media (max-width: 900px) {
+          .gallery-container {
+              grid-template-columns: repeat(2, 1fr); /* 2 columns on tablets */
+          }
+      }
+
+      @media (max-width: 600px) {
+          .gallery-container {
+              grid-template-columns: 1fr; /* 1 column on mobile */
+          }
       }
 
       @property --angle {
@@ -266,7 +278,7 @@
       .image-wrapper {
           position: relative;
           width: 100%;
-          height: 220px;
+          height: 250px;
           overflow: hidden;
           background: #000;
           cursor: pointer;
@@ -336,13 +348,13 @@
       }
 
       /* ======================================================
-         GENERIC MODAL DIALOGS
+         GENERIC MODAL DIALOGS & PREVIEW
          ====================================================== */
       .modal {
           display: none;
           position: fixed;
           top: 0; left: 0; width: 100%; height: 100%;
-          background: rgba(0, 0, 0, 0.8);
+          background: rgba(0, 0, 0, 0.85);
           z-index: 10000;
           align-items: center;
           justify-content: center;
@@ -366,7 +378,7 @@
           background: none;
           border: none;
           color: var(--text-muted);
-          font-size: 1.5rem;
+          font-size: 1.8rem;
           cursor: pointer;
       }
 
@@ -413,12 +425,14 @@
           max-height: 80vh;
           border-radius: 8px;
           object-fit: contain;
+          box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8);
       }
 
       .preview-caption {
-          margin-top: 10px;
+          margin-top: 12px;
           color: #fff;
-          font-size: 1.1rem;
+          font-size: 1.2rem;
+          font-family: 'Rajdhani', sans-serif;
           text-align: center;
       }
 
@@ -775,7 +789,7 @@
         </div>
     </section>
 
-    <!-- Gallery Grid Container -->
+    <!-- 3-Column Gallery Grid Container -->
     <main class="gallery-container" id="gallery-grid">
         <div class="loading-text">Loading album memories...</div>
     </main>
@@ -807,7 +821,7 @@
                 </div>
                 <div class="form-group">
                     <label for="input-name">Person's Name</label>
-                    <input type="text" id="input-name" placeholder="e.g. name">
+                    <input type="text" id="input-name" placeholder="e.g. Name">
                 </div>
                 <div class="form-group">
                     <label for="input-title">Nickname</label>
@@ -888,13 +902,13 @@
         </div>
     </div>
 
-    <!-- Image Preview Lightbox Modal -->
-    <div id="preview-modal" class="modal" onclick="closeModals()">
+    <!-- Image Preview Lightbox Overlay Modal -->
+    <div id="preview-modal" class="modal" onclick="closePreviewModal()">
         <div class="preview-modal-content" onclick="event.stopPropagation()">
             <audio id="BSound" preload="auto">
                 <source src="https://raw.githubusercontent.com/Usmhern/Photo-Album/main/hw.mp3" type="audio/mpeg">
             </audio>
-            <button class="close-modal" onclick="closeModals()">&times;</button>
+            <button class="close-modal" onclick="closePreviewModal()">&times;</button>
             <img id="preview-img" src="" alt="Preview">
             <div id="preview-caption" class="preview-caption"></div>
         </div>
@@ -945,6 +959,33 @@
       var currentUserPhone = "";
       var isListening = false;
       var recognition = null;
+
+      // Image Preview Trigger Handler
+      function openImagePreview(imgSrc, captionText) {
+        var modal = document.getElementById("preview-modal");
+        var img = document.getElementById("preview-img");
+        var caption = document.getElementById("preview-caption");
+        var audio = document.getElementById("BSound");
+
+        if (img) img.src = imgSrc;
+        if (caption) caption.innerText = captionText || "";
+        if (modal) modal.style.display = "flex";
+
+        if (audio) {
+          audio.currentTime = 0;
+          audio.play().catch(function(e) { console.log("Audio play prevented:", e); });
+        }
+      }
+
+      function closePreviewModal() {
+        var modal = document.getElementById("preview-modal");
+        if (modal) modal.style.display = "none";
+      }
+
+      function closeModals() {
+        var modals = document.querySelectorAll(".modal");
+        modals.forEach(function(m) { m.style.display = "none"; });
+      }
 
       // Safe execution wrapper for Google Apps Script
       function callScript(funcName, successCallback, payload) {
