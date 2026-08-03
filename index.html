@@ -448,6 +448,7 @@
             background: var(--whatsapp-bg);
             border-radius: 12px;
             overflow: hidden;
+            position: relative;
         }
 
         .chat-header {
@@ -531,8 +532,52 @@
             font-size: 0.8rem;
             font-weight: bold;
         }
-        .tick-seen { color: #53bdeb; } /* Double Blue Ticks */
-        .tick-unseen { color: #8696a0; } /* Single Gray Tick */
+        .tick-seen { color: #53bdeb; }
+        .tick-unseen { color: #8696a0; }
+
+        /* Mention Tag Styling in Messages */
+        .chat-mention-tag {
+            color: #53bdeb;
+            background: rgba(83, 189, 235, 0.15);
+            padding: 2px 5px;
+            border-radius: 4px;
+            font-weight: 600;
+        }
+
+        /* Mention Auto-complete Popup */
+        .mention-dropdown {
+            position: absolute;
+            bottom: 60px;
+            left: 10px;
+            right: 10px;
+            background: #2a3942;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            max-height: 150px;
+            overflow-y: auto;
+            display: none;
+            z-index: 1050;
+            box-shadow: 0 -4px 15px rgba(0, 0, 0, 0.4);
+        }
+
+        .mention-dropdown.active {
+            display: block;
+        }
+
+        .mention-item {
+            padding: 10px 15px;
+            color: #e9edef;
+            font-size: 0.9rem;
+            cursor: pointer;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .mention-item:hover {
+            background: #005c4b;
+        }
 
         .chat-input-area {
             background: #202c33;
@@ -540,6 +585,7 @@
             display: flex;
             align-items: center;
             gap: 8px;
+            position: relative;
         }
 
         .chat-input-area input {
@@ -808,9 +854,9 @@
         <h1><span id="glowtt" style="color:#0be;">YOBE STATE UNIVERSITY</span></h1>
         <h3>CS <span style="color:#e20" id="glowt2">2K24</span> DIGITAL PHOTO ALBUM</h3>
     </header>
-//////////////////////////////////////////////////////////////////////////////////
+
     <div class="admin-bar">
-        <button class="btn btn-chat" onclick="openLiveChat()">💬Live Chat</button>
+        <button class="btn btn-chat" onclick="openLiveChat()">💬 Member Live Chat</button>
         <button id="Lock" class="btn btn-primary" onclick="checkAdminAccess()" style="display:none;">Central Admin Panel</button>
         <button class="btn" id="logout-btn" style="display:none;" onclick="adminLogout()">Logout Admin</button>
     </div>
@@ -862,20 +908,20 @@
             </p>
             <div class="form-group">
                 <label for="chat-phone-input">Phone Number</label>
-                <input type="tel" id="chat-phone-input" placeholder="e.g. +2348012345678">
+                <input type="tel" id="chat-phone-input" placeholder="e.g. 08012345678">
             </div>
             <button class="btn btn-chat" style="width:100%; font-weight: bold;" onclick="verifyChatPhone()">Access Live Chat</button>
         </div>
     </div>
 
-    <!-- Live Chat Room Modal -->
+    <!-- Live Chat Room Modal (WhatsApp Theme + Mentions) -->
     <div id="live-chat-modal" class="modal">
         <div class="modal-content chat-modal-content">
             <button class="close-modal" style="top: 0.8rem; right: 1rem;" onclick="closeModals()">&times;</button>
             
             <div class="chat-header">
                 <div>
-                    <h2 style="margin: 0; font-size: 1.1rem; color: #e9edef;">CS 2K24 GROUP CHAT</h2>
+                    <h2 style="margin: 0; font-size: 1.1rem; color: #e9edef;">CS 2K24 WhatsApp Group</h2>
                     <span id="chat-user-badge" style="font-size: 0.78rem; color: #8696a0;">Logged in as Member</span>
                 </div>
             </div>
@@ -890,10 +936,13 @@
                 <div class="loading-text">Loading chat messages...</div>
             </div>
 
+            <!-- Mention Auto-Complete Dropdown Menu -->
+            <div class="mention-dropdown" id="mention-dropdown"></div>
+
             <!-- Chat Message Input Bar -->
             <div class="chat-input-area">
                 <button class="voice-btn" id="voice-btn" title="Voice to Text" onclick="toggleVoiceRecognition()">🎙️</button>
-                <input type="text" id="chat-msg-input" placeholder="Type a message..." onkeypress="handleChatKeyPress(event)">
+                <input type="text" id="chat-msg-input" placeholder="Type a message... (Type @ to mention)" oninput="handleMentionInput(event)" onkeypress="handleChatKeyPress(event)">
                 <button class="btn btn-chat" id="send-msg-btn" style="border-radius: 50%; width: 40px; height: 40px; padding: 0; display: flex; align-items: center; justify-content: center;" onclick="sendChatMessage()">▶</button>
             </div>
         </div>
@@ -1075,6 +1124,26 @@
             }
         }
 
+        /* Mention Helper Function: Render Text with Mentions Highlighted */
+        function formatMentionsInText(text) {
+            if (!text) return '';
+            // Regex matches @Word or @"Multiple Words"
+            return text.replace(/@([a-zA-Z0-9_.\-\s]+?)(?=\s|$|[.,!?])/g, (match, p1) => {
+                // Check if p1 matches a registered nickname or name
+                const matchedMember = galleryData.some(m => {
+                    const nick = (m.title || '').toLowerCase();
+                    const name = (m.name || '').toLowerCase();
+                    const search = p1.trim().toLowerCase();
+                    return nick === search || name === search;
+                });
+                
+                if (matchedMember || p1.trim().length > 0) {
+                    return `<span class="chat-mention-tag">@${p1.trim()}</span>`;
+                }
+                return match;
+            });
+        }
+
         async function loadChatMessages() {
             const container = document.getElementById('chat-messages-container');
             const onlineList = document.getElementById('online-users-list');
@@ -1086,7 +1155,7 @@
                 const data = await res.json();
 
                 if (data.status === 'success') {
-                    // 1. Render Messages with WhatsApp UI Styling
+                    // 1. Render Messages with WhatsApp UI Styling & Mention Highlight
                     const messages = data.messages || [];
                     if (messages.length > 0) {
                         container.innerHTML = '';
@@ -1102,7 +1171,7 @@
                             senderHeader.textContent = isMe ? 'You' : (msg.senderName || 'Member');
 
                             const msgText = document.createElement('span');
-                            msgText.textContent = msg.message || '';
+                            msgText.innerHTML = formatMentionsInText(msg.message || '');
 
                             // Formatting Time & Read Status Ticks
                             const timeFormatted = msg.timestamp ? new Date(msg.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : '';
@@ -1150,13 +1219,64 @@
             }
         }
 
+        /* --- @Mention Dropdown & Typing Handler --- */
+        function handleMentionInput(e) {
+            const input = e.target;
+            const text = input.value;
+            const dropdown = document.getElementById('mention-dropdown');
+            
+            const lastAtIndex = text.lastIndexOf('@');
+            
+            if (lastAtIndex !== -1 && lastAtIndex >= text.length - 15) {
+                const query = text.substring(lastAtIndex + 1).toLowerCase();
+                
+                // Filter registered members matching nickname or name
+                const matches = galleryData.filter(m => {
+                    const nick = (m.title || '').toLowerCase();
+                    const name = (m.name || '').toLowerCase();
+                    return nick.includes(query) || name.includes(query);
+                });
+
+                if (matches.length > 0) {
+                    dropdown.innerHTML = '';
+                    matches.forEach(member => {
+                        const nickname = member.title || member.name;
+                        const item = document.createElement('div');
+                        item.className = 'mention-item';
+                        item.innerHTML = `👤 <strong>@${nickname}</strong> <span style="font-size:0.75rem; opacity:0.6;">(${member.name})</span>`;
+                        item.onclick = () => selectMention(nickname, lastAtIndex);
+                        dropdown.appendChild(item);
+                    });
+                    dropdown.classList.add('active');
+                    return;
+                }
+            }
+            
+            dropdown.classList.remove('active');
+        }
+
+        function selectMention(nickname, atIndex) {
+            const input = document.getElementById('chat-msg-input');
+            const dropdown = document.getElementById('mention-dropdown');
+            const text = input.value;
+
+            // Replace text from @ to current cursor position with selected mention
+            const beforeAt = text.substring(0, atIndex);
+            input.value = `${beforeAt}@${nickname} `;
+            
+            dropdown.classList.remove('active');
+            input.focus();
+        }
+
         async function sendChatMessage() {
             const input = document.getElementById('chat-msg-input');
+            const dropdown = document.getElementById('mention-dropdown');
             const messageText = input.value.trim();
             const sendBtn = document.getElementById('send-msg-btn');
 
             if (!messageText) return;
 
+            dropdown.classList.remove('active');
             input.value = '';
             sendBtn.disabled = true;
 
@@ -1241,7 +1361,7 @@
             const voiceBtn = document.getElementById('voice-btn');
             const chatInput = document.getElementById('chat-msg-input');
             if (voiceBtn) voiceBtn.classList.remove('recording');
-            if (chatInput) chatInput.placeholder = "Type a message...";
+            if (chatInput) chatInput.placeholder = "Type a message... (Type @ to mention)";
         }
 
         function populateStateOptions(selectId) {
@@ -1446,6 +1566,7 @@
 
         function closeModals() {
             document.querySelectorAll('.modal').forEach(m => m.classList.remove('active'));
+            document.getElementById('mention-dropdown').classList.remove('active');
             if (chatInterval) {
                 clearInterval(chatInterval);
                 chatInterval = null;
