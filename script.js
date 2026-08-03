@@ -1035,11 +1035,10 @@
         populateStateOptions('input-state');
         populateStateOptions('edit-state');
         fetchGalleryData();
-    </script>
+  
 
     <!-- Intro Animation Script -->
-    <script>
-        (function () {
+          (function () {
             const lines = [
                 "WELCOME TO CS 2K24 DIGITAL PHOTO ALBUM.",
                 "O Allah, the Most Merciful, the Most Compassionate",
