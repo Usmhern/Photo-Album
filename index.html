@@ -484,7 +484,7 @@
         }
 
         .chat-msg {
-            max-width: 75%;
+            max-width: 80%;
             padding: 0.5rem 0.8rem;
             border-radius: 8px;
             font-size: 0.9rem;
@@ -544,6 +544,42 @@
             font-weight: 600;
         }
 
+        /* Voice Note Audio Player Styling */
+        .chat-voice-player {
+            width: 230px;
+            height: 36px;
+            outline: none;
+            margin-top: 4px;
+            border-radius: 18px;
+        }
+
+        .voice-recording-indicator {
+            display: none;
+            align-items: center;
+            gap: 8px;
+            color: var(--danger-red);
+            font-weight: 600;
+            font-size: 0.88rem;
+            padding-left: 8px;
+        }
+
+        .voice-recording-indicator.active {
+            display: flex;
+        }
+
+        .recording-dot {
+            width: 10px;
+            height: 10px;
+            background-color: var(--danger-red);
+            border-radius: 50%;
+            animation: blink 0.8s infinite alternate;
+        }
+
+        @keyframes blink {
+            from { opacity: 1; }
+            to { opacity: 0.2; }
+        }
+
         /* Mention Auto-complete Popup */
         .mention-dropdown {
             position: absolute;
@@ -599,26 +635,20 @@
             font-size: 0.95rem;
         }
 
-        .voice-btn {
+        .voice-record-btn {
             background: transparent;
             border: none;
             color: #8696a0;
-            font-size: 1.2rem;
+            font-size: 1.25rem;
             cursor: pointer;
             padding: 6px;
             border-radius: 50%;
             transition: var(--transition-smooth);
         }
 
-        .voice-btn.recording {
+        .voice-record-btn.recording {
             color: var(--danger-red);
-            animation: pulse 1s infinite;
-        }
-
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.2); }
-            100% { transform: scale(1); }
+            transform: scale(1.15);
         }
 
         .form-group { margin-bottom: 1rem; }
@@ -813,6 +843,7 @@
             .action-btns { grid-template-columns: 1fr; gap: 4px; padding-top: 0.3rem; }
             .whatsapp-btn, .call-btn { padding: 0.3rem 0.2rem; font-size: 0.62rem; }
             .btn-icon { width: 11px; height: 11px; }
+            .chat-voice-player { width: 180px; }
         }
     </style>
 </head>
@@ -914,7 +945,7 @@
         </div>
     </div>
 
-    <!-- Live Chat Room Modal (WhatsApp Theme + Mentions) -->
+    <!-- Live Chat Room Modal (WhatsApp Theme + Voice Notes + Mentions) -->
     <div id="live-chat-modal" class="modal">
         <div class="modal-content chat-modal-content">
             <button class="close-modal" style="top: 0.8rem; right: 1rem;" onclick="closeModals()">&times;</button>
@@ -941,8 +972,14 @@
 
             <!-- Chat Message Input Bar -->
             <div class="chat-input-area">
-                <button class="voice-btn" id="voice-btn" title="Voice to Text" onclick="toggleVoiceRecognition()">🎙️</button>
+                <!-- Recording Animation Indicator -->
+                <div class="voice-recording-indicator" id="recording-indicator">
+                    <span class="recording-dot"></span> Recording... <span id="recording-timer">0s</span>
+                </div>
+
                 <input type="text" id="chat-msg-input" placeholder="Type a message... (Type @ to mention)" oninput="handleMentionInput(event)" onkeypress="handleChatKeyPress(event)">
+                
+                <button class="voice-record-btn" id="voice-record-btn" title="Hold or Click to Record Voice Note" onclick="toggleVoiceNoteRecording()">🎙️</button>
                 <button class="btn btn-chat" id="send-msg-btn" style="border-radius: 50%; width: 40px; height: 40px; padding: 0; display: flex; align-items: center; justify-content: center;" onclick="sendChatMessage()">▶</button>
             </div>
         </div>
@@ -1067,8 +1104,13 @@
         let isAdminLoggedIn = false;
         let currentUser = null; 
         let chatInterval = null;
-        let isRecording = false;
-        let recognition = null;
+
+        /* Voice Note Recording Variables */
+        let mediaRecorder = null;
+        let audioChunks = [];
+        let isVoiceRecording = false;
+        let recordingSeconds = 0;
+        let recordingTimerInterval = null;
 
         async function fetchGalleryData() {
             try {
@@ -1127,9 +1169,7 @@
         /* Mention Helper Function: Render Text with Mentions Highlighted */
         function formatMentionsInText(text) {
             if (!text) return '';
-            // Regex matches @Word or @"Multiple Words"
             return text.replace(/@([a-zA-Z0-9_.\-\s]+?)(?=\s|$|[.,!?])/g, (match, p1) => {
-                // Check if p1 matches a registered nickname or name
                 const matchedMember = galleryData.some(m => {
                     const nick = (m.title || '').toLowerCase();
                     const name = (m.name || '').toLowerCase();
@@ -1155,7 +1195,6 @@
                 const data = await res.json();
 
                 if (data.status === 'success') {
-                    // 1. Render Messages with WhatsApp UI Styling & Mention Highlight
                     const messages = data.messages || [];
                     if (messages.length > 0) {
                         container.innerHTML = '';
@@ -1165,15 +1204,23 @@
                             const msgDiv = document.createElement('div');
                             msgDiv.className = `chat-msg ${isMe ? 'me' : 'other'}`;
                             
-                            // Sender Nickname Display
                             const senderHeader = document.createElement('div');
                             senderHeader.className = 'chat-sender-nickname';
                             senderHeader.textContent = isMe ? 'You' : (msg.senderName || 'Member');
 
-                            const msgText = document.createElement('span');
-                            msgText.innerHTML = formatMentionsInText(msg.message || '');
+                            const msgBody = document.createElement('div');
 
-                            // Formatting Time & Read Status Ticks
+                            // Check if message is a Voice Note URL or Base64 Data
+                            if (msg.audioUrl || (msg.message && (msg.message.startsWith('data:audio') || msg.message.endsWith('.mp3') || msg.message.endsWith('.webm') || msg.message.endsWith('.ogg')))) {
+                                const audioSrc = msg.audioUrl || msg.message;
+                                msgBody.innerHTML = `
+                                    <div style="font-size: 0.8rem; opacity: 0.8; margin-bottom: 2px;">🎤 Voice Note</div>
+                                    <audio class="chat-voice-player" controls src="${audioSrc}"></audio>
+                                `;
+                            } else {
+                                msgBody.innerHTML = formatMentionsInText(msg.message || '');
+                            }
+
                             const timeFormatted = msg.timestamp ? new Date(msg.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : '';
                             const tickIcon = isMe ? '<span class="tick-mark tick-seen">✓✓</span>' : '<span class="tick-mark tick-unseen">✓</span>';
 
@@ -1182,16 +1229,16 @@
                             metaDiv.innerHTML = `<span>${timeFormatted}</span> ${tickIcon}`;
 
                             msgDiv.appendChild(senderHeader);
-                            msgDiv.appendChild(msgText);
+                            msgDiv.appendChild(msgBody);
                             msgDiv.appendChild(metaDiv);
                             container.appendChild(msgDiv);
                         });
                         container.scrollTop = container.scrollHeight;
                     } else {
-                        container.innerHTML = '<div class="loading-text">No messages yet. Say hi to the group!</div>';
+                        container.innerHTML = '<div class="loading-text">No messages yet. Say hi or record a voice note!</div>';
                     }
 
-                    // 2. Render Online Members Top List
+                    // Render Online Members List
                     const onlinePhones = data.onlineUsers || [];
                     let activeNicknames = [];
 
@@ -1230,7 +1277,6 @@
             if (lastAtIndex !== -1 && lastAtIndex >= text.length - 15) {
                 const query = text.substring(lastAtIndex + 1).toLowerCase();
                 
-                // Filter registered members matching nickname or name
                 const matches = galleryData.filter(m => {
                     const nick = (m.title || '').toLowerCase();
                     const name = (m.name || '').toLowerCase();
@@ -1260,7 +1306,6 @@
             const dropdown = document.getElementById('mention-dropdown');
             const text = input.value;
 
-            // Replace text from @ to current cursor position with selected mention
             const beforeAt = text.substring(0, atIndex);
             input.value = `${beforeAt}@${nickname} `;
             
@@ -1309,59 +1354,93 @@
             }
         }
 
-        /* --- Voice-to-Text Feature --- */
-        function toggleVoiceRecognition() {
-            const voiceBtn = document.getElementById('voice-btn');
-            const chatInput = document.getElementById('chat-msg-input');
+        /* --- 🎙️ Voice Note Recording & Playback Implementation --- */
+        async function toggleVoiceNoteRecording() {
+            if (!isVoiceRecording) {
+                try {
+                    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                    mediaRecorder = new MediaRecorder(stream);
+                    audioChunks = [];
 
-            if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
-                alert('Voice-to-Text is not supported by your browser. Please use Google Chrome or modern Mobile Browsers.');
-                return;
-            }
+                    mediaRecorder.ondataavailable = event => {
+                        audioChunks.push(event.data);
+                    };
 
-            if (isRecording) {
-                recognition.stop();
-                return;
-            }
+                    mediaRecorder.onstop = async () => {
+                        const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
+                        await uploadAndSendVoiceNote(audioBlob);
+                    };
 
-            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-            recognition = new SpeechRecognition();
-            recognition.continuous = false;
-            recognition.interimResults = true;
-            recognition.lang = 'en-US';
+                    mediaRecorder.start();
+                    isVoiceRecording = true;
+                    recordingSeconds = 0;
 
-            recognition.onstart = function() {
-                isRecording = true;
-                voiceBtn.classList.add('recording');
-                chatInput.placeholder = "Listening... Speak now";
-            };
+                    // UI Feedback
+                    document.getElementById('voice-record-btn').classList.add('recording');
+                    document.getElementById('voice-record-btn').title = "Click to Stop & Send Voice Note";
+                    document.getElementById('chat-msg-input').style.display = 'none';
+                    document.getElementById('recording-indicator').classList.add('active');
 
-            recognition.onresult = function(event) {
-                let transcript = '';
-                for (let i = event.resultIndex; i < event.results.length; ++i) {
-                    transcript += event.results[i][0].transcript;
+                    recordingTimerInterval = setInterval(() => {
+                        recordingSeconds++;
+                        document.getElementById('recording-timer').textContent = `${recordingSeconds}s`;
+                    }, 1000);
+
+                } catch (err) {
+                    alert('Microphone permission denied or not supported by your browser.');
+                    console.error("Microphone Access Error:", err);
                 }
-                chatInput.value = transcript;
-            };
-
-            recognition.onerror = function(event) {
-                console.error("Voice Error:", event.error);
-                stopRecordingUI();
-            };
-
-            recognition.onend = function() {
-                stopRecordingUI();
-            };
-
-            recognition.start();
+            } else {
+                stopAndSendVoiceNote();
+            }
         }
 
-        function stopRecordingUI() {
-            isRecording = false;
-            const voiceBtn = document.getElementById('voice-btn');
-            const chatInput = document.getElementById('chat-msg-input');
-            if (voiceBtn) voiceBtn.classList.remove('recording');
-            if (chatInput) chatInput.placeholder = "Type a message... (Type @ to mention)";
+        function stopAndSendVoiceNote() {
+            if (mediaRecorder && isVoiceRecording) {
+                mediaRecorder.stop();
+                mediaRecorder.stream.getTracks().forEach(track => track.stop()); // Release Mic
+                
+                isVoiceRecording = false;
+                clearInterval(recordingTimerInterval);
+
+                // Reset UI
+                document.getElementById('voice-record-btn').classList.remove('recording');
+                document.getElementById('voice-record-btn').title = "Hold or Click to Record Voice Note";
+                document.getElementById('chat-msg-input').style.display = 'block';
+                document.getElementById('recording-indicator').classList.remove('active');
+            }
+        }
+
+        async function uploadAndSendVoiceNote(blob) {
+            const sendBtn = document.getElementById('send-msg-btn');
+            sendBtn.disabled = true;
+
+            const reader = new FileReader();
+            reader.readAsDataURL(blob);
+            reader.onloadend = async () => {
+                const base64Audio = reader.result;
+                const userNickname = currentUser.title || currentUser.name;
+
+                const payload = {
+                    action: 'sendMessage',
+                    senderName: userNickname,
+                    phone: currentUser.phone,
+                    message: base64Audio // Upload Base64 Data URI for Audio
+                };
+
+                try {
+                    await fetch(WEB_APP_URL, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                        body: JSON.stringify(payload)
+                    });
+                    await loadChatMessages();
+                } catch (err) {
+                    console.error("Error sending voice note:", err);
+                } finally {
+                    sendBtn.disabled = false;
+                }
+            };
         }
 
         function populateStateOptions(selectId) {
@@ -1567,6 +1646,9 @@
         function closeModals() {
             document.querySelectorAll('.modal').forEach(m => m.classList.remove('active'));
             document.getElementById('mention-dropdown').classList.remove('active');
+            if (isVoiceRecording) {
+                stopAndSendVoiceNote();
+            }
             if (chatInterval) {
                 clearInterval(chatInterval);
                 chatInterval = null;
