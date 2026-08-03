@@ -105,10 +105,10 @@
             const currentTheme = wrapper.getAttribute('data-chat-theme');
             if (currentTheme === 'dark') {
                 wrapper.setAttribute('data-chat-theme', 'light');
-                btn.textContent = '🌙 Dark';
+                btn.textContent = '🌙';
             } else {
                 wrapper.setAttribute('data-chat-theme', 'dark');
-                btn.textContent = '☀️ Light';
+                btn.textContent = '☀️';
             }
         }
 
