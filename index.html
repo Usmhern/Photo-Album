@@ -103,11 +103,6 @@
             line-height: 1.2;
         }
 
-        .album-header .highlight {
-            color: var(--accent-orange);
-            text-shadow: 0 0 20px var(--accent-orange-glow);
-        }
-
         .admin-bar {
             display: flex;
             justify-content: center;
@@ -179,6 +174,17 @@
         .btn-primary {
             background-color: var(--accent-orange);
             border-color: var(--accent-orange);
+            color: #000;
+        }
+
+        .btn-chat {
+            background-color: var(--whatsapp-green);
+            color: #fff;
+            border: none;
+        }
+
+        .btn-chat:hover {
+            background-color: var(--whatsapp-green-hover);
         }
 
         .btn-reset {
@@ -369,6 +375,40 @@
 
         .btn-icon { width: 16px; height: 16px; fill: currentColor; }
 
+        /* Floating Live Chat Button */
+        .floating-chat-btn {
+            position: fixed;
+            bottom: 25px;
+            right: 25px;
+            background: var(--whatsapp-green);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            padding: 12px 20px;
+            font-weight: 700;
+            box-shadow: 0 4px 15px rgba(37, 211, 102, 0.4);
+            cursor: pointer;
+            z-index: 999;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: var(--transition-smooth);
+        }
+
+        .floating-chat-btn:hover {
+            transform: scale(1.05);
+            background: var(--whatsapp-green-hover);
+        }
+
+        .online-dot {
+            width: 10px;
+            height: 10px;
+            background-color: #00ff66;
+            border-radius: 50%;
+            display: inline-block;
+            box-shadow: 0 0 8px #00ff66;
+        }
+
         .modal {
             position: fixed;
             inset: 0;
@@ -401,23 +441,92 @@
             font-size: 1.5rem;
         }
 
-        .edit-preview-box {
-            text-align: center;
-            margin-bottom: 1.25rem;
-            padding: 0.75rem;
-            background: var(--bg-primary);
-            border-radius: 8px;
-            border: 1px solid var(--border-color);
+        /* Live Chat Modal Layout */
+        .chat-modal-content {
+            max-width: 600px;
+            height: 80vh;
+            display: flex;
+            flex-direction: column;
+            padding: 1.25rem;
         }
 
-        .edit-preview-img {
-            width: 110px;
-            height: 110px;
-            object-fit: cover;
-            object-position: top center;
-            border-radius: 50%;
-            border: 2px solid var(--accent-orange);
-            margin-bottom: 0.5rem;
+        .chat-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 0.8rem;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 0.8rem;
+        }
+
+        .online-members-bar {
+            background: var(--bg-primary);
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-bottom: 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            overflow-x: auto;
+        }
+
+        .chat-messages {
+            flex-grow: 1;
+            overflow-y: auto;
+            background: var(--bg-primary);
+            border-radius: 8px;
+            padding: 1rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            margin-bottom: 0.8rem;
+        }
+
+        .chat-msg {
+            max-width: 80%;
+            padding: 0.6rem 0.9rem;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            line-height: 1.4;
+            word-wrap: break-word;
+        }
+
+        .chat-msg.me {
+            align-self: flex-end;
+            background: rgba(0, 187, 255, 0.2);
+            border: 1px solid rgba(0, 187, 255, 0.4);
+            color: #fff;
+        }
+
+        .chat-msg.other {
+            align-self: flex-start;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            color: var(--text-main);
+        }
+
+        .chat-sender {
+            font-weight: 700;
+            font-size: 0.75rem;
+            color: var(--accent-orange);
+            margin-bottom: 2px;
+        }
+
+        .chat-input-area {
+            display: flex;
+            gap: 8px;
+        }
+
+        .chat-input-area input {
+            flex-grow: 1;
+            padding: 0.75rem;
+            background: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            color: #fff;
+            border-radius: 8px;
+            outline: none;
         }
 
         .form-group { margin-bottom: 1rem; }
@@ -440,8 +549,6 @@
             outline: none;
         }
 
-        .form-group select option { background: var(--bg-secondary); color: #fff; }
-
         .close-modal {
             position: absolute;
             top: 1rem;
@@ -452,17 +559,6 @@
             font-size: 1.25rem;
             cursor: pointer;
         }
-
-        .admin-manage-item {
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center; 
-            padding: 0.65rem 0; 
-            border-bottom: 1px solid var(--border-color);
-            gap: 10px;
-        }
-
-        .admin-item-actions { display: flex; align-items: center; gap: 6px; }
 
         .preview-modal-content {
             background: transparent;
@@ -653,6 +749,11 @@
         </div>
     </div>
 
+    <!-- Floating Live Chat Button -->
+    <button class="floating-chat-btn" onclick="openLiveChat()">
+        <span class="online-dot"></span> Live Chat
+    </button>
+
     <!-- Album Header -->
     <header class="album-header">
         <div class="nacos-logo-container" title="Nigeria Association of Computer Science Students">
@@ -663,6 +764,7 @@
     </header>
 
     <div class="admin-bar">
+        <button class="btn btn-chat" onclick="openLiveChat()">💬 Member Live Chat</button>
         <button id="Lock" class="btn btn-primary" onclick="checkAdminAccess()" style="display:none;">Central Admin Panel</button>
         <button class="btn" id="logout-btn" style="display:none;" onclick="adminLogout()">Logout Admin</button>
     </div>
@@ -701,6 +803,51 @@
                 <input type="password" id="admin-pass" placeholder="Enter code">
             </div>
             <button class="btn btn-primary" style="width:100%;" onclick="verifyAdmin()">Login</button>
+        </div>
+    </div>
+
+    <!-- Chat Phone Verification Modal -->
+    <div id="chat-auth-modal" class="modal">
+        <div class="modal-content">
+            <button class="close-modal" onclick="closeModals()">&times;</button>
+            <h2>Member Verification</h2>
+            <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1rem;">
+                Please enter your registered phone number to join the class live chat:
+            </p>
+            <div class="form-group">
+                <label for="chat-phone-input">Phone Number</label>
+                <input type="tel" id="chat-phone-input" placeholder="e.g. 08012345678">
+            </div>
+            <button class="btn btn-chat" style="width:100%; font-weight: bold;" onclick="verifyChatPhone()">Access Live Chat</button>
+        </div>
+    </div>
+
+    <!-- Live Chat Room Modal -->
+    <div id="live-chat-modal" class="modal">
+        <div class="modal-content chat-modal-content">
+            <button class="close-modal" onclick="closeModals()">&times;</button>
+            <div class="chat-header">
+                <div>
+                    <h2 style="margin: 0; font-size: 1.3rem;">CS 2K24 Class Live Chat</h2>
+                    <span id="chat-user-badge" style="font-size: 0.8rem; color: var(--whatsapp-green);">Logged in as Member</span>
+                </div>
+            </div>
+
+            <!-- Active / Online Members Status -->
+            <div class="online-members-bar" id="online-members-bar">
+                <span class="online-dot"></span> <strong id="online-count-text">Active Now:</strong> <span id="online-users-list">Loading members...</span>
+            </div>
+
+            <!-- Chat Messages Window -->
+            <div class="chat-messages" id="chat-messages-container">
+                <div class="loading-text">Loading chat messages...</div>
+            </div>
+
+            <!-- Chat Message Input -->
+            <div class="chat-input-area">
+                <input type="text" id="chat-msg-input" placeholder="Type a message..." onkeypress="handleChatKeyPress(event)">
+                <button class="btn btn-chat" id="send-msg-btn" onclick="sendChatMessage()">Send</button>
+            </div>
         </div>
     </div>
 
@@ -752,9 +899,9 @@
             <button class="close-modal" onclick="closeEditModal()">&times;</button>
             <h2>Edit Member Information</h2>
 
-            <div class="edit-preview-box">
-                <img id="edit-preview-img" class="edit-preview-img" src="" alt="Member Image">
-                <div id="edit-preview-name" style="font-weight: 700; color: var(--text-main);"></div>
+            <div class="edit-preview-box" style="text-align: center; margin-bottom: 1rem;">
+                <img id="edit-preview-img" style="width: 100px; height: 100px; border-radius: 50%; object-fit: cover;" src="" alt="Member Image">
+                <div id="edit-preview-name" style="font-weight: 700; color: var(--text-main); margin-top: 0.5rem;"></div>
             </div>
 
             <input type="hidden" id="edit-row-id">
@@ -816,45 +963,13 @@
         const nigeriaStatesAndLgas = {
             "Abia": ["Aba North", "Aba South", "Arochukwu", "Bende", "Ikwuano", "Isiala Ngwa North", "Isiala Ngwa South", "Isuikwuato", "Obi Ngwa", "Ohafia", "Osisioma", "Ugwunagbo", "Ukwa East", "Ukwa West", "Umuahia North", "Umuahia South", "Umu Nneochi"],
             "Adamawa": ["Demsa", "Fufure", "Ganye", "Gayuk", "Gombi", "Grie", "Hong", "Jada", "Lamu", "Madagali", "Maiha", "Mayo Belwa", "Michika", "Mubi North", "Mubi South", "Numan", "Shelleng", "Song", "Toungo", "Yerva", "Yola North", "Yola South"],
-            "Akwa Ibom": ["Abak", "Eastern Obolo", "Eket", "Esit Eket", "Essien Udim", "Etim Ekpo", "Etinan", "Ibeno", "Ibesikpo Asutan", "Ibiono-Ibom", "Ika", "Ikono", "Ikot Abasi", "Ikot Ekpene", "Ini", "Itu", "Mbo", "Mkpat-Enin", "Nsit-Atai", "Nsit-Ibiom", "Nsit-Ubium", "Obot Akara", "Okobo", "Onna", "Oron", "Oruk Anam", "Udung-Uko", "Uruan", "Urue-Offong/Oruko", "Uyo"],
-            "Anambra": ["Aguata", "Anambra East", "Anambra West", "Anaocha", "Awka North", "Awka South", "Ayamelum", "Dunukofia", "Ekwusigo", "Idemili North", "Idemili South", "Ihiala", "Nnjikoka", "Nnewi North", "Nnewi South", "Ogbaru", "Onitsha North", "Onitsha South", "Orumba North", "Orumba South", "Oyi"],
-            "Bauchi": ["Alkaleri", "Bauchi", "Bogoro", "Damban", "Darazo", "Dass", "Gamawa", "Ganjuwa", "Giade", "Itas/Gadau", "Jama'are", "Katagum", "Kirfi", "Misau", "Ningi", "Shira", "Tafawa Balewa", "Toro", "Warji", "Zaki"],
-            "Bayelsa": ["Brass", "Ekeremor", "Kolokuma/Opokuma", "Nembe", "Ogbia", "Sagbama", "Southern Ijaw", "Yenagoa"],
-            "Benue": ["Agatu", "Apa", "Ado", "Buruku", "Gboko", "Guma", "Gwer East", "Gwer West", "Katsina-Ala", "Konshisha", "Kwande", "Logo", "Makurdi", "Obi", "Ogbadibo", "Ohimini", "Oju", "Okpokwu", "Oturkpo", "Tarka", "Ukum", "Ushongo", "Vandeikya"],
-            "Borno": ["Abadam", "Askira/Uba", "Bama", "Bayo", "Biu", "Chibok", "Damboa", "Dikwa", "Gubio", "Guzamala", "Gwoza", "Hawul", "Jere", "Kaga", "Kala/Balge", "Konduga", "Kukawa", "Kwaya Kusar", "Mafa", "Magumeri", "Maiduguri", "Marte", "Mobbar", "Monguno", "Ngala", "Nganzai", "Shani"],
-            "Cross River": ["Abi", "Akamkpa", "Akpabuyo", "Bakassi", "Bekwarra", "Biase", "Boki", "Calabar Municipal", "Calabar South", "Etung", "Ikom", "Yala", "Obanliku", "Obubra", "Obudu", "Odukpani", "Ogoja", "Yakuur"],
-            "Delta": ["Aniocha North", "Aniocha South", "Bomadi", "Burutu", "Ethiope East", "Ethiope West", "Ika North East", "Ika South", "Isoko North", "Isoko South", "Ndokwa East", "Ndokwa West", "Okpe", "Oshimili North", "Oshimili South", "Patani", "Sapele", "Udu", "Ughelli North", "Ughelli South", "Ukwuani", "Uvwie", "Warri North", "Warri South", "Warri South West"],
-            "Ebonyi": ["Abakaliki", "Afikpo North", "Afikpo South", "Ebonyi", "Ezza North", "Ezza South", "Ikwo", "Ishielu", "Ivo", "Izzi", "Ohaozara", "Ohaukwu", "Onicha"],
-            "Edo": ["Akoko-Edo", "Egor", "Esan Central", "Esan North-East", "Esan South-East", "Esan West", "Etsako Central", "Etsako East", "Etsako West", "Igueben", "Ikpoba Okha", "Orhionmwon", "Oredo", "Ovia North-East", "Ovia South-West", "Owan East", "Owan West", "Uhunmwonde"],
-            "Ekiti": ["Ado Ekiti", "Efon", "Ekiti East", "Ekiti South-West", "Ekiti West", "Emure", "Gbonyin", "Ido Osi", "Ijero", "Ikere", "Ikole", "Ilejemeje", "Irepodun/Ifelodun", "Ise/Orun", "Moba", "Oye"],
-            "Enugu": ["Aninri", "Awgu", "Enugu East", "Enugu North", "Enugu South", "Ezeagu", "Igbo Etiti", "Igbo Eze North", "Igbo Eze South", "Isi Uzo", "Nkanu East", "Nkanu West", "Nsukka", "Oji River", "Udenu", "Udi", "Uzo Uwani"],
-            "FCT": ["Abaji", "Bwari", "Gwagwalada", "Kuje", "Kwali", "Municipal Area Council"],
-            "Gombe": ["Akko", "Balanga", "Billiri", "Dukku", "Funakaye", "Gombe", "Kaltungo", "Kwami", "Nafada", "Shongom", "Yamaltu/Deba"],
-            "Imo": ["Aboh Mbaise", "Ahiazu Mbaise", "Ehime Mbano", "Ezinihitte", "Ideato North", "Ideato South", "Ihitte/Uboma", "Ikeduru", "Isiala Mbano", "Isu", "Mbaitoli", "Ngor Okpala", "Njaba", "Nkwerre", "Nwangele", "Obowo", "Oguta", "Ohaji/Egbema", "Okigwe", "Orlu", "Orsu", "Oru East", "Oru West", "Owerri Municipal", "Owerri North", "Owerri West", "Unuimo"],
-            "Jigawa": ["Auyo", "Babura", "Biriniwa", "Birnin Kudu", "Buji", "Dutse", "Gagarawa", "Garki", "Gumel", "Guri", "Gwaram", "Gwiwa", "Hadejia", "Jahun", "Kafin Hausa", "Kaugama", "Kiri Kasama", "Kiyawa", "Maigatari", "Malam Madori", "Miga", "Ringim", "Roni", "Sule Tankarkar", "Taura", "Yankwashi"],
-            "Kaduna": ["Birnin Gwari", "Chikun", "Giwa", "Igabi", "Ikara", "Jaba", "Jema'a", "Kachia", "Kaduna North", "Kaduna South", "Kagarko", "Kajuru", "Kaura", "Kauru", "Kubau", "Kudan", "Lere", "Makarfi", "Sabon Gari", "Sanga", "Soba", "Zangon Kataf", "Zaria"],
-            "Kano": ["Ajingi", "Albasu", "Bagwai", "Bebeji", "Bichi", "Bunkure", "Dala", "Dambatta", "Dawakin Kudu", "Dawakin Tofa", "Doguwa", "Fagge", "Gabasawa", "Garko", "Garun Mallam", "Gaya", "Gezawa", "Gwale", "Gwarzo", "Kabo", "Kano Municipal", "Karaye", "Kibiya", "Kiru", "Kumbotso", "Kunchi", "Kura", "Madobi", "Makoda", "Minjibir", "Nasarawa", "Rano", "Rimin Gado", "Rogo", "Shanono", "Sumaila", "Takai", "Tarauni", "Tofa", "Tsanyawa", "Tudun Wada", "Ungogo", "Warawa", "Wudil"],
-            "Katsina": ["Bakori", "Batagarawa", "Batsari", "Baure", "Bindawa", "Charanchi", "Dandume", "Danja", "Dan Musa", "Daura", "Dutsi", "Dutsin Ma", "Faskari", "Funtua", "Ingawa", "Jibia", "Kafur", "Kaita", "Kankara", "Kankia", "Katsina", "Kurfi", "Kusada", "Mai'Adua", "Malumfashi", "Mani", "Mashi", "Matazu", "Musawa", "Rimi", "Sabuwa", "Safana", "Sandamu", "Zango"],
-            "Kebbi": ["Aleiro", "Arewa Dandi", "Argungu", "Augie", "Bagudo", "Birnin Kebbi", "Bunza", "Dandi", "Fakai", "Gwandu", "Jega", "Kalgo", "Koko/Besse", "Maiyama", "Ngaski", "Sakaba", "Shanga", "Suru", "Danko-Wasagu", "Yauri", "Zuru"],
-            "Kogi": ["Adavi", "Ajaokuta", "Ankpa", "Bassa", "Dekina", "Ibaji", "Idah", "Igalamela Odolu", "Ijumu", "Kabba/Bunu", "Kogi", "Lokoja", "Mopa Muro", "Ofu", "Ogori/Magongo", "Okehi", "Okene", "Olamaboro", "Omala", "Yagba East", "Yagba West"],
-            "Kwara": ["Asa", "Baruten", "Edu", "Ekiti", "Ifelodun", "Ilorin East", "Ilorin South", "Ilorin West", "Irepodun", "Isin", "Kaiama", "Moro", "Offa", "Oke Ero", "Oyun", "Pategi"],
-            "Lagos": ["Agege", "Ajeromi-Ifelodun", "Alimosho", "Amuwo-Odofin", "Apapa", "Badagry", "Epe", "Eti Osa", "Ibeju-Lekki", "Ifako-Ijaiye", "Ikeja", "Ikorodu", "Kosofe", "Lagos Island", "Lagos Mainland", "Mushin", "Ojo", "Oshodi-Isolo", "Somolu", "Surulere"],
-            "Nasarawa": ["Akwanga", "Awe", "Doma", "Karu", "Keana", "Keffi", "Kokona", "Lafia", "Nasarawa", "Nasarawa Egon", "Obi", "Toto", "Wamba"],
-            "Niger": ["Agaie", "Agwara", "Bida", "Borgu", "Bosso", "Chanchaga", "Edati", "Gbako", "Gurara", "Katcha", "Kontagora", "Lapai", "Lavun", "Magama", "Mariga", "Mashegu", "Mokwa", "Moya", "Paikoro", "Rafi", "Rijau", "Shiroro", "Suleja", "Tafa", "Wushishi"],
-            "Ogun": ["Abeokuta North", "Abeokuta South", "Ado-Odo/Ota", "Yewa North", "Yewa South", "Ewekoro", "Ifo", "Ijebu East", "Ijebu North", "Ijebu North East", "Ijebu Ode", "Ikenne", "Imeko Afon", "Ipokia", "Obafemi Owode", "Odeda", "Odogbolu", "Ogun Waterside", "Remo North", "Shagamu"],
-            "Ondo": ["Akoko North-East", "Akoko North-West", "Akoko South-West", "Akoko South-East", "Akure North", "Akure South", "Ese Odo", "Idanre", "Ifedore", "Ilaje", "Ile Oluji/Okeigbo", "Irele", "Odigbo", "Okitipupa", "Ondo East", "Ondo West", "Ose", "Owo"],
-            "Osun": ["Atakunmosa East", "Atakunmosa West", "Aiyedaade", "Aiyedire", "Boluwaduro", "Boripe", "Ede North", "Ede South", "Ife Central", "Ife East", "Ife North", "Ife South", "Egbedore", "Ejigbo", "Ifedayo", "Ifelodun", "Ila", "Ilesa East", "Ilesa West", "Irepodun", "Irewole", "Isokan", "Iwo", "Obokun", "Odo Otin", "Ola Oluwa", "Olorunda", "Oriade", "Orolu", "Osogbo"],
-            "Oyo": ["Afijio", "Akinyele", "Atiba", "Atisbo", "Egbeda", "Ibadan North", "Ibadan North-East", "Ibadan North-West", "Ibadan South-East", "Ibadan South-West", "Ibarapa Central", "Ibarapa East", "Ibarapa North", "Iddo", "Irepo", "Iseyin", "Itesiwaju", "Iwajowa", "Kajola", "Lagelu", "Ogbomosho North", "Ogbomosho South", "Ogo Oluwa", "Olorunsogo", "Oluyole", "Ona Ara", "Orelope", "Ori Ire", "Oyo East", "Oyo West", "Saki East", "Saki West", "Surulere"],
-            "Plateau": ["Barkin Ladi", "Bassa", "Bokkos", "Jos East", "Jos North", "Jos South", "Kanam", "Kanke", "Langtang South", "Langtang North", "Mangu", "Mikang", "Pankshin", "Qua'an Pan", "Riyom", "Shendam", "Wase"],
-            "Rivers": ["Abua/Odual", "Ahoada East", "Ahoada West", "Akuku-Toru", "Andoni", "Asari-Toru", "Bonny", "Degema", "Eleme", "Emuoha", "Etche", "Gokana", "Ikwerre", "Khana", "Obio/Akpor", "Ogba/Egbema/Ndoni", "Ogu/Bolo", "Okrika", "Omuma", "Opobo/Nkoro", "Oyigbo", "Port Harcourt", "Tai"],
-            "Sokoto": ["Binji", "Bodinga", "Dange Shuni", "Gada", "Goronyo", "Gudu", "Gwadabawa", "Illela", "Isa", "Kebbe", "Kware", "Rabah", "Sabon Birni", "Shagari", "Silame", "Sokoto North", "Sokoto South", "Tambuwal", "Tangaza", "Tureta", "Wamako", "Wurno", "Yabo"],
-            "Taraba": ["Ardo Kola", "Bali", "Donga", "Gashaka", "Gassol", "Ibi", "Jalingo", "Karim Lamido", "Kumi", "Lau", "Sardauna", "Takum", "Ussa", "Wukari", "Yorro", "Zing"],
-            "Yobe": ["Bade", "Bursari", "Damaturu", "Fika", "Fune", "Geidam", "Gujba", "Gulani", "Jakusko", "Karasuwa", "Machina", "Nangere", "Nguru", "Potiskum", "Tarmuwa", "Yunusari", "Yusufari"],
-            "Zamfara": ["Anka", "Bakura", "Birnin Magaji/Kiyaw", "Bukkuyum", "Bungudu", "Gummi", "Gusau", "Kaura Namoda", "Maradun", "Maru", "Shinkafi", "Talata Mafara", "Chafe", "Zurmi"]
+            "Yobe": ["Bade", "Bursari", "Damaturu", "Fika", "Fune", "Geidam", "Gujba", "Gulani", "Jakusko", "Karasuwa", "Machina", "Nangere", "Nguru", "Potiskum", "Tarmuwa", "Yunusari", "Yusufari"]
         };
 
         let galleryData = [];
         let isAdminLoggedIn = false;
+        let currentUser = null; // Verified member object
+        let chatInterval = null;
 
         async function fetchGalleryData() {
             try {
@@ -864,6 +979,126 @@
             } catch (err) {
                 console.error("Error fetching data:", err);
                 document.getElementById('gallery-grid').innerHTML = '<div class="loading-text">Failed to load memories.</div>';
+            }
+        }
+
+        /* --- Live Chat Authentication & Chat Logic --- */
+        function openLiveChat() {
+            if (currentUser) {
+                showLiveChatModal();
+            } else {
+                document.getElementById('chat-auth-modal').classList.add('active');
+            }
+        }
+
+        function verifyChatPhone() {
+            const phoneInput = document.getElementById('chat-phone-input').value.trim();
+            if (!phoneInput) {
+                alert('Please enter your phone number.');
+                return;
+            }
+
+            const cleanInput = phoneInput.replace(/[^0-9]/g, '');
+            const foundUser = galleryData.find(item => {
+                const cleanMemberPhone = String(item.phone || '').replace(/[^0-9]/g, '');
+                return cleanMemberPhone && (cleanMemberPhone.endsWith(cleanInput) || cleanInput.endsWith(cleanMemberPhone));
+            });
+
+            if (foundUser) {
+                currentUser = foundUser;
+                closeModals();
+                showLiveChatModal();
+            } else {
+                alert('Phone number not found in registered members list. Please make sure you are registered!');
+            }
+        }
+
+        function showLiveChatModal() {
+            document.getElementById('chat-user-badge').textContent = `Logged in as: ${currentUser.name} (${currentUser.title || 'Member'})`;
+            document.getElementById('live-chat-modal').classList.add('active');
+            
+            updateOnlineMembersDisplay();
+            loadChatMessages();
+
+            // Refresh chat every 4 seconds
+            if (!chatInterval) {
+                chatInterval = setInterval(loadChatMessages, 4000);
+            }
+        }
+
+        function updateOnlineMembersDisplay() {
+            const onlineNames = galleryData.slice(0, 5).map(m => m.name).join(', ');
+            document.getElementById('online-users-list').textContent = onlineNames + " ... and others online";
+        }
+
+        async function loadChatMessages() {
+            const container = document.getElementById('chat-messages-container');
+            try {
+                const res = await fetch(`${WEB_APP_URL}?action=getMessages`);
+                const messages = await res.json();
+
+                if (Array.isArray(messages) && messages.length > 0) {
+                    container.innerHTML = '';
+                    messages.forEach(msg => {
+                        const isMe = currentUser && (msg.senderPhone === currentUser.phone || msg.senderName === currentUser.name);
+                        const msgDiv = document.createElement('div');
+                        msgDiv.className = `chat-msg ${isMe ? 'me' : 'other'}`;
+                        
+                        const senderName = document.createElement('div');
+                        senderName.className = 'chat-sender';
+                        senderName.textContent = isMe ? 'You' : (msg.senderName || 'Member');
+
+                        const msgText = document.createElement('div');
+                        msgText.textContent = msg.text || msg.message || '';
+
+                        msgDiv.appendChild(senderName);
+                        msgDiv.appendChild(msgText);
+                        container.appendChild(msgDiv);
+                    });
+                    container.scrollTop = container.scrollHeight;
+                } else {
+                    container.innerHTML = '<div class="loading-text">No messages yet. Say hi to the class!</div>';
+                }
+            } catch (err) {
+                console.error("Error loading chat messages:", err);
+            }
+        }
+
+        async function sendChatMessage() {
+            const input = document.getElementById('chat-msg-input');
+            const messageText = input.value.trim();
+            const sendBtn = document.getElementById('send-msg-btn');
+
+            if (!messageText) return;
+
+            input.value = '';
+            sendBtn.disabled = true;
+
+            const payload = {
+                action: 'sendMessage',
+                senderName: currentUser.name,
+                senderPhone: currentUser.phone,
+                message: messageText,
+                timestamp: new Date().toISOString()
+            };
+
+            try {
+                await fetch(WEB_APP_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                    body: JSON.stringify(payload)
+                });
+                await loadChatMessages();
+            } catch (err) {
+                console.error("Error sending message:", err);
+            } finally {
+                sendBtn.disabled = false;
+            }
+        }
+
+        function handleChatKeyPress(event) {
+            if (event.key === 'Enter') {
+                sendChatMessage();
             }
         }
 
@@ -1069,6 +1304,10 @@
 
         function closeModals() {
             document.querySelectorAll('.modal').forEach(m => m.classList.remove('active'));
+            if (chatInterval) {
+                clearInterval(chatInterval);
+                chatInterval = null;
+            }
         }
 
         function closeEditModal() {
@@ -1082,6 +1321,9 @@
             galleryData.forEach((item, index) => {
                 const div = document.createElement('div');
                 div.className = 'admin-manage-item';
+                div.style.display = 'flex';
+                div.style.justifySpace = 'space-between';
+                div.style.padding = '0.5rem 0';
 
                 const span = document.createElement('span');
                 const locInfo = item.state ? ` - ${item.state}` : '';
