@@ -12,219 +12,219 @@
     <link href="https://fonts.googleapis.com/css2?family=Noto+Naskh+Arabic:wght@400;700&display=swap" rel="stylesheet">
 
     <style>
-        /* Modals Overlay */
-.chat-modal-overlay {
-  position: fixed;
-  top: 0; left: 0; right: 0; bottom: 0;
-  background: rgba(0, 0, 0, 0.6);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 9999;
-}
+      /* Modals Overlay */
+      .chat-modal-overlay {
+        position: fixed;
+        top: 0; left: 0; right: 0; bottom: 0;
+        background: rgba(0, 0, 0, 0.6);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 9999;
+      }
 
-.chat-modal-card {
-  background: #fff;
-  padding: 24px;
-  border-radius: 12px;
-  width: 90%;
-  max-width: 360px;
-  text-align: center;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-}
+      .chat-modal-card {
+        background: #fff;
+        padding: 24px;
+        border-radius: 12px;
+        width: 90%;
+        max-width: 360px;
+        text-align: center;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      }
 
-.chat-modal-card input {
-  width: 100%;
-  padding: 10px;
-  margin: 15px 0;
-  border: 1px solid #ccc;
-  border-radius: 6px;
-  box-sizing: border-box;
-}
+      .chat-modal-card input {
+        width: 100%;
+        padding: 10px;
+        margin: 15px 0;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+        box-sizing: border-box;
+      }
 
-/* Floating Chat Trigger */
-#chatToggleBtn {
-  position: fixed;
-  bottom: 20px;
-  right: 20px;
-  background-color: #25D366;
-  color: white;
-  border: none;
-  padding: 12px 20px;
-  border-radius: 30px;
-  font-size: 16px;
-  cursor: pointer;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-  z-index: 999;
-}
+      /* Floating Chat Trigger */
+      #chatToggleBtn {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        background-color: #25D366;
+        color: white;
+        border: none;
+        padding: 12px 20px;
+        border-radius: 30px;
+        font-size: 16px;
+        cursor: pointer;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        z-index: 999;
+      }
 
-.badge {
-  background: #red;
-  background-color: #e74c3c;
-  color: white;
-  border-radius: 50%;
-  padding: 2px 7px;
-  font-size: 12px;
-}
+      .badge {
+        background-color: #e74c3c;
+        color: white;
+        border-radius: 50%;
+        padding: 2px 7px;
+        font-size: 12px;
+      }
 
-/* Chat Box */
-.chat-window {
-  background: #fff;
-  width: 90%;
-  max-width: 450px;
-  height: 80vh;
-  border-radius: 12px;
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-}
+      /* Chat Box */
+      .chat-window {
+        background: #fff;
+        width: 90%;
+        max-width: 450px;
+        height: 80vh;
+        border-radius: 12px;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+      }
 
-.chat-header {
-  background: #075E54;
-  color: white;
-  padding: 15px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
+      .chat-header {
+        background: #075E54;
+        color: white;
+        padding: 15px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
 
-.online-users-bar {
-  background: #f0f2f5;
-  padding: 8px 12px;
-  font-size: 13px;
-  border-bottom: 1px solid #ddd;
-  display: flex;
-  gap: 8px;
-  align-items: center;
-  overflow-x: auto;
-}
+      .close-btn {
+        cursor: pointer;
+        font-size: 20px;
+      }
 
-.chat-body {
-  flex: 1;
-  padding: 15px;
-  overflow-y: auto;
-  background: #efeae2;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
+      .online-users-bar {
+        background: #f0f2f5;
+        padding: 8px 12px;
+        font-size: 13px;
+        border-bottom: 1px solid #ddd;
+        display: flex;
+        gap: 8px;
+        align-items: center;
+        overflow-x: auto;
+      }
 
-.msg-bubble {
-  max-width: 75%;
-  padding: 8px 12px;
-  border-radius: 8px;
-  font-size: 14px;
-}
+      .chat-body {
+        flex: 1;
+        padding: 15px;
+        overflow-y: auto;
+        background: #efeae2;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
 
-.msg-bubble.me {
-  align-self: flex-end;
-  background: #dcf8c6;
-}
+      .msg-bubble {
+        max-width: 75%;
+        padding: 8px 12px;
+        border-radius: 8px;
+        font-size: 14px;
+      }
 
-.msg-bubble.other {
-  align-self: flex-start;
-  background: #ffffff;
-}
+      .msg-bubble.me {
+        align-self: flex-end;
+        background: #dcf8c6;
+      }
 
-.msg-author {
-  font-size: 11px;
-  color: #555;
-  font-weight: bold;
-  display: block;
-  margin-bottom: 3px;
-}
+      .msg-bubble.other {
+        align-self: flex-start;
+        background: #ffffff;
+      }
 
-.chat-footer {
-  display: flex;
-  padding: 10px;
-  background: #f0f2f5;
-  gap: 8px;
-}
+      .msg-author {
+        font-size: 11px;
+        color: #555;
+        font-weight: bold;
+        display: block;
+        margin-bottom: 3px;
+      }
 
-.chat-footer input {
-  flex: 1;
-  padding: 8px 12px;
-  border: 1px solid #ccc;
-  border-radius: 20px;
-}
+      .chat-footer {
+        display: flex;
+        padding: 10px;
+        background: #f0f2f5;
+        gap: 8px;
+      }
 
-#micBtn {
-  background: #128C7E;
-  color: white;
-  border: none;
-  border-radius: 50%;
-  width: 36px;
-  height: 36px;
-  cursor: pointer;
-}
+      .chat-footer input {
+        flex: 1;
+        padding: 8px 12px;
+        border: 1px solid #ccc;
+        border-radius: 20px;
+      }
 
-#micBtn.listening {
-  background: #e74c3c;
-  animation: pulse 1s infinite;
-}
+      #micBtn {
+        background: #128C7E;
+        color: white;
+        border: none;
+        border-radius: 50%;
+        width: 36px;
+        height: 36px;
+        cursor: pointer;
+      }
 
-@keyframes pulse {
-  0% { transform: scale(1); }
-  50% { transform: scale(1.1); }
-  100% { transform: scale(1); }
-}
+      #micBtn.listening {
+        background: #e74c3c;
+        animation: pulse 1s infinite;
+      }
 
-
+      @keyframes pulse {
+        0% { transform: scale(1); }
+        50% { transform: scale(1.1); }
+        100% { transform: scale(1); }
+      }
     </style>
 </head>
 <body>
-<div id="intro-overlay" aria-hidden="false">
-  <div class="intro-inner" role="dialog" aria-labelledby="intro-title">
-    <div class="intro-logo">
-      <img src="https://nacos.org.ng/img/about.jpg" alt="NACOS Logo">
+    <div id="intro-overlay" aria-hidden="false">
+      <div class="intro-inner" role="dialog" aria-labelledby="intro-title">
+        <div class="intro-logo">
+          <img src="https://nacos.org.ng/img/about.jpg" alt="NACOS Logo">
+        </div>
+
+        <div class="intro-texts">
+          <b><div id="line-1" class="intro-line"></div></b>
+          <div id="line-2" class="intro-line"></div>
+          <div id="line-3" class="intro-line"></div>
+          <div id="line-4" class="intro-line"></div>
+          <div id="line-5" class="intro-line" dir="rtl"></div>
+        </div>
+
+        <button id="enter-btn" class="btn" aria-label="Enter album" style="display:none;">Open Album</button>
+        
+        <audio id="welcomeSound" preload="auto">
+          <source src="https://raw.githubusercontent.com/Usmhern/Photo-Album/main/win7.mp3" type="audio/mpeg">
+        </audio>
+      </div>
     </div>
 
-    <div class="intro-texts">
-      <b><div id="line-1" class="intro-line"></div></b>
-      <div id="line-2" class="intro-line"></div>
-        <div id="line-3" class="intro-line"></div>
-        <div id="line-4" class="intro-line"></div>
-      <div id="line-5" class="intro-line" dir="rtl"></div> <!-- Arabic line (rtl) -->
-    </div>
-
-    <button id="enter-btn" class="btn" aria-label="Enter album" style="display:none;">Open Album</button>
-    
-    <audio id="welcomeSound" preload="auto">
-  <source src="https://raw.githubusercontent.com/Usmhern/Photo-Album/main/win7.mp3" type="audio/mpeg">
-</audio>
-
-  </div>
-</div>
     <header class="album-header">
         <div class="nacos-logo-container" title="Nigeria Association of Computer Science Students">
             <img src="https://nacos.org.ng/img/about.jpg" alt="NACOS Logo" class="nacos-logo-img">
         </div>
-        <h1> <span class=""  id="glowtt" style="color:#0be;" >YOBE STATE UNIVERSITY </span></h1>
-        <h3>CS <span class="" style="color:#e20" id="glowt2">2K24</span> DIGITAL PHOTO ALBUM</h3>
+        <h1><span id="glowtt" style="color:#0be;">YOBE STATE UNIVERSITY</span></h1>
+        <h3>CS <span style="color:#e20" id="glowt2">2K24</span> DIGITAL PHOTO ALBUM</h3>
     </header>
 
     <div class="admin-bar">
-        <button id="Lock" class="btn btn-primary" onclick="checkAdminAccess()" style="display:none;"> Central Admin Panel</button>
-        <button class="btn" id="logout-btn" style="display:none;" onclick="adminLogout()"> Logout Admin</button>
+        <button id="Lock" class="btn btn-primary" onclick="checkAdminAccess()" style="display:none;">Central Admin Panel</button>
+        <button class="btn" id="logout-btn" style="display:none;" onclick="adminLogout()">Logout Admin</button>
     </div>
 
     <!-- Location Search & Filter Bar -->
     <section class="search-filter-container">
         <div class="filter-group">
-           
             <select id="filter-state" onchange="onFilterStateChange()">
                 <option value="">STATE</option>
             </select>
         </div>
 
         <div class="filter-group">
-           
             <select id="filter-lga" onchange="applyLocationFilter()" disabled>
                 <option value="">LGA</option>
             </select>
         </div>
 
-       <center> <button class="btn btn-reset" onclick="resetFilters()" style="background:#e20; color:#fff;">🔍 ALL</button></center>
+        <center><button class="btn btn-reset" onclick="resetFilters()" style="background:#e20; color:#fff;">🔍 ALL</button></center>
     </section>
 
     <!-- Gallery Grid Container -->
@@ -285,7 +285,7 @@
                 </div>
 
                 <button class="btn btn-primary" id="publish-btn" onclick="addPhotoEntry()">Publish to Album</button>
-              </div>
+            </div>
 
             <h3 style="font-size: 1.1rem; margin-bottom: 0.5rem;">Existing Entries (Manage & Edit)</h3>
             <div id="admin-manage-list" style="max-height: 250px; overflow-y: auto;"></div>
@@ -306,7 +306,6 @@
             <input type="hidden" id="edit-row-id">
             <input type="hidden" id="edit-index">
             
-            <!-- Replace Image Input -->
             <div class="form-group">
                 <label for="edit-file">Replace Member Photo (Optional)</label>
                 <input type="file" id="edit-file" accept="image/*" onchange="previewNewEditImage(this)">
@@ -344,228 +343,226 @@
     <!-- Image Preview Lightbox Modal -->
     <div id="preview-modal" class="modal" onclick="closeModals()">
         <div class="preview-modal-content" onclick="event.stopPropagation()">
-                <audio id="BSound" preload="auto">
-  <source src="https://raw.githubusercontent.com/Usmhern/Photo-Album/main/hw.mp3" type="audio/mpeg">
-                </audio>
+            <audio id="BSound" preload="auto">
+                <source src="https://raw.githubusercontent.com/Usmhern/Photo-Album/main/hw.mp3" type="audio/mpeg">
+            </audio>
             <button class="close-modal" onclick="closeModals()">&times;</button>
             <img id="preview-img" src="" alt="Preview">
             <div id="preview-caption" class="preview-caption"></div>
         </div>
     </div>
 
-
-
     <!-- 1. Phone Verification Modal -->
-<div id="phoneModal" class="chat-modal-overlay">
-  <div class="chat-modal-card">
-    <h3>Enter Your WhatsApp Number</h3>
-    <p>Please enter your exact phone number to access the live album chat.</p>
-    <input type="tel" id="userPhoneInput" placeholder="+1234567890" required />
-    <button onclick="saveUserPhone()">Continue to Album & Chat</button>
-  </div>
-</div>
-
-<!-- 2. Floating Chat Toggle Button -->
-<button id="chatToggleBtn" onclick="toggleChatModal()" style="display:none;">
-  💬 Live Chat <span id="onlineBadge" class="badge">0</span>
-</button>
-
-<!-- 3. Group Chat Window Modal -->
-<div id="groupChatModal" class="chat-modal-overlay" style="display:none;">
-  <div class="chat-window">
-    <div class="chat-header">
-      <h4>Group Chat</h4>
-      <span class="close-btn" onclick="toggleChatModal()">&times;</span>
-    </div>
-    
-    <!-- Online Users Sidebar / Bar -->
-    <div class="online-users-bar">
-      <span>🟢 Online Now:</span>
-      <div id="onlineUsersList">None</div>
+    <div id="phoneModal" class="chat-modal-overlay">
+      <div class="chat-modal-card">
+        <h3>Enter Your WhatsApp Number</h3>
+        <p>Please enter your exact phone number to access the live album chat.</p>
+        <input type="tel" id="userPhoneInput" placeholder="+1234567890" required />
+        <button type="button" onclick="saveUserPhone()">Continue to Album & Chat</button>
+      </div>
     </div>
 
-    <!-- Chat Messages Stream -->
-    <div id="chatMessages" class="chat-body"></div>
+    <!-- 2. Floating Chat Toggle Button -->
+    <button id="chatToggleBtn" onclick="toggleChatModal()" style="display:none;">
+      💬 Live Chat <span id="onlineBadge" class="badge">0</span>
+    </button>
 
-    <!-- Controls: Input, Voice-to-Text, Send -->
-    <div class="chat-footer">
-      <button id="micBtn" type="button" onclick="toggleVoiceToText()" title="Hold/Click to Speak">🎙️</button>
-      <input type="text" id="chatInputText" placeholder="Type or speak a message..." />
-      <button type="button" onclick="handleSendChat()">Send</button>
+    <!-- 3. Group Chat Window Modal -->
+    <div id="groupChatModal" class="chat-modal-overlay" style="display:none;">
+      <div class="chat-window">
+        <div class="chat-header">
+          <h4>Group Chat</h4>
+          <span class="close-btn" onclick="toggleChatModal()">&times;</span>
+        </div>
+        
+        <div class="online-users-bar">
+          <span>🟢 Online Now:</span>
+          <div id="onlineUsersList">None</div>
+        </div>
+
+        <div id="chatMessages" class="chat-body"></div>
+
+        <div class="chat-footer">
+          <button id="micBtn" type="button" onclick="toggleVoiceToText()" title="Hold/Click to Speak">🎙️</button>
+          <input type="text" id="chatInputText" placeholder="Type or speak a message..." />
+          <button type="button" onclick="handleSendChat()">Send</button>
+        </div>
+      </div>
     </div>
-  </div>
-</div>
 
     <script>
-        var currentUserPhone = "";
-var isListening = false;
-var recognition = null;
+      var currentUserPhone = "";
+      var isListening = false;
+      var recognition = null;
 
-// Initialize on page load
-window.addEventListener("DOMContentLoaded", function() {
-  var savedPhone = localStorage.getItem("user_whatsapp_phone");
-  if (savedPhone) {
-    currentUserPhone = savedPhone;
-    document.getElementById("phoneModal").style.display = "none";
-    document.getElementById("chatToggleBtn").style.display = "block";
-    startHeartbeatAndPolling();
-  } else {
-    document.getElementById("phoneModal").style.display = "flex";
-  }
-  
-  initSpeechRecognition();
-});
+      // Safe wrapper for Google Apps Script execution
+      function callScript(funcName, successCallback, payload) {
+        if (typeof google !== "undefined" && google.script && google.script.run) {
+          var runner = google.script.run.withSuccessHandler(successCallback);
+          if (payload !== undefined) {
+            runner[funcName](payload);
+          } else {
+            runner[funcName]();
+          }
+        } else {
+          console.warn("google.script.run is unavailable. Running in local/preview mode.");
+          // Fallback mock logic for testing preview mode without errors
+          if (funcName === 'updateUserPresence') successCallback(["+1234567890"]);
+          if (funcName === 'getGroupMessages') successCallback([]);
+          if (funcName === 'sendMessage') successCallback({status: "success"});
+        }
+      }
 
-// Save phone number locally
-function saveUserPhone() {
-  var phoneInput = document.getElementById("userPhoneInput").value.trim();
-  if (!phoneInput || phoneInput.length < 7) {
-    alert("Please enter a valid WhatsApp phone number.");
-    return;
-  }
-  currentUserPhone = phoneInput;
-  localStorage.setItem("user_whatsapp_phone", phoneInput);
-  
-  document.getElementById("phoneModal").style.display = "none";
-  document.getElementById("chatToggleBtn").style.display = "block";
-  startHeartbeatAndPolling();
-}
+      window.addEventListener("DOMContentLoaded", function() {
+        var savedPhone = localStorage.getItem("user_whatsapp_phone");
+        if (savedPhone) {
+          currentUserPhone = savedPhone;
+          document.getElementById("phoneModal").style.display = "none";
+          document.getElementById("chatToggleBtn").style.display = "block";
+          startHeartbeatAndPolling();
+        } else {
+          document.getElementById("phoneModal").style.display = "flex";
+        }
+        
+        initSpeechRecognition();
+      });
 
-function toggleChatModal() {
-  var modal = document.getElementById("groupChatModal");
-  if (modal.style.display === "none" || modal.style.display === "") {
-    modal.style.display = "flex";
-    fetchMessages();
-  } else {
-    modal.style.display = "none";
-  }
-}
+      function saveUserPhone() {
+        var phoneInput = document.getElementById("userPhoneInput").value.trim();
+        if (!phoneInput || phoneInput.length < 7) {
+          alert("Please enter a valid WhatsApp phone number.");
+          return;
+        }
+        currentUserPhone = phoneInput;
+        localStorage.setItem("user_whatsapp_phone", phoneInput);
+        
+        document.getElementById("phoneModal").style.display = "none";
+        document.getElementById("chatToggleBtn").style.display = "block";
+        startHeartbeatAndPolling();
+      }
 
-// Presence Heartbeat & Periodic Polling
-function startHeartbeatAndPolling() {
-  // Pulse active status immediately
-  pingPresence();
-  fetchMessages();
+      function toggleChatModal() {
+        var modal = document.getElementById("groupChatModal");
+        if (modal.style.display === "none" || modal.style.display === "") {
+          modal.style.display = "flex";
+          fetchMessages();
+        } else {
+          modal.style.display = "none";
+        }
+      }
 
-  // Send presence heartbeat every 30s
-  setInterval(pingPresence, 30000);
-  
-  // Refresh messages and online list every 5s
-  setInterval(function() {
-    pingPresence();
-    fetchMessages();
-  }, 5000);
-}
+      function startHeartbeatAndPolling() {
+        pingPresence();
+        fetchMessages();
 
-function pingPresence() {
-  if (!currentUserPhone) return;
-  google.script.run
-    .withSuccessHandler(function(onlineUsers) {
-      document.getElementById("onlineBadge").innerText = onlineUsers.length;
-      document.getElementById("onlineUsersList").innerText = onlineUsers.join(", ");
-    })
-    .updateUserPresence(currentUserPhone);
-}
+        setInterval(pingPresence, 30000);
+        setInterval(function() {
+          pingPresence();
+          fetchMessages();
+        }, 5000);
+      }
 
-function fetchMessages() {
-  google.script.run
-    .withSuccessHandler(renderMessages)
-    .getGroupMessages();
-}
+      function pingPresence() {
+        if (!currentUserPhone) return;
+        callScript('updateUserPresence', function(onlineUsers) {
+          document.getElementById("onlineBadge").innerText = onlineUsers.length;
+          document.getElementById("onlineUsersList").innerText = onlineUsers.join(", ");
+        }, currentUserPhone);
+      }
 
-function renderMessages(messages) {
-  var container = document.getElementById("chatMessages");
-  container.innerHTML = "";
-  
-  messages.forEach(function(msg) {
-    var isMe = msg.phone === currentUserPhone;
-    var bubble = document.createElement("div");
-    bubble.className = "msg-bubble " + (isMe ? "me" : "other");
-    
-    var author = document.createElement("span");
-    author.className = "msg-author";
-    author.innerText = isMe ? "You" : msg.phone;
-    
-    var text = document.createElement("div");
-    text.innerText = msg.message;
-    
-    bubble.appendChild(author);
-    bubble.appendChild(text);
-    container.appendChild(bubble);
-  });
-  
-  // Auto-scroll to latest
-  container.scrollTop = container.scrollHeight;
-}
+      function fetchMessages() {
+        callScript('getGroupMessages', renderMessages);
+      }
 
-function handleSendChat() {
-  var input = document.getElementById("chatInputText");
-  var msg = input.value.trim();
-  if (!msg) return;
+      function renderMessages(messages) {
+        var container = document.getElementById("chatMessages");
+        if (!container || !Array.isArray(messages)) return;
+        container.innerHTML = "";
+        
+        messages.forEach(function(msg) {
+          var isMe = msg.phone === currentUserPhone;
+          var bubble = document.createElement("div");
+          bubble.className = "msg-bubble " + (isMe ? "me" : "other");
+          
+          var author = document.createElement("span");
+          author.className = "msg-author";
+          author.innerText = isMe ? "You" : msg.phone;
+          
+          var text = document.createElement("div");
+          text.innerText = msg.message;
+          
+          bubble.appendChild(author);
+          bubble.appendChild(text);
+          container.appendChild(bubble);
+        });
+        
+        container.scrollTop = container.scrollHeight;
+      }
 
-  var payload = {
-    phone: currentUserPhone,
-    message: msg,
-    type: "text"
-  };
+      function handleSendChat() {
+        var input = document.getElementById("chatInputText");
+        var msg = input.value.trim();
+        if (!msg) return;
 
-  input.value = "";
-  
-  google.script.run
-    .withSuccessHandler(function() {
-      fetchMessages();
-    })
-    .sendMessage(payload);
-}
+        var payload = {
+          phone: currentUserPhone,
+          message: msg,
+          type: "text"
+        };
 
-// Voice-to-Text via Web Speech API
-function initSpeechRecognition() {
-  var SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-  if (!SpeechRecognition) {
-    document.getElementById("micBtn").style.display = "none";
-    console.warn("Speech Recognition API not supported in this browser.");
-    return;
-  }
+        input.value = "";
+        
+        callScript('sendMessage', function() {
+          fetchMessages();
+        }, payload);
+      }
 
-  recognition = new SpeechRecognition();
-  recognition.continuous = false;
-  recognition.interimResults = true;
+      function initSpeechRecognition() {
+        var SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+        if (!SpeechRecognition) {
+          var micBtn = document.getElementById("micBtn");
+          if (micBtn) micBtn.style.display = "none";
+          return;
+        }
 
-  recognition.onresult = function(event) {
-    var transcript = Array.from(event.results)
-      .map(function(result) { return result[0].transcript; })
-      .join("");
-    
-    document.getElementById("chatInputText").value = transcript;
-  };
+        recognition = new SpeechRecognition();
+        recognition.continuous = false;
+        recognition.interimResults = true;
 
-  recognition.onerror = function(event) {
-    console.error("Speech recognition error:", event.error);
-    stopListening();
-  };
+        recognition.onresult = function(event) {
+          var transcript = Array.from(event.results)
+            .map(function(result) { return result[0].transcript; })
+            .join("");
+          
+          document.getElementById("chatInputText").value = transcript;
+        };
 
-  recognition.onend = function() {
-    stopListening();
-  };
-}
+        recognition.onerror = function() {
+          stopListening();
+        };
 
-function toggleVoiceToText() {
-  if (!recognition) return;
-  if (isListening) {
-    recognition.stop();
-    stopListening();
-  } else {
-    recognition.start();
-    isListening = true;
-    document.getElementById("micBtn").classList.add("listening");
-  }
-}
+        recognition.onend = function() {
+          stopListening();
+        };
+      }
 
-function stopListening() {
-  isListening = false;
-  document.getElementById("micBtn").classList.remove("listening");
-}
+      function toggleVoiceToText() {
+        if (!recognition) return;
+        if (isListening) {
+          recognition.stop();
+          stopListening();
+        } else {
+          recognition.start();
+          isListening = true;
+          document.getElementById("micBtn").classList.add("listening");
+        }
+      }
 
+      function stopListening() {
+        isListening = false;
+        var micBtn = document.getElementById("micBtn");
+        if (micBtn) micBtn.classList.remove("listening");
+      }
     </script>
 </body>
 </html>
