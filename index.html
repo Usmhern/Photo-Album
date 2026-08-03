@@ -10,6 +10,9 @@
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Noto+Naskh+Arabic:wght@400;700&display=swap" rel="stylesheet">
     
+    <!-- Font Awesome Icons for WhatsApp and Call buttons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
     <link rel="icon" type="image/jpg" href="https://nacos.org.ng/img/about.jpg">
     <script src="script.js" defer></script>
 
@@ -26,6 +29,7 @@
           --whatsapp-green: #25d366;
           --whatsapp-green-hover: #1ebd56;
           --call-blue: #007bff;
+          --call-blue-hover: #0056b3;
           --danger-red: #ff3b30;
           --text-main: #f3f4f6;
           --text-muted: #9ca3af;
@@ -184,6 +188,11 @@
           border-radius: 8px;
           cursor: pointer;
           transition: var(--transition-smooth);
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          gap: 0.5rem;
+          text-decoration: none;
       }
 
       .btn-primary {
@@ -204,7 +213,7 @@
       }
 
       /* ======================================================
-         GALLERY GRID & MEMBER CARDS
+         GALLERY GRID, MEMBER CARDS & ACTION BUTTONS
          ====================================================== */
       .gallery-container {
           max-width: 1200px;
@@ -294,6 +303,36 @@
           font-weight: 600;
           text-transform: uppercase;
           margin-bottom: 0.25rem;
+      }
+
+      .card-actions {
+          display: flex;
+          gap: 0.5rem;
+          margin-top: 1rem;
+      }
+
+      .btn-whatsapp {
+          background-color: var(--whatsapp-green);
+          color: #fff;
+          border: none;
+          flex: 1;
+      }
+
+      .btn-whatsapp:hover {
+          background-color: var(--whatsapp-green-hover);
+          color: #fff;
+      }
+
+      .btn-call {
+          background-color: var(--call-blue);
+          color: #fff;
+          border: none;
+          flex: 1;
+      }
+
+      .btn-call:hover {
+          background-color: var(--call-blue-hover);
+          color: #fff;
       }
 
       /* ======================================================
@@ -521,21 +560,26 @@
         border-radius: 6px;
         font-weight: 600;
         cursor: pointer;
+        width: 100%;
       }
 
       #chatToggleBtn {
         position: fixed;
         bottom: 20px;
         right: 20px;
-        background-color: #25D366;
+        background-color: var(--whatsapp-green);
         color: white;
         border: none;
         padding: 12px 20px;
         border-radius: 30px;
         font-size: 16px;
+        font-weight: 600;
         cursor: pointer;
         box-shadow: 0 4px 10px rgba(0,0,0,0.2);
         z-index: 999;
+        display: flex;
+        align-items: center;
+        gap: 8px;
       }
 
       .badge {
@@ -868,28 +912,30 @@
 
     <!-- Live Chat Modal 2: Floating Chat Trigger Button -->
     <button id="chatToggleBtn" onclick="toggleChatModal()" style="display:none;">
-      Live Chat <span id="onlineBadge" class="badge">0</span>
+      <i class="fa-brands fa-whatsapp" style="font-size:1.2rem;"></i> Live Chat <span id="onlineBadge" class="badge">0</span>
     </button>
 
     <!-- Live Chat Modal 3: Group Chat Window -->
     <div id="groupChatModal" class="chat-modal-overlay" style="display:none;">
       <div class="chat-window">
         <div class="chat-header">
-          <h4>Group Chat</h4>
+          <h4><i class="fa-brands fa-whatsapp"></i> Group Chat</h4>
           <span class="close-btn" onclick="toggleChatModal()">&times;</span>
         </div>
         
         <div class="online-users-bar">
-          <span>Online Now:</span>
+          <span style="font-weight: 600; color: #075E54;"><i class="fa-solid fa-circle" style="color:#25D366; font-size: 8px;"></i> Online Now:</span>
           <div id="onlineUsersList">None</div>
         </div>
 
         <div id="chatMessages" class="chat-body"></div>
 
         <div class="chat-footer">
-          <button id="micBtn" type="button" onclick="toggleVoiceToText()" title="Hold/Click to Speak">🎤</button>
+          <button id="micBtn" type="button" onclick="toggleVoiceToText()" title="Hold/Click to Speak">
+            <i class="fa-solid fa-microphone"></i>
+          </button>
           <input type="text" id="chatInputText" placeholder="Type or speak a message..." />
-          <button type="button" onclick="handleSendChat()">Send</button>
+          <button type="button" onclick="handleSendChat()"><i class="fa-solid fa-paper-plane"></i></button>
         </div>
       </div>
     </div>
@@ -922,7 +968,7 @@
         if (savedPhone) {
           currentUserPhone = savedPhone;
           document.getElementById("phoneModal").style.display = "none";
-          document.getElementById("chatToggleBtn").style.display = "block";
+          document.getElementById("chatToggleBtn").style.display = "flex";
           startHeartbeatAndPolling();
         } else {
           document.getElementById("phoneModal").style.display = "flex";
@@ -941,7 +987,7 @@
         localStorage.setItem("user_whatsapp_phone", phoneInput);
         
         document.getElementById("phoneModal").style.display = "none";
-        document.getElementById("chatToggleBtn").style.display = "block";
+        document.getElementById("chatToggleBtn").style.display = "flex";
         startHeartbeatAndPolling();
       }
 
